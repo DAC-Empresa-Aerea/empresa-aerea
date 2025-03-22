@@ -1,6 +1,6 @@
 function Teste() {
   return (
-    <div className="flex items-center justify-center">
+    <div className="flex items-center justify-center m-auto">
       Aqui vai ser a landing page
     </div>
   );

@@ -4,10 +4,14 @@ import Footer from "../../components/organisms/Footer";
 
 function DashboardLayout() {
   return (
-    <div className="flex flex-col h-full">
+    <div className="contents flex-col h-full">
       <Header />
-      <h1>Dashboard Layout</h1>
-        <Outlet />
+        <h1 className="text-center">Dashboard Layout</h1>
+
+        <div className="flex flex-col flex-1">
+            <Outlet />   
+        </div>
+        
       <Footer />
     </div>
   );

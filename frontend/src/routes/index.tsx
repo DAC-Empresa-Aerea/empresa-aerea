@@ -4,8 +4,9 @@ import { createBrowserRouter } from "react-router-dom";
 import Loadable from "../components/organisms/Loadable";
 import { Routes } from "./routes.enum";
 
+import LoginRoutes from "./LoginRoutes";
+
 //Para layouts
-const LoginLayout = Loadable(lazy(() => import("../layouts/Login")));
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Deshboard")));
 
 //Para pages
@@ -22,6 +23,7 @@ const router = createBrowserRouter([
       },
     ],
   },
+  LoginRoutes,
 ]);
 
 export default router;
