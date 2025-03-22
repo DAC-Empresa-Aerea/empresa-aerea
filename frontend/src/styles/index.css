@@ -1,5 +1,16 @@
 @import "tailwindcss";
 
 @theme {
-    --color-alien: #000000;
+  --color-alien: #000000;
+
+  --color-blue-medium: var(--color-blue-500);
+  --color-blue-dark: var(--color-blue-700);
+
+  --color-gray-medium: var(--color-gray-600);
+  --color-gray-dark: var(--color-gray-800);
+
+  --color-black: var(--color-black);
+
+  --font-roboto: "Roboto", sans-serif;
+  --font-museo-moderno: "MuseoModerno", sans-serif;
 }
