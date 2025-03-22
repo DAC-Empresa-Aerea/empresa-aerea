@@ -1,5 +1,5 @@
 export const theme = {
   colors: {},
-  fontFamily: {},
+  fontFamily: "'Roboto', sans-serif",
   boxShadow: {},
 };
