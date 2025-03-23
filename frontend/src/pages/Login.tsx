@@ -33,7 +33,7 @@ const Login = () => {
                     <div className="mb-4">
                         <input
                             type="email"
-                            className="mt-1 w-full rounded-md border px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="mt-1 w-full rounded-md border px-3 py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             value={email}
                             placeholder="Email"
                             onChange={(e) => setEmail(e.target.value)}
@@ -45,7 +45,7 @@ const Login = () => {
                     <div className="mb-4">
                         <input
                             type="password"
-                            className="mt-1 w-full rounded-md border px-3 py-2 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            className="mt-1 w-full rounded-md border px-3 py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             value={password}
                             placeholder="Password"
                             onChange={(e) => setPassword(e.target.value)}
