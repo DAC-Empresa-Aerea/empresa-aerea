@@ -1,7 +1,8 @@
 import { lazy } from "react";
-import Loadable from "../components/organisms/Loadable";
+import Loadable from "../components/organisms/loadable";
 
 const LoginLayout = Loadable(lazy(() => import("../layouts/Login")));
+const Login = Loadable(lazy(() => import("../pages/Login")));
 
 const LoginRoutes = {
   path: "/",
@@ -12,7 +13,7 @@ const LoginRoutes = {
       children: [
         {
           path: "login",
-          element: <h1 className="text-center">Mudar para pagina de login futuramente</h1>
+          element: <h1 className="text-center"><Login /></h1>
         },
         {
           path: "register",
