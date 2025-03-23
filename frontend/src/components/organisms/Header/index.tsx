@@ -5,7 +5,7 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   return (
-    <header className="bg-white shadow-md font-roboto">
+    <header className="bg-white shadow-md font-roboto z-10">
       <div className="container mx-auto px-4 py-4">
         {/* DESKTOP */}
         <div className="hidden md:flex justify-between items-center">

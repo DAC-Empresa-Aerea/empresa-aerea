@@ -1,5 +1,5 @@
 import { lazy } from "react";
-import Loadable from "../components/organisms/loadable";
+import Loadable from "../components/organisms/Loadable";
 
 const LoginLayout = Loadable(lazy(() => import("../layouts/Login")));
 const Login = Loadable(lazy(() => import("../pages/Login")));

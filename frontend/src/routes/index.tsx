@@ -1,7 +1,7 @@
 import { lazy } from "react";
 import { createBrowserRouter } from "react-router-dom";
 
-import Loadable from "../components/organisms/loadable";
+import Loadable from "../components/organisms/Loadable";
 import { Routes } from "./routes.enum";
 
 import LoginRoutes from "./LoginRoutes";
