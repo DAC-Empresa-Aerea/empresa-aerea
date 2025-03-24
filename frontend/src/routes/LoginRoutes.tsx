@@ -3,13 +3,15 @@ import Loadable from "../components/organisms/Loadable";
 
 const LoginLayout = Loadable(lazy(() => import("../layouts/Login")));
 const Login = Loadable(lazy(() => import("../pages/Login")));
+const SelfRegistrationLayout = Loadable(lazy(() => import("../layouts/Self-registration")));
+const SelfRegistration = Loadable(lazy(() => import("../pages/SelfRegistration")));
 
 const LoginRoutes = {
   path: "/",
   children: [
     {
       path: "/",
-      element: <LoginLayout />,
+      //element: [<LoginLayout />, <SelfRegistrationLayout />],
       children: [
         {
           path: "login",
@@ -17,7 +19,7 @@ const LoginRoutes = {
         },
         {
           path: "register",
-          element: <h1 className="text-center">Mudar para pagina de registro futuramente</h1>
+          element: <h1 className="text-center"><SelfRegistration /></h1>
         },
         {
           path: "forgot-password",
