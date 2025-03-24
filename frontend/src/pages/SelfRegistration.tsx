@@ -11,7 +11,7 @@ const SelfRegistration = () => {
     const [street, setStreet] = useState("");
     const [number, setNumber] = useState("");
     const [complement, setComplement] = useState("");
-    const [cepError, setCepError] = useState(""); // Estado para mensagens de erro do CEP
+    const [cepError, setCepError] = useState("");
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
@@ -19,12 +19,11 @@ const SelfRegistration = () => {
         console.log("Login: ", { name, email, cpf, cep, state, city, street, number, complement });
     };
 
-    // Função para buscar o endereço pelo CEP
     const fetchAddressByCep = async (cep: string) => {
         try {
-            const cleanedCep = cep.replace(/\D/g, ""); // Remove caracteres não numéricos
+            const cleanedCep = cep.replace(/\D/g, "");
             if (cleanedCep.length !== 8) {
-                setCepError("CEP inválido. Digite 8 dígitos.");
+                setCepError("Invalid CEP. Please enter 8 digits.");
                 return;
             }
 
@@ -32,7 +31,7 @@ const SelfRegistration = () => {
             const data = await response.json();
 
             if (data.erro) {
-                setCepError("CEP não encontrado.");
+                setCepError("CEP not found.");
                 setState("");
                 setCity("");
                 setStreet("");
@@ -43,8 +42,8 @@ const SelfRegistration = () => {
                 setStreet(data.logradouro);
             }
         } catch (error) {
-            setCepError("Erro ao buscar o CEP. Tente novamente.");
-            console.error("Erro na requisição do ViaCEP:", error);
+            setCepError("Error retrieving the CEP. Please try again.");
+            console.error("Error in the ViaCEP request:", error);
         }
     };
 
@@ -74,7 +73,7 @@ const SelfRegistration = () => {
                 {/* Form */}
                 <form onSubmit={handleSubmit}>
 
-                    {/* Campo de Nome */}
+                    {/* Name */}
                     <div className="mb-4">
                         <input
                             type="text"
@@ -86,7 +85,7 @@ const SelfRegistration = () => {
                         />
                     </div>
 
-                    {/* Campo de Email */}
+                    {/* Email */}
                     <div className="mb-4">
                         <input
                             type="email"
@@ -98,7 +97,7 @@ const SelfRegistration = () => {
                         />
                     </div>
 
-                    {/* Campos de CPF e CEP */}
+                    {/* CPF & CEP */}
                     <div className="mb-4 flex space-x-2">
                         <IMaskInput
                             mask="000.000.000-00"
@@ -119,10 +118,10 @@ const SelfRegistration = () => {
                         />
                     </div>
 
-                    {/* Mensagem de erro do CEP */}
+                    {/* Error message from CEP */}
                     {cepError && <p className="text-red-500 text-sm mb-4">{cepError}</p>}
 
-                    {/* Campos de Estado e Cidade */}
+                    {/* State & City */}
                     <div className="mb-4 flex space-x-2">
                         <input
                             type="text"
@@ -142,7 +141,7 @@ const SelfRegistration = () => {
                         />
                     </div>
 
-                    {/* Campos de Rua e Numero */}
+                    {/* Street & Number */}
                     <div className="mb-4 flex space-x-2">
                         <input
                             type="text"
@@ -161,7 +160,7 @@ const SelfRegistration = () => {
                             required
                         />
                     </div>
-                    {/* Campo de Complemento */}
+                    {/* Complement */}
                     <div className="mb-4">
                         <input
                             type="text"
@@ -173,7 +172,7 @@ const SelfRegistration = () => {
                         />
                     </div>
 
-                    {/* Botao de Registro */}
+                    {/* Regiter button */}
                     <button
                         type="submit"
                         className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 cursor-pointer"
@@ -181,7 +180,7 @@ const SelfRegistration = () => {
                         Register
                     </button>
 
-                    {/* Texto apoio senha envio e-mail*/}
+                    {/* Suport text*/}
                     <p className="mt-4 text-center text-sm text-gray-800 cursor-default">
                         Your password will be sent to your email.
                     </p>
