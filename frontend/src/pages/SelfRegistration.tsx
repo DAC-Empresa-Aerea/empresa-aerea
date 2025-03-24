@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { IMaskInput } from "react-imask";
 
 const SelfRegistration = () => {
     const [name, setName] = useState("");
@@ -10,11 +11,48 @@ const SelfRegistration = () => {
     const [street, setStreet] = useState("");
     const [number, setNumber] = useState("");
     const [complement, setComplement] = useState("");
+    const [cepError, setCepError] = useState(""); // Estado para mensagens de erro do CEP
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
         console.log("Login: ", { name, email, cpf, cep, state, city, street, number, complement });
+    };
+
+    // Função para buscar o endereço pelo CEP
+    const fetchAddressByCep = async (cep: string) => {
+        try {
+            const cleanedCep = cep.replace(/\D/g, ""); // Remove caracteres não numéricos
+            if (cleanedCep.length !== 8) {
+                setCepError("CEP inválido. Digite 8 dígitos.");
+                return;
+            }
+
+            const response = await fetch(`https://viacep.com.br/ws/${cleanedCep}/json/`);
+            const data = await response.json();
+
+            if (data.erro) {
+                setCepError("CEP não encontrado.");
+                setState("");
+                setCity("");
+                setStreet("");
+            } else {
+                setCepError("");
+                setState(data.uf);
+                setCity(data.localidade);
+                setStreet(data.logradouro);
+            }
+        } catch (error) {
+            setCepError("Erro ao buscar o CEP. Tente novamente.");
+            console.error("Erro na requisição do ViaCEP:", error);
+        }
+    };
+
+    const handleCepBlur = (e: { target: { value: any; }; }) => {
+        const cep = e.target.value;
+        if (cep) {
+            fetchAddressByCep(cep);
+        }
     };
 
     return (
@@ -62,23 +100,27 @@ const SelfRegistration = () => {
 
                     {/* Campos de CPF e CEP */}
                     <div className="mb-4 flex space-x-2">
-                        <input
-                            type="text"
-                            className="mt-1 w-full rounded-md border px-3 py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            value={cpf}
+                        <IMaskInput
+                            mask="000.000.000-00"
                             placeholder="CPF"
-                            onChange={(e) => setCpf(e.target.value)}
+                            value={cpf}
+                            onAccept={(value) => setCpf(value)}
+                            className="mt-1 w-full rounded-md border px-3 py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
                             required
                         />
-                        <input
-                            type="text"
-                            className="mt-1 w-full rounded-md border px-3 py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            value={cep}
+                        <IMaskInput
+                            mask="00000-000"
                             placeholder="CEP"
-                            onChange={(e) => setCep(e.target.value)}
+                            value={cep}
+                            onAccept={(value) => setCep(value)}
+                            className="mt-1 w-full rounded-md border px-3 py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
+                            onBlur={handleCepBlur}
                             required
                         />
                     </div>
+
+                    {/* Mensagem de erro do CEP */}
+                    {cepError && <p className="text-red-500 text-sm mb-4">{cepError}</p>}
 
                     {/* Campos de Estado e Cidade */}
                     <div className="mb-4 flex space-x-2">
