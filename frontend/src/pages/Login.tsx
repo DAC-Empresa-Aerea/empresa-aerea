@@ -1,4 +1,7 @@
 import { useState } from "react";
+import LogoImage from "../components/atoms/LogoImage";
+import BasicInput from "../components/atoms/BasicInput";
+import SubmitButton from "../components/atoms/SubmitButton";
 
 const Login = () => {
     const [email, setEmail] = useState("");
@@ -14,11 +17,7 @@ const Login = () => {
         <div className="flex min-h-screen items-center justify-center bg-gray-100">
             {/* Container */}
             <div className="w-full max-w-md rounded-lg bg-white p-6 shadow-md">
-            <img
-              src="/icon/favicon/favicon.ico"
-              alt="Logo"
-              className="mx-auto h-10 mb-2"
-            />
+            <LogoImage size="h-10" />
             <h1 className="text-2xl font-bold text-gray-800 text-center cursor-default">FlyHigh</h1>
                 <div className="flex justify-center items-center cursor-default">
                     <h2 className="text-gray-800">Welcome to Fly</h2>
@@ -31,26 +30,12 @@ const Login = () => {
 
                     {/* Campo de Email */}
                     <div className="mb-4">
-                        <input
-                            type="email"
-                            className="mt-1 w-full rounded-md border px-3 py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            value={email}
-                            placeholder="Email"
-                            onChange={(e) => setEmail(e.target.value)}
-                            required
-                        />
+                        <BasicInput type="email" value={email} placeholder="Email" onChange={(e) => setEmail(e.target.value)} required />
                     </div>
 
                     {/* Campo de Senha */}
                     <div className="mb-4">
-                        <input
-                            type="password"
-                            className="mt-1 w-full rounded-md border px-3 py-2 border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500"
-                            value={password}
-                            placeholder="Password"
-                            onChange={(e) => setPassword(e.target.value)}
-                            required
-                        />
+                        <BasicInput type="password" value={password} placeholder="Password" onChange={(e) => setPassword(e.target.value)} required />
                     </div>
 
                     {/* Opcoes entre os inputs e o botao de login */}
@@ -63,12 +48,7 @@ const Login = () => {
                     </div>
 
                     {/* Botao de Login */}
-                    <button
-                        type="submit"
-                        className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 cursor-pointer"
-                    >
-                        Login
-                    </button>
+                    <SubmitButton text="Login"/>
 
                     {/* Link para a pagina de cadastro*/}
                     <p className="mt-4 text-center text-sm text-gray-600 cursor-default">
