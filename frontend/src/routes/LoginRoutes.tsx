@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/Loadable";
+import CustomerHomePage from "../pages/CustomerHomePage";
 
 const LoginLayout = Loadable(lazy(() => import("../layouts/Login")));
 const Login = Loadable(lazy(() => import("../pages/Login")));
@@ -23,7 +24,7 @@ const LoginRoutes = {
         },
         {
           path: "forgot-password",
-          element: <h1 className="text-center">Mudar para pagina de esqueci minha senha futuramente</h1>
+          element: <h1 className="text-center"><CustomerHomePage /></h1>
         }
       ]
     }
