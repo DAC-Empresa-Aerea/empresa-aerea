@@ -3,6 +3,8 @@ export interface Flight {
   number: number;
   departure: string;
   arrival: string;
+  origin: string;
+  destination: string;
 }
 
 interface FlightBasicInfoProps {

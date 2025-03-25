@@ -11,6 +11,7 @@ const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
 //Para pages
 const Teste = Loadable(lazy(() => import("../pages/Teste")));
+const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
 
 const router = createBrowserRouter([
   {
@@ -21,6 +22,10 @@ const router = createBrowserRouter([
         index: true,
         element: <Teste />,
       },
+      {
+        path: "buscarVoo",
+        element: <SearchFlights />,
+      }
     ],
   },
   LoginRoutes,
