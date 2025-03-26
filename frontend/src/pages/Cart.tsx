@@ -1,245 +1,158 @@
 import React, { useState, useEffect } from "react";
-import { fetchAddressByCep } from "../utils/ViaCep";
-import CartItem from "../components/molecules/CartItem";
-import CartSummary from "../components/molecules/CartSummary";
-import PassengerInfoForm from "../components/molecules/PassengerInfo";
-import AddressForm from "../components/molecules/AddressForm";
+import FlightDetails from "../components/molecules/FlightDetails";
+import TicketQuantitySelector from "../components/molecules/TicketQuantitySelector";
+import PurchaseSummary from "../components/molecules/PurchaseSummary";
+import BookingConfirmation from "../components/molecules/BookingConfirmation";
+import { SelectedFlight, User } from "../types/flightTypes";
 
-interface CartItem {
-  id: number;
-  name: string;
-  description: string;
-  price: number;
-  quantity: number;
-  imageUrl: string;
-  options?: string[]
-  selectedOption?: string
-}
+// Dados simulados de usuário
+const mockUser: User = {
+  id: "user123",
+  name: "João Silva",
+  milesBalance: 15000 // saldo de milhas
+};
+
+// Voo selecionado mock (isso viria da tela de resultados de pesquisa)
+const mockSelectedFlight: SelectedFlight = {
+  id: "flight789",
+  origin: "São Paulo (GRU)",
+  destination: "Rio de Janeiro (SDU)",
+  departureDate: "2025-04-10",
+  departureTime: "08:30",
+  arrivalDate: "2025-04-10",
+  arrivalTime: "09:30",
+  seatPrice: 450.00,
+  airline: "Airline Brasil",
+  flightNumber: "AB1234"
+};
+
+// Função para gerar código de reserva único (3 letras maiúsculas + 3 números)
+const generateBookingCode = (): string => {
+  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+  let code = '';
+  
+  // Gerar 3 letras aleatórias
+  for (let i = 0; i < 3; i++) {
+    code += letters.charAt(Math.floor(Math.random() * letters.length));
+  }
+  
+  // Gerar 3 números aleatórios
+  for (let i = 0; i < 3; i++) {
+    code += Math.floor(Math.random() * 10);
+  }
+  
+  return code;
+};
 
 const Cart: React.FC = () => {
-  // Estado do carrinho
-  const [cartItems, setCartItems] = useState<CartItem[]>([
-    {
-      id: 1,
-      name: "Business Class Flight Ticket",
-      description: "Blue",
-      price: 417.47,
-      quantity: 2,
-      imageUrl: "https://placehold.co/100x100",
-      options: ["MIA"],
-      selectedOption: "MIA"
-    },
-    {
-      id: 2,
-      name: "In-flight Meal",
-      description: "Sliced",
-      price: 15.99,
-      quantity: 1,
-      imageUrl: "https://placehold.co/100x100",
-      options: ["Vegetariano"],
-      selectedOption: "Vegetariano"
-    },
-    {
-      id: 3,
-      name: "Flight Control",
-      description: "Red",
-      price: 50.49,
-      quantity: 1,
-      imageUrl: "https://placehold.co/100x100",
-      options: ["3m"],
-      selectedOption: "3m"
-    }
-  ]);
-
-  // Perfil do passageiro
-  const [passengerFirstName, setPassengerFirstName] = useState("");
-  const [passengerLastName, setPassengerLastName] = useState("");
-  const [passengerEmail, setPassengerEmail] = useState("");
-  const [passengerCpf, setPassengerCpf] = useState("");
-  const [passengerPhone, setPassengerPhone] = useState("");
-  const [passengerDate, setPassengerDate] = useState("");
-
-  // Endereço do passageiro
-  const [passengerCep, setPassengerCep] = useState("");
-  const [passengerCity, setPassengerCity] = useState("");
-  const [passengerState, setPassengerState] = useState("");
-  const [passengerCountry, setPassengerCountry] = useState("");
-  const [passengerStreet, setPassengerStreet] = useState("");
-  const [passengerNumber, setPassengerNumber] = useState("");
-  const [passengerComplement, setPassengerComplement] = useState("");
-  const [cepError, setCepError] = useState("");
-
-  // Endereço de faturamento
-  const [useSameForBilling, setUseSameForBilling] = useState(false);
-
-  // Cálculos de total
-  const [subtotal, setSubtotal] = useState(0);
-  const [additionalFees, setAdditionalFees] = useState(20.00);
-
-  // Atualizar o total ao adicionar/remover itens
+  const [selectedFlight, setSelectedFlight] = useState<SelectedFlight>(mockSelectedFlight);
+  
+  const [user, setUser] = useState<User>(mockUser);
+  
+  // Quantidade de passagens e uso de milhas
+  const [ticketQuantity, setTicketQuantity] = useState(1);
+  const [milesToUse, setMilesToUse] = useState(0);
+  const [bookingCode, setBookingCode] = useState<string | null>(null);
+  
+  // Cálculos
+  const [totalPrice, setTotalPrice] = useState(selectedFlight.seatPrice);
+  const [requiredMiles, setRequiredMiles] = useState(0);
+  const [finalPrice, setFinalPrice] = useState(selectedFlight.seatPrice);
+  const [milesDiscount, setMilesDiscount] = useState(0);
+  
+  //  100 milhas = R$ 10
+  const milesConversionRate = 0.1;
+  
   useEffect(() => {
-    const calculatedSubtotal = cartItems.reduce((total, item) => {
-      return total + (item.price * item.quantity);
-    }, 0);
-    setSubtotal(calculatedSubtotal);
-  }, [cartItems]);
+    const newTotalPrice = selectedFlight.seatPrice * ticketQuantity;
+    setTotalPrice(newTotalPrice); 
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-
-    if (!passengerFirstName || !passengerLastName || !passengerEmail || !passengerCpf) {
-      alert("Por favor, preencha todos os campos obrigatórios");
-      return;
-    }
-
-    console.log("Order submission: ", { 
-      passengerDetails: {
-        firstName: passengerFirstName,
-        lastName: passengerLastName,
-        email: passengerEmail,
-        cpf: passengerCpf,
-        phone: passengerPhone,
-        dateOfBirth: passengerDate
-      },
-      address: {
-        cep: passengerCep,
-        city: passengerCity,
-        state: passengerState,
-        country: passengerCountry,
-        street: passengerStreet,
-        number: passengerNumber,
-        complement: passengerComplement
-      },
-      useSameForBilling,
-      order: {
-        items: cartItems,
-        subtotal,
-        additionalFees,
-        total: subtotal + additionalFees
-      }
-    });
-    alert("Redirecionando para a página de pagamento...");
-  };
-
-  const handleCepBlur = async (cep: string) => {
-    if (cep && cep.length >= 8) {
-      const { state, city, street, error } = await fetchAddressByCep(cep);
-      if (error) {
-        setCepError(error);
-      } else {
-        setCepError("");
-        setPassengerState(state);
-        setPassengerCity(city);
-        setPassengerStreet(street);
-      }
-    }
-  };
-
-  const handleQuantityChange = (id: number, newQuantity: number) => {
-    if (newQuantity < 1) return;
+    // Milhas necessárias para o preço total
+    const newRequiredMiles = Math.round(newTotalPrice / milesConversionRate);
+    setRequiredMiles(newRequiredMiles);
     
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id ? { ...item, quantity: newQuantity } : item
-      )
-    );
+    // Desconto baseado nas milhas utilizadas
+    const newMilesDiscount = Math.min(milesToUse * milesConversionRate, newTotalPrice);
+    setMilesDiscount(newMilesDiscount);
+    
+    // Preço final após desconto de milhas
+    const newFinalPrice = newTotalPrice - newMilesDiscount;
+    setFinalPrice(newFinalPrice);
+    
+  }, [ticketQuantity, milesToUse, selectedFlight.seatPrice]);
+  
+  const handleTicketQuantityChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (value > 0 && value <= 10) {
+      setTicketQuantity(value);
+    }
   };
-
-  const handleOptionChange = (id: number, option: string) => {
-    setCartItems(prevItems => 
-      prevItems.map(item => 
-        item.id === id ? { ...item, selectedOption: option } : item
-      )
-    );
+  
+  const handleMilesToUseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const value = parseInt(e.target.value);
+    if (value >= 0 && value <= user.milesBalance) {
+      setMilesToUse(value);
+    }
   };
-
-  const removeItem = (id: number) => {
-    setCartItems(prevItems => prevItems.filter(item => item.id !== id));
+  
+  // Confirmar compra
+  const handleConfirmPurchase = () => {
+    //Atualizar saldo
+    const updatedUser = {
+      ...user,
+      milesBalance: user.milesBalance - milesToUse
+    };
+    
+    setUser(updatedUser);
+    
+    // Gerar código de reserva
+    const newBookingCode = generateBookingCode();
+    setBookingCode(newBookingCode);
+    
+    console.log("Compra confirmada!", {
+      flight: selectedFlight,
+      quantity: ticketQuantity,
+      milesUsed: milesToUse,
+      finalPrice: finalPrice,
+      bookingCode: newBookingCode
+    });
   };
-
+  
   return (
-    <>
-      <div className="text-sm text-gray-600 mb-4">
-        Carrinho 
-        <span className="font-bold"> Passo 1/2 </span>
-      </div>
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div className="lg:col-span-2 bg-white p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-6">Itens no Carrinho</h2>
-          <div className="space-y-4">
-            {cartItems.map((item) => (
-              <CartItem
-                key={item.id}
-                id={item.id}
-                name={item.name}
-                description={item.description}
-                price={item.price}
-                quantity={item.quantity}
-                imageUrl={item.imageUrl}
-                options={item.options}
-                selectedOption={item.selectedOption}
-                onQuantityChange={handleQuantityChange}
-                onOptionChange={handleOptionChange}
-                onRemove={removeItem}
+    <div className="container mx-auto p-4">
+      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <h1 className="text-2xl font-bold mb-6">Finalizar compra</h1>
+        
+        {bookingCode ? (
+          <BookingConfirmation bookingCode={bookingCode} />
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {/* Detalhes do voo e quantidade de passagens */}
+            <div className="md:col-span-2">
+              <FlightDetails flight={selectedFlight} />
+              <TicketQuantitySelector 
+                quantity={ticketQuantity} 
+                onChange={handleTicketQuantityChange} 
               />
-            ))}
+            </div>
+            
+            {/* Resumo da compra */}
+            <div>
+              <PurchaseSummary 
+                userMilesBalance={user.milesBalance}
+                totalPrice={totalPrice}
+                requiredMiles={requiredMiles}
+                milesToUse={milesToUse}
+                onMilesChange={handleMilesToUseChange}
+                milesDiscount={milesDiscount}
+                finalPrice={finalPrice}
+                onPurchase={handleConfirmPurchase}
+              />
+            </div>
           </div>
-          <CartSummary 
-            subtotal={subtotal} 
-            additionalFees={additionalFees} 
-          />
-        </div>
-        <div className="bg-blue-500 text-white p-8 rounded-lg shadow-md">
-          <h2 className="text-2xl font-bold mb-6">Detalhes do Passageiro</h2>
-          <form onSubmit={handleSubmit} className="space-y-4">
-            <PassengerInfoForm
-              firstName={passengerFirstName}
-              setFirstName={setPassengerFirstName}
-              lastName={passengerLastName}
-              setLastName={setPassengerLastName}
-              email={passengerEmail}
-              setEmail={setPassengerEmail}
-              cpf={passengerCpf}
-              setCpf={setPassengerCpf}
-              phone={passengerPhone}
-              setPhone={setPassengerPhone}
-              date={passengerDate}
-              setDate={setPassengerDate}
-            />
-            
-            <hr className="border-gray-300 my-4" />
-            
-            <AddressForm
-              cep={passengerCep}
-              setCep={setPassengerCep}
-              country={passengerCountry}
-              setCountry={setPassengerCountry}
-              state={passengerState}
-              setState={setPassengerState}
-              city={passengerCity}
-              setCity={setPassengerCity}
-              street={passengerStreet}
-              setStreet={setPassengerStreet}
-              number={passengerNumber}
-              setNumber={setPassengerNumber}
-              complement={passengerComplement}
-              setComplement={setPassengerComplement}
-              cepError={cepError}
-              handleCepBlur={handleCepBlur}
-              useSameForBilling={useSameForBilling}
-              setUseSameForBilling={setUseSameForBilling}
-            />
-            
-            <button 
-              className="bg-black text-white py-2 px-4 rounded w-full hover:bg-gray-800 transition-colors" 
-              type="submit"
-            >
-              Prosseguir para Pagamento &gt;
-            </button>
-          </form>
-        </div>
+        )}
       </div>
-    </>
+    </div>
   );
 };
 
