@@ -6,10 +6,15 @@
   --color-blue-medium: var(--color-blue-500);
   --color-blue-dark: var(--color-blue-700);
 
+  --color-gray-extra-light: var(--color-gray-100);
+  --color-gray-light: var(--color-gray-200);
   --color-gray-medium: var(--color-gray-600);
   --color-gray-dark: var(--color-gray-800);
 
-  --color-black: var(--color-black);
+  --color-black: #000000;
+  --color-white: #ffffff;
+
+  --shadow-medium: var(--shadow-md);
 
   --font-roboto: "Roboto", sans-serif;
   --font-museo-moderno: "MuseoModerno", sans-serif;
