@@ -45,7 +45,7 @@ const generateBookingCode = (): string => {
 };
 
 const Cart: React.FC = () => {
-  const [selectedFlight, setSelectedFlight] = useState<SelectedFlight>(mockSelectedFlight);
+  const selectedFlight = mockSelectedFlight;
   
   const [user, setUser] = useState<User>(mockUser);
   
@@ -119,41 +119,55 @@ const Cart: React.FC = () => {
   };
   
   return (
-    <div className="container mx-auto p-4">
-      <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-        <h1 className="text-2xl font-bold mb-6">Finalizar compra</h1>
+    <div className="bg-slate-50 min-h-screen pb-16">
+      <div className="container mx-auto p-4 max-w-6xl">
+        <div className="flex items-center space-x-2 text-sm text-slate-500 mb-6 mt-2">
+          <span>Home</span>
+          <span>›</span>
+          <span>Voos</span>
+          <span>›</span>
+          <span className="font-medium text-slate-800">Checkout</span>
+        </div>
         
-        {bookingCode ? (
-          <BookingConfirmation bookingCode={bookingCode} />
-        ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
-            {/* Detalhes do voo e quantidade de passagens */}
-            <div className="md:col-span-2">
-              <FlightDetails flight={selectedFlight} />
-              <TicketQuantitySelector 
-                quantity={ticketQuantity} 
-                onChange={handleTicketQuantityChange} 
-              />
+        <h1 className="text-3xl font-bold mb-10 text-slate-900">Finalizar sua reserva</h1>
+        
+        <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100">
+          {bookingCode ? (
+            <BookingConfirmation bookingCode={bookingCode} />
+          ) : (
+            <div className="flex flex-col lg:flex-row">
+              <div className="lg:w-2/3 p-6 lg:p-8 border-b lg:border-b-0 lg:border-r border-slate-100">
+                <div className="mb-3">
+                  <h2 className="font-semibold text-slate-400 uppercase tracking-wider text-xs">Resumo da reserva</h2>
+                </div>
+                <FlightDetails flight={selectedFlight} />
+                <TicketQuantitySelector 
+                  quantity={ticketQuantity} 
+                  onChange={handleTicketQuantityChange} 
+                />
+              </div>
+
+              <div className="lg:w-1/3 p-6 lg:p-8 bg-slate-50 lg:bg-white">
+                <div className="mb-3">
+                  <h2 className="font-semibold text-slate-400 uppercase tracking-wider text-xs">Pagamento</h2>
+                </div>
+                <PurchaseSummary 
+                  userMilesBalance={user.milesBalance}
+                  totalPrice={totalPrice}
+                  requiredMiles={requiredMiles}
+                  milesToUse={milesToUse}
+                  onMilesChange={handleMilesToUseChange}
+                  milesDiscount={milesDiscount}
+                  finalPrice={finalPrice}
+                  onPurchase={handleConfirmPurchase}
+                />
+              </div>
             </div>
-            
-            {/* Resumo da compra */}
-            <div>
-              <PurchaseSummary 
-                userMilesBalance={user.milesBalance}
-                totalPrice={totalPrice}
-                requiredMiles={requiredMiles}
-                milesToUse={milesToUse}
-                onMilesChange={handleMilesToUseChange}
-                milesDiscount={milesDiscount}
-                finalPrice={finalPrice}
-                onPurchase={handleConfirmPurchase}
-              />
-            </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </div>
   );
-};
+}
 
 export default Cart;
