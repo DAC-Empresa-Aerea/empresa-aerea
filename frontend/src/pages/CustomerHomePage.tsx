@@ -1,22 +1,43 @@
 import { useState } from "react";
 import Header from "../components/organisms/Header";
 import Footer from "../components/organisms/Footer";
-import AvailableFlights from "../components/organisms/AvailableFlights"; // Ajuste o caminho conforme necessário
-import { Flight } from "../components/atoms/FlightBasicInfo";
+import ReservationTable from "../components/organisms/ReservationTable";
+import { Reserve } from "../components/atoms/TableItem";
 
 const CustomerHomePage = () => {
   // Simulação de dados que viriam da API
-  const [flights, setFlights] = useState<Flight[]>([
-    { number: 201, departure: "08:00", arrival: "10:00" },
-    { number: 202, departure: "12:00", arrival: "14:00" },
-    { number: 203, departure: "16:00", arrival: "18:00" },
+  const [reserves] = useState<Reserve[]>([
+    { 
+      number: 201, 
+      departure_city: "São Paulo", 
+      departure_date: new Date("2025-04-10T08:00:00"),
+      arrival_city: "Rio de Janeiro", 
+      arrival_date: new Date("2025-04-10T10:00:00"),
+      status: "Cancelado",
+    },
+    { 
+      number: 202, 
+      departure_city: "Brasília", 
+      departure_date: new Date("2025-05-15T12:00:00"),
+      arrival_city: "Salvador", 
+      arrival_date: new Date("2025-05-15T14:00:00"),
+      status: "Concluído",
+    },
+    { 
+      number: 203, 
+      departure_city: "Curitiba", 
+      departure_date: new Date("2025-06-20T16:00:00"),
+      arrival_city: "Porto Alegre", 
+      arrival_date: new Date("2025-06-20T18:00:00"),
+      status: "Reservado",
+    },
   ]);
 
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
       <main className="flex-1 p-4">
-        <AvailableFlights flights={flights} />
+        <ReservationTable reserves={reserves} />
       </main>
       <Footer />
     </div>

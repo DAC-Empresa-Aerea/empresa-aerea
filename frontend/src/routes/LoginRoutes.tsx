@@ -24,7 +24,7 @@ const LoginRoutes = {
         },
         {
           path: "forgot-password",
-          element: <h1 className="text-center"><CustomerHomePage /></h1>
+          element: <h1 className="text-center"></h1>
         }
       ]
     }
