@@ -16,15 +16,19 @@ const LoginRoutes = {
       children: [
         {
           path: "login",
-          element: <h1 className="text-center"><Login /></h1>
+          element: <h1 className="text-center"><Login/></h1>
         },
         {
           path: "register",
-          element: <h1 className="text-center"><SelfRegistration /></h1>
+          element: <h1 className="text-center"><SelfRegistration/></h1>
         },
         {
           path: "forgot-password",
           element: <h1 className="text-center"></h1>
+        },
+        {
+          path: "customer-home",
+          element: <h1 className="text-center"><CustomerHomePage /></h1>
         }
       ]
     }
