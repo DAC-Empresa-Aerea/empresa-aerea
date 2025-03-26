@@ -131,6 +131,7 @@ const Cart: React.FC = () => {
         
         <h1 className="text-3xl font-bold mb-10 text-slate-900">Finalizar sua reserva</h1>
         
+      {/* Resumo */}
         <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-slate-100">
           {bookingCode ? (
             <BookingConfirmation bookingCode={bookingCode} />
