@@ -1,5 +1,5 @@
-import { useEffect, useState } from "react";
-import { DropdownInput } from "../atoms/DropdownInput";
+import { useState } from "react";
+import { DropdownInput } from "../atoms/inputs/DropdownInput";
 
 
 interface SearchInputProps {
@@ -37,12 +37,6 @@ function SearchInput({
         "MAD",
         "BOM",
     ];
-
-    useEffect(() => {
-        if(selectedFirstValue && selectedSecondValue) {
-           handleSearch(selectedFirstValue, selectedSecondValue); 
-        }
-    }, [selectedFirstValue, selectedSecondValue]);
 
     function handleResetValues() {
         setSelectedFirstValue("");

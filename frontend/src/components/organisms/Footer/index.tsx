@@ -1,5 +1,5 @@
 import React from "react";
-import LinkButton from "../../atoms/LinkButton";
+import LinkButton from "../../atoms/buttons/LinkButton";
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();

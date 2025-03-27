@@ -4,7 +4,7 @@ import SearchInput from "../../molecules/SearchInput";
 import AvailableFlights from "../AvailableFlights";
 
 interface SearchAvailables {
-    flightsList?: Array<Flight>;
+    flightsList: Array<Flight>;
 }
 
 function SearchAvailables({
@@ -30,7 +30,7 @@ function SearchAvailables({
     }
 
     return (
-        <div className="mx-auto flex flex-row justify-center items-center w-full pl-7 h-[60dvh]  m-auto">  
+        <div className="mx-auto flex flex-row justify-center items-center w-full pl-7 h-[75dvh] mb-7">  
             <SearchInput handleSearch={handleSearch} handleCancelSearch={handleCancelSearch}/>
             <AvailableFlights flights={flights}/>
         </div>
