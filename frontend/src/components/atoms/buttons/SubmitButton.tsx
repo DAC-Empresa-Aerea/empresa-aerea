@@ -9,7 +9,7 @@ export default function SubmitButton({
     return (
         <button
             type="submit"
-            onClick={onClick} // Função de clique
+            onClick={onClick}
             className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 cursor-pointer"
         >
             {text}

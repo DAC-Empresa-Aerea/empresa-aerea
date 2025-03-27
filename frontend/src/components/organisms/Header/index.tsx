@@ -1,5 +1,5 @@
 import { useState } from "react";
-import LinkButton from "../../atoms/LinkButton";
+import LinkButton from "../../atoms/buttons/LinkButton";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
