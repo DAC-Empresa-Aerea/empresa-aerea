@@ -5,13 +5,14 @@ import Loadable from "../components/organisms/loadable";
 import { Routes } from "./routes.enum";
 
 import LoginRoutes from "./LoginRoutes";
+import CustomerRoutes from "./CustomerRoutes";
+import EmployeeRoutes from "./EmployeeRoutes";
 
 //Para layouts
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
 //Para pages
 const Teste = Loadable(lazy(() => import("../pages/Teste")));
-const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
 
 const router = createBrowserRouter([
   {
@@ -22,13 +23,12 @@ const router = createBrowserRouter([
         index: true,
         element: <Teste />,
       },
-      {
-        path: "buscarVoo",
-        element: <SearchFlights />,
-      }
+      
     ],
   },
   LoginRoutes,
+  CustomerRoutes,
+  EmployeeRoutes,
 ]);
 
 export default router;
