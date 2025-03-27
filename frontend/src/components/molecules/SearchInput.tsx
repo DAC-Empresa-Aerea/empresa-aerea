@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { DropdownInput } from "../atoms/DropdownInput";
 
 
@@ -37,12 +37,6 @@ function SearchInput({
         "MAD",
         "BOM",
     ];
-
-    useEffect(() => {
-        if(selectedFirstValue && selectedSecondValue) {
-           handleSearch(selectedFirstValue, selectedSecondValue); 
-        }
-    }, [selectedFirstValue, selectedSecondValue]);
 
     function handleResetValues() {
         setSelectedFirstValue("");
