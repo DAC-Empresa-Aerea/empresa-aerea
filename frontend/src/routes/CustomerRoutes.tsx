@@ -2,6 +2,7 @@ import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
 
 const CartLayout = Loadable(lazy(() => import("../layouts/Cart")));
+const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
 const Cart = Loadable(lazy(() => import("../pages/Cart")));
 const CustomerHomePage = Loadable(
@@ -14,11 +15,13 @@ const CustomerRoutes = {
   children: [
     {
       path: "customer-home",
-      element: (
-        <h1 className="text-center">
-          <CustomerHomePage />
-        </h1>
-      ),
+      element: <DashboardLayout />,
+      children: [
+        {
+          index: true,
+          element: <CustomerHomePage />,
+        },
+      ],
     },
     {
       path: "cart",

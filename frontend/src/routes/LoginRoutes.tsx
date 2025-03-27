@@ -3,10 +3,11 @@ import Loadable from "../components/organisms/loadable";
 import { Routes } from "./routes.enum";
 
 const LoginLayout = Loadable(lazy(() => import("../layouts/Login")));
-const Login = Loadable(lazy(() => import("../pages/Login")));
 const SelfRegistrationLayout = Loadable(
   lazy(() => import("../layouts/Self-registration"))
 );
+
+const Login = Loadable(lazy(() => import("../pages/Login")));
 const SelfRegistration = Loadable(
   lazy(() => import("../pages/SelfRegistration"))
 );
