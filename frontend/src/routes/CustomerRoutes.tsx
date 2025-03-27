@@ -9,7 +9,7 @@ const CustomerHomePage = Loadable(
   lazy(() => import("../pages/CustomerHomePage"))
 );
 const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
-const CheckIn = Loadable(lazy(() => import("../pages/Checkin")));
+const CheckIn = Loadable(lazy(() => import("../pages/CheckIn")));
 
 const CustomerRoutes = {
   path: "/",
