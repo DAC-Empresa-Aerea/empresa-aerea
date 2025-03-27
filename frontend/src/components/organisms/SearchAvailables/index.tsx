@@ -4,7 +4,7 @@ import SearchInput from "../../molecules/SearchInput";
 import AvailableFlights from "../AvailableFlights";
 
 interface SearchAvailables {
-    flightsList?: Array<Flight>;
+    flightsList: Array<Flight>;
 }
 
 function SearchAvailables({
