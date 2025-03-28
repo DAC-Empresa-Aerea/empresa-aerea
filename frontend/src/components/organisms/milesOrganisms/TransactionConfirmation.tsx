@@ -1,5 +1,5 @@
 import React from "react";
-import { MilesTransaction, User } from "../../types/flightTypes";
+import { MilesTransaction, User } from "../../../types/flightTypes";
 
 interface TransactionConfirmationProps {
   transaction: MilesTransaction | null;

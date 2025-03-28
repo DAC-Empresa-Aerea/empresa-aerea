@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { User } from "../types/flightTypes";
-import MilesPurchaseHeader from "../components/miles/MilesPurchaseHeader";
-import BalanceDisplay from "../components/miles/BalanceDisplay";
-import MilesOptionsSelector from "../components/miles/MilesOptionsSelector";
-import MilesSlider from "../components/miles/MilesSlider";
-import PriceSummary from "../components/miles/PriceSummary";
-import TransactionConfirmation from "../components/miles/TransactionConfirmation";
+import MilesPurchaseHeader from "../components/organisms/milesOrganisms/MilesPurchaseHeader";
+import BalanceDisplay from "../components/molecules/milesMolecules/BalanceDisplay";
+import MilesOptionsSelector from "../components/molecules/milesMolecules/MilesOptionsSelector";
+import MilesSlider from "../components/molecules/milesMolecules/MilesSlider";
+import PriceSummary from "../components/molecules/milesMolecules/PriceSummary";
+import TransactionConfirmation from "../components/organisms/milesOrganisms/TransactionConfirmation";
 
 // Dados simulados de usuário
 const mockUser: User = {
@@ -41,7 +41,7 @@ const BuyMiles: React.FC = () => {
 
   // Opções pré-definidas de milhas para compra
   const milesOptions = [25, 50, 100, 200, 500];
-  
+
   // Valores para o slider
   const sliderMin = 10;
   const sliderMax = 1000;
@@ -103,9 +103,9 @@ const BuyMiles: React.FC = () => {
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Cabeçalho */}
-        <MilesPurchaseHeader 
-          title="Comprar Milhas" 
-          subtitle="Aumente seu saldo de milhas e aproveite descontos em passagens" 
+        <MilesPurchaseHeader
+          title="Comprar Milhas"
+          subtitle="Aumente seu saldo de milhas e aproveite descontos em passagens"
         />
 
         {showConfirmation ? (
@@ -121,7 +121,9 @@ const BuyMiles: React.FC = () => {
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="px-6 py-8">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold text-gray-800">Selecione a quantidade de milhas</h2>
+                <h2 className="text-xl font-semibold text-gray-800">
+                  Selecione a quantidade de milhas
+                </h2>
                 <BalanceDisplay balance={user.milesBalance} />
               </div>
 

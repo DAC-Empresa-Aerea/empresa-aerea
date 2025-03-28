@@ -1,5 +1,5 @@
 import React from "react";
-import LoadingButton from "../molecules/common/LoadingButton";
+import LoadingButton from "../common/LoadingButton";
 
 interface PriceSummaryProps {
   milesAmount: number;
