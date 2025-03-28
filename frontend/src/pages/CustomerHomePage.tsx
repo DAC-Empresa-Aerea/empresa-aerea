@@ -1,9 +1,14 @@
 import { useState } from "react";
 import ReservationTable from "../components/organisms/ReservationTable";
+import SeeReservation from "../components/molecules/modalsMolecules/SeeReservation";
 import { Reserve } from "../components/atoms/TableItem";
 
 const CustomerHomePage = () => {
-  // Simulação de dados que viriam da API
+  // Estado para armazenar a reserva selecionada e controle do modal
+  const [selectedReserve, setSelectedReserve] = useState<Reserve | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  // Simulação de dados da API
   const [reserves] = useState<Reserve[]>([
     {
       number: 201,
@@ -31,8 +36,32 @@ const CustomerHomePage = () => {
     },
   ]);
 
+  const handleFlightClick = (reserve: Reserve) => {
+    setSelectedReserve(reserve);
+    setIsModalOpen(true);
+  };
+
   return (
-      <ReservationTable reserves={reserves} />
+    <div>
+      <ReservationTable reserves={reserves} onFlightClick={handleFlightClick} />
+
+      {/* Modal para ver detalhes da reserva */}
+      <SeeReservation
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title={`Detalhes da Reserva #${selectedReserve?.number}`}
+      >
+        {selectedReserve && (
+          <div>
+            <p><strong>Origem:</strong> {selectedReserve.departure_city}</p>
+            <p><strong>Data de Partida:</strong> {selectedReserve.departure_date.toLocaleString()}</p>
+            <p><strong>Destino:</strong> {selectedReserve.arrival_city}</p>
+            <p><strong>Data de Chegada:</strong> {selectedReserve.arrival_date.toLocaleString()}</p>
+            <p><strong>Status:</strong> {selectedReserve.status}</p>
+          </div>
+        )}
+      </SeeReservation>
+    </div>
   );
 };
 
