@@ -44,9 +44,9 @@ const BuyMiles: React.FC = () => {
   
   // Valores para o slider
   const sliderMin = 10;
-  const sliderMax = 2000;
+  const sliderMax = 1000;
   const sliderStep = 10;
-  const sliderMarkers = [10, 50, 500, 1000, 1500, 2000];
+  const sliderMarkers = [10, 250, 500, 750, 1000];
 
   // Processar a compra
   const handlePurchase = (e: React.FormEvent) => {
