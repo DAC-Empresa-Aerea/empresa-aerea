@@ -25,6 +25,7 @@ const Header = () => {
             <LinkButton href={"#"} isActive>
               Reserve agora
             </LinkButton>
+            <LinkButton href={"/buyMiles"} >Comprar Milhas</LinkButton>
             <LinkButton href={"#"}>Ajuda</LinkButton>
           </nav>
           <div className="flex items-center space-x-2">

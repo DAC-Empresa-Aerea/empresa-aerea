@@ -9,7 +9,7 @@ import { SelectedFlight, User } from "../types/flightTypes";
 const mockUser: User = {
   id: "user123",
   name: "João Silva",
-  milesBalance: 15000, // saldo de milhas
+  milesBalance: 5000, // saldo de milhas
 };
 
 // Voo selecionado mock (isso viria da tela de resultados de pesquisa)
@@ -60,8 +60,8 @@ const Cart: React.FC = () => {
   const [finalPrice, setFinalPrice] = useState(selectedFlight.seatPrice);
   const [milesDiscount, setMilesDiscount] = useState(0);
 
-  //  100 milhas = R$ 10
-  const milesConversionRate = 0.1;
+  //  1 milha = R$ 5,00
+  const milesConversionRate = 5.0;
 
   useEffect(() => {
     const newTotalPrice = selectedFlight.seatPrice * ticketQuantity;

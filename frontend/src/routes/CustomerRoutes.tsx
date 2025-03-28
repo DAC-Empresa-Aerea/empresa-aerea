@@ -10,6 +10,7 @@ const CustomerHomePage = Loadable(
 );
 const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
 const CheckIn = Loadable(lazy(() => import("../pages/CheckIn")));
+const BuyMiles = Loadable(lazy(() => import("../pages/BuyMiles")));
 
 const CustomerRoutes = {
   path: "/",
@@ -39,7 +40,14 @@ const CustomerRoutes = {
       element: <DashboardLayout />,
       children: [{ index: true, element: <SearchFlights /> }],
     },
-    { path: "checkin", element: <CheckIn /> },
+    { 
+      path: "checkin", element: <CheckIn /> 
+    },
+    {
+      path: "buyMiles",
+      element: <DashboardLayout />,
+      children: [{ index: true, element: <BuyMiles /> }],
+    }
   ],
 };
 
