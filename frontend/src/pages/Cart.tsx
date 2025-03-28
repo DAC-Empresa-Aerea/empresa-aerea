@@ -60,8 +60,8 @@ const Cart: React.FC = () => {
   const [finalPrice, setFinalPrice] = useState(selectedFlight.seatPrice);
   const [milesDiscount, setMilesDiscount] = useState(0);
 
-  //  100 milhas = R$ 10
-  const milesConversionRate = 0.1;
+  //  100 milhas = R$ 5,00
+  const milesConversionRate = 0.05;
 
   useEffect(() => {
     const newTotalPrice = selectedFlight.seatPrice * ticketQuantity;
