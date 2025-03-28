@@ -83,7 +83,7 @@ const BuyMiles: React.FC = () => {
   // Iniciar nova compra
   const handleNewPurchase = () => {
     setShowConfirmation(false);
-    setMilesAmount(100);
+    setMilesAmount(1000);
   };
 
   // Formatar valores monetários
