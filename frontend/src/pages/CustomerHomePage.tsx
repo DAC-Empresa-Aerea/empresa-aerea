@@ -11,33 +11,68 @@ const CustomerHomePage = () => {
   // Simulação de dados da API
   const [reserves] = useState<Reserve[]>([
     {
-      number: 201,
-      departure_city: "São Paulo",
-      departure_date: new Date("2025-04-10T08:00:00"),
-      arrival_city: "Rio de Janeiro",
-      arrival_date: new Date("2025-04-10T10:00:00"),
-      status: "Cancelado",
+            "codigo": "XPT789",
+            "data": new Date("2024-10-10T14:30:00Z-03:00"),
+            "valor": 250.00,
+            "milhas_utilizadas": 50,
+            "quantidade_poltronas": 1,
+            "codigo_cliente": 1,
+            "estado": "CONFIRMADO",
+            "voo": {
+                    "codigo": "TADS0001",
+                    "data": new Date("2024-10-10T14:30:00Z-03:00"), 
+                    "valor_passagem": 500.00,
+                    "quantidade_poltronas_total": 100,
+                    "quantidade_poltronas_ocupadas": 90,
+                    "estado": "CONFIRMADO",
+                    "aeroporto_origem": {
+                            "codigo": "GRU",
+                            "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+                            "cidade": "Guarulhos",
+                            "uf": "SP"
+                    },
+                    "aeroporto_destino": {
+                            "codigo": "GIG",
+                            "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+                            "cidade": "Rio de Janeiro",
+                            "uf": "RJ"
+                    }
+            }
     },
     {
-      number: 202,
-      departure_city: "Brasília",
-      departure_date: new Date("2025-05-15T12:00:00"),
-      arrival_city: "Salvador",
-      arrival_date: new Date("2025-05-15T14:00:00"),
-      status: "Concluído",
-    },
-    {
-      number: 203,
-      departure_city: "Curitiba",
-      departure_date: new Date("2025-06-20T16:00:00"),
-      arrival_city: "Porto Alegre",
-      arrival_date: new Date("2025-06-20T18:00:00"),
-      status: "Reservado",
-    },
-  ]);
+            "codigo": "XPT789",
+            "data": new Date("2024-10-10T14:30:00Z-03:00"),
+            "valor": 250.00,
+            "milhas_utilizadas": 50,
+            "quantidade_poltronas": 1,
+            "codigo_cliente": 1,
+            "estado": "CRIADA",
+            "voo": {
+                    "codigo": "TADS0001",
+                    "data": new Date("2024-10-15T14:30:00Z-03:00"), 
+                    "valor_passagem": 500.00,
+                    "quantidade_poltronas_total": 100,
+                    "quantidade_poltronas_ocupadas": 90,
+                    "estado": "CONFIRMADO",
+                    "aeroporto_origem": {
+                            "codigo": "GRU",
+                            "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+                            "cidade": "Guarulhos",
+                            "uf": "SP"
+                    },
+                    "aeroporto_destino": {
+                            "codigo": "GIG",
+                            "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+                            "cidade": "Rio de Janeiro",
+                            "uf": "RJ"
+                    }
+            }
+    }
+]);
 
   const handleFlightClick = (reserve: Reserve) => {
     setSelectedReserve(reserve);
+    console.log(reserve);
     setIsModalOpen(true);
   };
 
@@ -46,21 +81,14 @@ const CustomerHomePage = () => {
       <ReservationTable reserves={reserves} onFlightClick={handleFlightClick} />
 
       {/* Modal para ver detalhes da reserva */}
-      <SeeReservation
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        title={`Detalhes da Reserva #${selectedReserve?.number}`}
-      >
-        {selectedReserve && (
-          <div>
-            <p><strong>Origem:</strong> {selectedReserve.departure_city}</p>
-            <p><strong>Data de Partida:</strong> {selectedReserve.departure_date.toLocaleString()}</p>
-            <p><strong>Destino:</strong> {selectedReserve.arrival_city}</p>
-            <p><strong>Data de Chegada:</strong> {selectedReserve.arrival_date.toLocaleString()}</p>
-            <p><strong>Status:</strong> {selectedReserve.status}</p>
-          </div>
-        )}
-      </SeeReservation>
+      {selectedReserve && (
+        <SeeReservation
+          isOpen={isModalOpen}
+          onClose={() => setIsModalOpen(false)}
+          title={`Detalhes da Reserva #${selectedReserve.codigo}`}
+          selectedReserve={selectedReserve}
+        />
+      )}
     </div>
   );
 };

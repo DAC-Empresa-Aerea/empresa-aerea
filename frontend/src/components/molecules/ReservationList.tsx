@@ -19,7 +19,7 @@ function ReservationList({
       <ul className="flex flex-col gap-4">
         {reserves.map((reserve) => (
           <TableItem
-            key={reserve.number}
+            key={reserve.codigo}
             reserve={reserve}
             onClick={() => onFlightClick(reserve)}
             buttonText={buttonText}
