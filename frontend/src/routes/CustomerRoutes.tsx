@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
+import ConsultStatement from "../pages/ConsultStatement";
 
 const CartLayout = Loadable(lazy(() => import("../layouts/Cart")));
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
@@ -47,6 +48,11 @@ const CustomerRoutes = {
       path: "buyMiles",
       element: <DashboardLayout />,
       children: [{ index: true, element: <BuyMiles /> }],
+    },
+    {
+      path: "consultStatement",
+      element: <DashboardLayout />,
+      children: [ {index : true, element: <ConsultStatement />}]
     }
   ],
 };
