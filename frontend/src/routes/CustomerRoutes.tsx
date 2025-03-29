@@ -40,14 +40,16 @@ const CustomerRoutes = {
       element: <DashboardLayout />,
       children: [{ index: true, element: <SearchFlights /> }],
     },
-    { 
-      path: "checkin", element: <CheckIn /> 
+    {
+      path: "checkin",
+      element: <DashboardLayout />,
+      children: [{ index: true, element: <CheckIn /> }],
     },
     {
       path: "buyMiles",
       element: <DashboardLayout />,
       children: [{ index: true, element: <BuyMiles /> }],
-    }
+    },
   ],
 };
 

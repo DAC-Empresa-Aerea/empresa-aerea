@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
+import RegisterFlights from "../pages/RegisterFlights";
 
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
@@ -15,6 +16,16 @@ const EmployeeRoutes = {
         {
           index: true,
           element: <EmployeeHomePage />,
+        },
+      ],
+    },
+    {
+      path: "register-flights",
+      element: <DashboardLayout />,
+      children: [
+        {
+          index: true,
+          element: <RegisterFlights />,
         },
       ],
     },
