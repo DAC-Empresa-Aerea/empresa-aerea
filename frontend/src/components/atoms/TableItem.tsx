@@ -1,5 +1,4 @@
 import { FaPlaneDeparture, FaPlaneArrival } from "react-icons/fa";
-import { useState } from "react";
 
 export interface Reserve {
     "codigo": string,
@@ -33,21 +32,12 @@ export interface Reserve {
 
 interface TableItemInfoProps {
     reserve: Reserve;
-    onClick: () => void;
+    moreInfoClick: () => void;
+    cancelClick?: () => void;
     buttonText: string;
 }
 
-function TableItem({ reserve, onClick, buttonText }: TableItemInfoProps) {
-    const [isCanceling, setIsCanceling] = useState(false);
-
-    const handleCancelReservation = () => {
-        if (reserve.estado === 'CRIADA' || reserve.estado === 'CHECK-IN') {
-            console.log(`Cancelando a reserva ${reserve.codigo}`);
-            setIsCanceling(true);
-        } else {
-            console.log("Não é possível cancelar essa reserva.");
-        }
-    };
+function TableItem({ reserve, moreInfoClick, cancelClick ,buttonText }: TableItemInfoProps) {
 
     return (
         <li className="border border-gray-light p-4 flex justify-between items-center rounded-lg shadow-md bg-white hover:bg-gray-100 transition">
@@ -65,18 +55,17 @@ function TableItem({ reserve, onClick, buttonText }: TableItemInfoProps) {
                 <p className="text-sm font-medium text-gray-700">Status: <span className="uppercase text-blue-600">{reserve.estado}</span></p>
             </article>
             <div className="flex flex-col gap-2">
-                {/* Se o estado for CRIADA ou CHECK-IN, mostra o botão de Cancelar */}
-                {(reserve.estado === 'CRIADA' || reserve.estado === 'CHECK-IN') && !isCanceling && (
+                {(reserve.estado === 'CRIADA' || reserve.estado === 'CHECK-IN') && (
                     <button
                         className="px-4 py-2 bg-red-600 text-white font-medium rounded-md shadow-md hover:bg-red-700 transition"
-                        onClick={handleCancelReservation}
+                        onClick={cancelClick}
                     >
                         Cancelar Reserva
                     </button>
                 )}
                 <button
                     className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition"
-                    onClick={onClick}
+                    onClick={moreInfoClick}
                 >
                     {buttonText}
                 </button>

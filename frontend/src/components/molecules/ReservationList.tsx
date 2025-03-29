@@ -5,6 +5,7 @@ interface ReservationListProps {
   reserves: Reserve[];
   buttonText: string;
   onFlightClick: (reserve: Reserve) => void;
+  cancelFlightClick?: (reserve: Reserve) => void;
 }
 
 function ReservationList({
@@ -12,6 +13,7 @@ function ReservationList({
   reserves,
   buttonText,
   onFlightClick,
+  cancelFlightClick,
 }: ReservationListProps) {
   return (
     <section className="bg-white m-7 p-4 min-w-3/4 max-w-full h-full flex gap-4 flex-col">
@@ -21,7 +23,8 @@ function ReservationList({
           <TableItem
             key={reserve.codigo}
             reserve={reserve}
-            onClick={() => onFlightClick(reserve)}
+            moreInfoClick={() => onFlightClick(reserve)}
+            cancelClick={cancelFlightClick ? () => cancelFlightClick(reserve) : undefined}
             buttonText={buttonText}
           />
         ))}

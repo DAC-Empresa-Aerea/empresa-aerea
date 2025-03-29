@@ -1,19 +1,27 @@
 import { Reserve } from "../../atoms/TableItem";
+import { FaTimes } from "react-icons/fa";
 
-interface SeeReservationProps {
-  moreInfoisOpen: boolean;
-  moreInfoonClose: () => void;
-  moreInfotitle: string;
+interface CancelReservationProps {
+  cancelisOpen: boolean;
+  cancelClose: () => void;
+  canceltitle: string;
   selectedReserve: Reserve;
 }
 
-function SeeReservation({ moreInfoisOpen, moreInfoonClose, moreInfotitle, selectedReserve }: SeeReservationProps) {
-  if (!moreInfoisOpen) return null;
+function CancelReservation({ cancelisOpen, cancelClose, canceltitle, selectedReserve }: CancelReservationProps) {
+  if (!cancelisOpen) return null;
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-sm">
       <div className="bg-white p-6 rounded-lg shadow-lg w-96 relative border border-gray-300">
-        <h2 className="text-xl font-bold mb-4">{moreInfotitle}</h2>
+        <button
+          className="absolute top-2 right-2 text-gray-600 hover:text-gray-800"
+          onClick={cancelClose}
+        >
+          <FaTimes size={24} />
+        </button>
+
+        <h2 className="text-xl font-bold mb-4">{canceltitle}</h2>
         <div>
           <p><strong>Código da Reserva:</strong> {selectedReserve.codigo}</p>
           <p><strong>Data/Hora:</strong> {new Date(selectedReserve.data).toLocaleString()}</p>
@@ -23,12 +31,12 @@ function SeeReservation({ moreInfoisOpen, moreInfoonClose, moreInfotitle, select
           <p><strong>Milhas Gastas:</strong> {selectedReserve.milhas_utilizadas.toString()}</p>
           <p><strong>Status:</strong> {selectedReserve.estado}</p>
         </div>
-        <button className="mt-4 px-4 py-2 bg-blue-600 text-white rounded-md w-full" onClick={moreInfoonClose}>
-          Fechar
+        <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md w-full" onClick={cancelClose}>
+          Confirmar Cancelamento
         </button>
       </div>
     </div>
   );
 }
 
-export default SeeReservation;
+export default CancelReservation;
