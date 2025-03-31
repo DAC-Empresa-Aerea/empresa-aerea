@@ -34,7 +34,7 @@ const FlightSeats = ({
         <BasicInput
           type="number"
           value={occupiedSeats.toString()}
-          placeholder="Poltronas livres"
+          placeholder="Poltronas ocupadas"
           onChange={(e) =>
             setOccupiedSeats(
               Number(e.target.value) > totalSeats
