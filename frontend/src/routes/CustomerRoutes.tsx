@@ -9,6 +9,9 @@ const CustomerHomePage = Loadable(
   lazy(() => import("../pages/CustomerHomePage"))
 );
 const BasicCustomerLayout = Loadable(lazy(() => import("../layouts/BasicCustomer")));
+const CheckReservation = Loadable(
+  lazy(() => import("../pages/CheckReservation"))
+);
 const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
 const CheckIn = Loadable(lazy(() => import("../pages/CheckIn")));
 
@@ -22,6 +25,16 @@ const CustomerRoutes = {
         {
           index: true,
           element: <CustomerHomePage />,
+        },
+      ],
+    },
+    {
+      path: "ver-reserva",
+      element: <BasicCustomerLayout />,
+      children: [
+        {
+          index: true,
+          element: <CheckReservation />,
         },
       ],
     },

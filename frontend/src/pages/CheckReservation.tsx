@@ -1,8 +1,10 @@
-// Colocar os campos como componente e ajustar seu estilo - adicionar nas rotas
-
 import { useState } from "react";
 import { Reserve } from "../components/atoms/TableItem";
 import CancelReservation from "../components/molecules/modalsMolecules/CancelReservation";
+import BasicInput from "../components/atoms/inputs/BasicInput";
+import ReservationDetails from "../components/organisms/ReservationDetails/Index";
+import CityDetails from "../components/molecules/CityDetails";
+import FlightDetails from "../components/organisms/FlightDetails/Index";
 
 const ConsultarReserva = () => {
   const [codigoReserva, setCodigoReserva] = useState("");
@@ -81,60 +83,66 @@ const ConsultarReserva = () => {
   };
 
   return (
-    <div className="p-6 max-w-lg mx-auto">
+    <div className="p-6 max-w-2xl mx-auto">
       <h1 className="text-2xl font-bold mb-4">Consultar Reserva</h1>
-      <input
+      <BasicInput
         type="text"
         placeholder="Digite o código da reserva"
         value={codigoReserva}
         onChange={(e) => setCodigoReserva(e.target.value)}
-        className="border p-2 w-full mb-4 rounded"
       />
       <button
         onClick={handleSearch}
-        className="bg-blue-600 text-white px-4 py-2 rounded w-full"
+        className="bg-blue-600 text-white px-4 py-2 rounded w-full mt-2"
       >
         Buscar Reserva
       </button>
 
       {selectedReserve && (
         <div className="mt-6 border p-4 rounded shadow">
-          <h2 className="text-xl font-bold mb-2">Detalhes da Reserva</h2>
-          <p><strong>Código:</strong> {selectedReserve.codigo}</p>
-          <p><strong>Data:</strong> {selectedReserve.data.toLocaleString()}</p>
-          <p><strong>Valor:</strong> R$ {selectedReserve.valor.toFixed(2)}</p>
-          <p><strong>Milhas Utilizadas:</strong> {selectedReserve.milhas_utilizadas.toString()}</p>
-          <p><strong>Poltronas:</strong> {selectedReserve.quantidade_poltronas.toString()}</p>
-          <p><strong>Status:</strong> {selectedReserve.estado}</p>
-
-          <h3 className="text-lg font-bold mt-4">Dados do Voo</h3>
-          <p><strong>Código do Voo:</strong> {selectedReserve.voo.codigo}</p>
-          <p><strong>Data do Voo:</strong> {selectedReserve.voo.data.toLocaleString()}</p>
-          <p><strong>Valor da Passagem:</strong> R$ {selectedReserve.voo.valor_passagem.toFixed(2)}</p>
-
-          <h3 className="text-lg font-bold mt-4">Aeroporto de Origem</h3>
-          <p><strong>Nome:</strong> {selectedReserve.voo.aeroporto_origem.nome}</p>
-          <p><strong>Cidade:</strong> {selectedReserve.voo.aeroporto_origem.cidade}</p>
-          <p><strong>UF:</strong> {selectedReserve.voo.aeroporto_origem.uf}</p>
-
-          <h3 className="text-lg font-bold mt-4">Aeroporto de Destino</h3>
-          <p><strong>Nome:</strong> {selectedReserve.voo.aeroporto_destino.nome}</p>
-          <p><strong>Cidade:</strong> {selectedReserve.voo.aeroporto_destino.cidade}</p>
-          <p><strong>UF:</strong> {selectedReserve.voo.aeroporto_destino.uf}</p>
-
-          {selectedReserve && (selectedReserve.estado === 'CRIADA' || selectedReserve.estado === 'CHECK-IN') && (
-          <div className="gap-4 mt-4">
-            <button
-              onClick={() => setIsModalCancelOpen(true)}
-              className="bg-red-500 text-white px-4 py-2 rounded w-full"
-            >
-              Cancelar Reserva
-            </button>
+          <div className="grid grid-cols-2 gap-4">
+            <ReservationDetails reservation={selectedReserve} />
+            <FlightDetails
+              code={selectedReserve.voo.codigo}
+              date={selectedReserve.voo.data}
+              price={selectedReserve.voo.valor_passagem}
+            />
           </div>
+
+          <div className="grid grid-cols-2 gap-4 mt-4">
+            <CityDetails
+              title="Aeroporto de Origem"
+              city={selectedReserve.voo.aeroporto_origem.cidade}
+              uf={selectedReserve.voo.aeroporto_origem.uf}
+              airport={selectedReserve.voo.aeroporto_origem.nome}
+              arriving={false}
+              airportCode={selectedReserve.voo.aeroporto_origem.codigo}
+            />
+            <CityDetails
+              title="Aeroporto de Destino"
+              city={selectedReserve.voo.aeroporto_destino.cidade}
+              uf={selectedReserve.voo.aeroporto_destino.uf}
+              airport={selectedReserve.voo.aeroporto_destino.nome}
+              arriving={true}
+              airportCode={selectedReserve.voo.aeroporto_destino.codigo}
+            />
+          </div>
+
+          {/* Botão para cancelar reserva */}
+          {(selectedReserve.estado === "CRIADA" || selectedReserve.estado === "CHECK-IN") && (
+            <div className="mt-4">
+              <button
+                onClick={() => setIsModalCancelOpen(true)}
+                className="bg-red-500 text-white px-4 py-2 rounded w-full"
+              >
+                Cancelar Reserva
+              </button>
+            </div>
           )}
         </div>
       )}
 
+      {/* Modal de Cancelamento */}
       {selectedReserve && isModalCancelOpen && (
         <CancelReservation
           cancelisOpen={isModalCancelOpen}
