@@ -1,5 +1,6 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
+import { CustomerRoutes as Routes } from "./routes.enum";
 
 const CartLayout = Loadable(lazy(() => import("../layouts/Cart")));
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
@@ -13,10 +14,10 @@ const CheckIn = Loadable(lazy(() => import("../pages/CheckIn")));
 const BuyMiles = Loadable(lazy(() => import("../pages/BuyMiles")));
 
 const CustomerRoutes = {
-  path: "/",
+  path: Routes.BASE,
   children: [
     {
-      path: "customer-home",
+      path: Routes.HOME,
       element: <DashboardLayout />,
       children: [
         {
@@ -26,7 +27,7 @@ const CustomerRoutes = {
       ],
     },
     {
-      path: "cart",
+      path: Routes.CART,
       element: <CartLayout />,
       children: [
         {
@@ -36,17 +37,17 @@ const CustomerRoutes = {
       ],
     },
     {
-      path: "buscarVoo",
+      path: Routes.SEARCH_FLIGHTS,
       element: <DashboardLayout />,
       children: [{ index: true, element: <SearchFlights /> }],
     },
     {
-      path: "checkin",
+      path: Routes.CHECK_IN,
       element: <DashboardLayout />,
       children: [{ index: true, element: <CheckIn /> }],
     },
     {
-      path: "buyMiles",
+      path: Routes.BUY_MILES,
       element: <DashboardLayout />,
       children: [{ index: true, element: <BuyMiles /> }],
     },
