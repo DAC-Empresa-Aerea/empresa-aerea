@@ -12,8 +12,8 @@ const FlightDate = ({ date, setDate }: FlightDateProps) => {
         <h3 className="text-gray-800 ml-2">Data de saída:</h3>
         <BasicInput
           type="date"
-          value={date.split("T")[0]}
-          onChange={(e) => setDate(`${e.target.value}T${date.split("T")[1]}`)}
+          value={date.includes("T") ? date.split("T")[0] : ""}
+          onChange={(e) => setDate(`${e.target.value}T${date.includes("T") ? date.split("T")[1] : "00:00"}`)}
           required
         />
       </div>
