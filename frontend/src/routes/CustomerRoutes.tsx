@@ -8,6 +8,7 @@ const Cart = Loadable(lazy(() => import("../pages/Cart")));
 const CustomerHomePage = Loadable(
   lazy(() => import("../pages/CustomerHomePage"))
 );
+const BasicCustomerLayout = Loadable(lazy(() => import("../layouts/BasicCustomer")));
 const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
 const CheckIn = Loadable(lazy(() => import("../pages/CheckIn")));
 
@@ -16,7 +17,7 @@ const CustomerRoutes = {
   children: [
     {
       path: "customer-home",
-      element: <DashboardLayout />,
+      element: <BasicCustomerLayout />,
       children: [
         {
           index: true,
