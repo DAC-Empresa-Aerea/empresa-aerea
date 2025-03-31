@@ -27,7 +27,7 @@ function StatementList({
                 ))}
             </ul>
             <button onClick={onViewMoreClick} className="btn-view-more">
-                View More
+                {buttonText}
             </button>
         </section>
     );
