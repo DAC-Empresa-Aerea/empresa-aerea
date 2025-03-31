@@ -21,9 +21,7 @@ function StatementList({
                     <StatementListItem 
                         key={statement.reservation_code} 
                         statement={statement}
-                        buttonText={buttonText} onClick={function (): void {
-                            throw new Error("Function not implemented.");
-                        } }                    />
+                        buttonText={buttonText} onClick={() => {}} />
                 ))}
             </ul>
             <button onClick={onViewMoreClick} className="btn-view-more">
