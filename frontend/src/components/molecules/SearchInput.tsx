@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { DropdownInput } from "../atoms/inputs/DropdownInput";
+import DropdownInput from "../atoms/inputs/DropdownInput";
 
 
 interface SearchInputProps {
