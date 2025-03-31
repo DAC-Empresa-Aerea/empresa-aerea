@@ -6,22 +6,29 @@ interface DropdownInputProps {
   setSelectedValue: (value: string) => void;
   options: string[];
   className?: string;
+  placeholder?: string;
+  required?: boolean;
 }
 
-export const DropdownInput = ({
+function DropdownInput({
   value,
   setSelectedValue,
   options,
   className,
-}: DropdownInputProps) => {
+  placeholder,
+  required,
+}: DropdownInputProps) {
   return (
     <Dropdown
       value={value}
       onChange={(e) => setSelectedValue(e.value)}
       options={options}
       optionLabel="name"
-      placeholder="Select a Airport"
+      placeholder={placeholder ?? "Selecionar"}
       className={`w-full ${className}`}
+      required={required}
     />
   );
-};
+}
+
+export default DropdownInput;

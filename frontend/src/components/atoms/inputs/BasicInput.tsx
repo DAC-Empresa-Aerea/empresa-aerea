@@ -1,7 +1,7 @@
 interface BasicInputProps {
   type: string;
   value: string;
-  placeholder: string;
+  placeholder?: string;
   onChange?: (e: React.ChangeEvent<HTMLInputElement>) => void;
   required?: boolean;
   disabled?: boolean;
