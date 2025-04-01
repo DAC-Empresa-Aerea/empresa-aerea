@@ -11,7 +11,6 @@ function LinkButton({
   isActive,
   className,
 }: SimpleButtonProps) {
-  console.log(isActive);
   return (
     <a
       className={`transition-colors cursor-pointer font-roboto ${

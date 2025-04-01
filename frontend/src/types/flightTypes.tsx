@@ -16,3 +16,11 @@ export interface SelectedFlight {
     name: string;
     milesBalance: number;
   }
+
+  export interface MilesTransaction {
+    id: string;
+    date: Date;
+    milesAmount: number;
+    amountInReais: number;
+    description: string;
+  }
