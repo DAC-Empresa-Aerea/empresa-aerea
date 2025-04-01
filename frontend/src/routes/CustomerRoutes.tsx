@@ -1,6 +1,5 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
-import ConsultStatement from "../pages/ConsultStatement";
 import { CustomerRoutes as Routes } from "./routes.enum";
 
 
@@ -18,6 +17,7 @@ const CheckReservation = Loadable(
 const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
 const CheckIn = Loadable(lazy(() => import("../pages/CheckIn")));
 const BuyMiles = Loadable(lazy(() => import("../pages/BuyMiles")));
+const ConsultStatement = Loadable(lazy(() => import("../pages/ConsultStatement")));
 
 const CustomerRoutes = {
   path: Routes.BASE,

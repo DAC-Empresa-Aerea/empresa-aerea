@@ -9,6 +9,7 @@ export enum EmployeeRoutes {
   HOME = "/employee-home",
   REGISTER_FLIGHTS = "/register-flights",
   CONFIRM_BOARDING = "/confirm",
+  CRUD = "/employee",
 }
 
 export enum CustomerRoutes {

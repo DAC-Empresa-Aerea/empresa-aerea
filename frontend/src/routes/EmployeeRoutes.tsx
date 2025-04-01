@@ -1,12 +1,17 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
-import RegisterFlights from "../pages/RegisterFlights";
-import ConfirmBoarding from "../pages/ConfirmBoarding";
 import { EmployeeRoutes as Routes } from "./routes.enum";
 
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
 const EmployeeHomePage = Loadable(lazy(() => import("../pages/EmployeeHome")));
+const ConfirmBoarding = Loadable(
+  lazy(() => import("../pages/ConfirmBoarding"))
+);
+const RegisterFlights = Loadable(
+  lazy(() => import("../pages/RegisterFlights"))
+);
+const EmployeeCRUD = Loadable(lazy(() => import("../pages/EmployeeCRUD")));
 
 const EmployeeRoutes = {
   path: Routes.BASE,
@@ -40,7 +45,17 @@ const EmployeeRoutes = {
           element: <ConfirmBoarding />,
         },
       ],
-    }
+    },
+    {
+      path: Routes.CRUD,
+      element: <DashboardLayout />,
+      children: [
+        {
+          index: true,
+          element: <EmployeeCRUD />,
+        },
+      ],
+    },
   ],
 };
 
