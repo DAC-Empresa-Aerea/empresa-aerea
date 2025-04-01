@@ -5,6 +5,7 @@ interface EmployeeListProps {
     title: string;
     employees: Employee[]; 
     editEmployee: (employee: Employee | null) => void;
+    deleteEmployee: (employee: Employee | null) => void;
     buttonText: string;
     onViewMoreClick: () => void;
 }
@@ -12,8 +13,9 @@ interface EmployeeListProps {
 function EmployeeList({
     title,
     employees,
-    editEmployee,
     buttonText,
+    editEmployee,
+    deleteEmployee,
     onViewMoreClick,
 }: EmployeeListProps) {
     return (
@@ -23,8 +25,8 @@ function EmployeeList({
                 {employees.map((employee) => (
                     <EmployeeListItem 
                         employee={employee}
-                        buttonText={buttonText || "Editar"} 
-                        editEmployee={editEmployee} 
+                        editEmployee={editEmployee}
+                        deleteEmployee={deleteEmployee}
                     />
                 ))}
             </ul>

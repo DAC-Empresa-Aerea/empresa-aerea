@@ -15,6 +15,13 @@ function EmployeeCRUD() {
     text: "Fechar",
   });
 
+  const handleDeleteEmployee = (employee: Employee | null) => {
+    if(employee) {
+        if (!window.confirm("Deseja realmente deletar este funcionário?")) return;
+        setEmployees(prev => prev.filter(emp => emp.codigo !== employee.codigo));
+    }
+  }
+
   const handleOpenModal = (employee: Employee | null) => {
     if(employee) {
         setSelectedEmployee(employee);
@@ -32,6 +39,7 @@ function EmployeeCRUD() {
       <EmployeeTable
         employees={employees}
         editEmployee={handleOpenModal}
+        deleteEmployee={handleDeleteEmployee}
         onViewMoreClick={() => alert("Ver mais funcionários não implementado")}
       />
       

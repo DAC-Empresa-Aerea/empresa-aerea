@@ -1,13 +1,12 @@
 import Employee from "../../../interfaces/Employee";
 
-
 interface EmployeeListItemProps {
     employee: Employee;
     editEmployee: (employee: Employee | null) => void;
-    buttonText: string;
+    deleteEmployee: (employee: Employee | null) => void;
 }
 
-function EmployeeListItem({employee, editEmployee, buttonText}: EmployeeListItemProps) {
+function EmployeeListItem({employee, editEmployee, deleteEmployee}: EmployeeListItemProps) {
     return (
         <li className="border border-gray-light p-4 flex justify-between items-center rounded-lg shadow-md bg-white hover:bg-gray-100 transition">
             <article className="font-roboto flex-1 flex flex-col gap-2">
@@ -24,7 +23,13 @@ function EmployeeListItem({employee, editEmployee, buttonText}: EmployeeListItem
                     className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition"
                     onClick={() => editEmployee(employee)}
                 >
-                    {buttonText}
+                    Editar
+                </button>
+                <button
+                    className="px-4 py-2 bg-red-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition"
+                    onClick={() => deleteEmployee(employee)}
+                >
+                    Deletar
                 </button>
             </div>
         </li>

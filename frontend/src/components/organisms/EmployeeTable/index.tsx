@@ -5,12 +5,14 @@ import EmployeeList from "../../molecules/EmployeeList";
 interface EmployeeTableProps {
     employees: Employee[];
     editEmployee: (employee: Employee | null) => void;
+    deleteEmployee: (employee: Employee | null) => void;
     onViewMoreClick: () => void;
 }
 
 function EmployeeTable({
     employees = employeesExample,
     editEmployee,
+    deleteEmployee,
     onViewMoreClick,
 }: EmployeeTableProps) {
     return (
@@ -18,7 +20,8 @@ function EmployeeTable({
             title="Funcionários"
             employees={employees}
             editEmployee={editEmployee}
-            buttonText="Editar"
+            deleteEmployee={deleteEmployee}
+            buttonText="Ver mais funcionários"
             onViewMoreClick={onViewMoreClick}
         />
     );
