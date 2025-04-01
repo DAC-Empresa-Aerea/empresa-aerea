@@ -4,6 +4,7 @@ import Employee from "../../interfaces/Employee";
 interface EmployeeListProps {
     title: string;
     employees: Employee[]; 
+    editEmployee: (employee: Employee | null) => void;
     buttonText: string;
     onViewMoreClick: () => void;
 }
@@ -11,6 +12,7 @@ interface EmployeeListProps {
 function EmployeeList({
     title,
     employees,
+    editEmployee,
     buttonText,
     onViewMoreClick,
 }: EmployeeListProps) {
@@ -22,7 +24,7 @@ function EmployeeList({
                     <EmployeeListItem 
                         employee={employee}
                         buttonText={buttonText || "Editar"} 
-                        editEmployee={() => {}} 
+                        editEmployee={editEmployee} 
                     />
                 ))}
             </ul>

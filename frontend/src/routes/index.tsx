@@ -12,7 +12,7 @@ import EmployeeRoutes from "./EmployeeRoutes";
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
 //Para pages
-const Teste = Loadable(lazy(() => import("../components/molecules/EmployeeList")));
+const Teste = Loadable(lazy(() => import("../pages/EmployeeCRUD")));
 
 const router = createBrowserRouter([
   {

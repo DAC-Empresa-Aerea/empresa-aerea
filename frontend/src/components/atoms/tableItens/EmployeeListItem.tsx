@@ -3,7 +3,7 @@ import Employee from "../../../interfaces/Employee";
 
 interface EmployeeListItemProps {
     employee: Employee;
-    editEmployee: () => void;
+    editEmployee: (employee: Employee | null) => void;
     buttonText: string;
 }
 
@@ -22,7 +22,7 @@ function EmployeeListItem({employee, editEmployee, buttonText}: EmployeeListItem
             <div className="flex flex-col gap-2">
                 <button
                     className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition"
-                    onClick={editEmployee}
+                    onClick={() => editEmployee(employee)}
                 >
                     {buttonText}
                 </button>

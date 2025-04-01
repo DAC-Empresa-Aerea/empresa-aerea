@@ -1,6 +1,6 @@
 // ESTE ARQUIVO SERÁ EXCLUÍDO EM BREVE
 
-interface CloseOptions {
+export interface CloseOptions {
   text?: string;
   onClose: () => void;
   isOpen: boolean;
