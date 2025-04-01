@@ -15,6 +15,10 @@ function EmployeeForm({ employee = {} as Employee, employees, setEmployees, onCo
     const [employeeData, setEmployeeData] = useState<Employee>(employee ?? {} as Employee);
 
     const handleSubmit = () => {
+        if(!employeeData.nome || !employeeData.telefone || !employeeData.email){
+            alert("Preencha todos os campos!");
+            return;
+        }
         if(employeeData.codigo){
             const updatedEmployees = employees.map(emp => emp.codigo === employeeData.codigo ? employeeData : emp);
             setEmployees(updatedEmployees);
@@ -34,7 +38,7 @@ function EmployeeForm({ employee = {} as Employee, employees, setEmployees, onCo
                 text="Salvar"
                 onClick={() => {
                     handleSubmit();
-                    onConfirm && onConfirm();
+                    if(employeeData.nome && employeeData.telefone && employeeData.email) onConfirm && onConfirm();
                 }}    
             />
         </div>
