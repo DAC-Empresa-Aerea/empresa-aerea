@@ -1,28 +1,23 @@
 import { Reserve } from "../../atoms/TableItem";
 import ReservationList from "../../molecules/ReservationList";
 
-const reservesDataExample: Array<Reserve> = [
-  ];
-
-// Não deixe como opcional, apenas leve a constante acima para o componente pai
 interface ReservationTableProps {
   reserves: Array<Reserve>;
+  onFlightClick: (reserve: Reserve) => void;
+  cancelFlightClick?: (reserve: Reserve) => void;
 }
 
-function ReservationTable({
-    reserves = reservesDataExample,
-}: ReservationTableProps) {
+function ReservationTable({ reserves, onFlightClick , cancelFlightClick}: ReservationTableProps) {
   return (
     <ReservationList
-      title=""  //fix o posicionamento 
+      title="Minhas Reservas"
       reserves={reserves}
       buttonText="Mais informações"
-      onFlightClick={(reserve) =>
-        alert(`Não implementado | Selecionar Voo ${reserve.number}`)
-      }
-      onViewMoreClick={() => alert("Não implementado")}
+      onFlightClick={onFlightClick}
+      cancelFlightClick={cancelFlightClick}
     />
   );
 }
 
 export default ReservationTable;
+

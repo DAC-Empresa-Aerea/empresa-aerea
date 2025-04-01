@@ -1,24 +1,34 @@
-import { Dropdown } from 'primereact/dropdown';
+import { Dropdown } from "primereact/dropdown";
 import "primereact/resources/themes/lara-light-cyan/theme.css";
 
-
 interface DropdownInputProps {
-    value: string;
-    setSelectedValue: (value: string) => void;
-    options: string[];
+  value: string;
+  setSelectedValue: (value: string) => void;
+  options: string[];
+  className?: string;
+  placeholder?: string;
+  required?: boolean;
 }
 
-export const DropdownInput = ({
-    value,
-    setSelectedValue,
-    options,
-}: DropdownInputProps) => {
-  return <Dropdown 
-            value={value} 
-            onChange={(e) => setSelectedValue(e.value)} 
-            options={options} 
-            optionLabel="name" 
-            placeholder="Select a Airport" 
-            className="w-full md:w-14rem margin-bottom-1" 
-        />;
-};
+function DropdownInput({
+  value,
+  setSelectedValue,
+  options,
+  className,
+  placeholder,
+  required,
+}: DropdownInputProps) {
+  return (
+    <Dropdown
+      value={value}
+      onChange={(e) => setSelectedValue(e.value)}
+      options={options}
+      optionLabel="name"
+      placeholder={placeholder ?? "Selecionar"}
+      className={`w-full ${className}`}
+      required={required}
+    />
+  );
+}
+
+export default DropdownInput;
