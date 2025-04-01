@@ -18,7 +18,7 @@ function EmployeeTable({
             title="Funcionários"
             employees={employees}
             editEmployee={editEmployee}
-            buttonText="Ver mais funcionários"
+            buttonText="Editar"
             onViewMoreClick={onViewMoreClick}
         />
     );
