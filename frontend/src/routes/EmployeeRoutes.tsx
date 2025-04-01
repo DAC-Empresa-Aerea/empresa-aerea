@@ -1,6 +1,6 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
-import { EmployeeRoutes as Routes } from "./routes.enum";
+import { EmployeeRoutesEnum as Routes } from "./routes.enum";
 
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 

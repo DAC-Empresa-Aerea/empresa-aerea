@@ -1,9 +1,9 @@
 interface Flight {
         "codigo": string,
         "data": Date, 
-        "valor_passagem": Number,
-        "quantidade_poltronas_total": Number,
-        "quantidade_poltronas_ocupadas": Number,
+        "valor_passagem": number,
+        "quantidade_poltronas_total": number,
+        "quantidade_poltronas_ocupadas": number,
         "estado": string,
         "aeroporto_origem": {
                 "codigo": string,
