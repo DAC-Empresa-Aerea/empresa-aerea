@@ -5,28 +5,12 @@ import SubmitButton from "../../atoms/buttons/SubmitButton";
 
 interface EmployeeFormProps {
     employee?: Employee | null;
-    employees: Employee[];
-    setEmployees: (employees: Employee[]) => void;
-    onConfirm?: () => void;
+    onConfirm: (employee: Employee) => void;
 }
 
-function EmployeeForm({ employee = {} as Employee, employees, setEmployees, onConfirm}: EmployeeFormProps) {
+function EmployeeForm({ employee = {} as Employee, onConfirm}: EmployeeFormProps) {
 
     const [employeeData, setEmployeeData] = useState<Employee>(employee ?? {} as Employee);
-
-    const handleSubmit = () => {
-        if(!employeeData.nome || !employeeData.telefone || !employeeData.email){
-            alert("Preencha todos os campos!");
-            return;
-        }
-        if(employeeData.codigo){
-            const updatedEmployees = employees.map(emp => emp.codigo === employeeData.codigo ? employeeData : emp);
-            setEmployees(updatedEmployees);
-        }
-        else{
-            setEmployees([...employees, {...employeeData, codigo: employees.length + 1}]);
-        }
-    }
 
     return (
         <div className="flex flex-col gap-4 p-4 bg-white rounded-lg shadow-md justify-between">
@@ -37,8 +21,8 @@ function EmployeeForm({ employee = {} as Employee, employees, setEmployees, onCo
             <SubmitButton
                 text="Salvar"
                 onClick={() => {
-                    handleSubmit();
-                    if(employeeData.nome && employeeData.telefone && employeeData.email) onConfirm && onConfirm();
+                    if(employeeData.nome && employeeData.telefone && employeeData.email) onConfirm && onConfirm(employeeData);
+                    else alert("Preencha todos os campos!");
                 }}    
             />
         </div>

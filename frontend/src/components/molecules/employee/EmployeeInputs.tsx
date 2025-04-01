@@ -25,7 +25,7 @@ function EmployeeInputs({employee, setEmployee}: EmployeeInputsProps) {
             disabled={false}
             required={true}
             classNameAdd="w-full"
-            placeholder="Digite o nome do funcionário"
+            placeholder="Digite o telefone do funcionário"
             value={employee.telefone}
             onChange={(e) => setEmployee({...employee, telefone: e.target.value})}
             width="w-full"
@@ -36,7 +36,7 @@ function EmployeeInputs({employee, setEmployee}: EmployeeInputsProps) {
             disabled={false}
             required={true}
             classNameAdd="w-full"
-            placeholder="Digite o nome do funcionário"
+            placeholder="Digite o email do funcionário"
             value={employee.email}
             onChange={(e) => setEmployee({...employee, email: e.target.value})}
             width="w-full"

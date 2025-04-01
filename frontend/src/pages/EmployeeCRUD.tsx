@@ -4,6 +4,7 @@ import employeesExample from "../data/EmployeesExample";
 import EmployeeTable from "../components/organisms/EmployeeTable";
 import BasicModal, { CloseOptions } from "../components/atoms/modals/_BasicModal";
 import EmployeeForm from "../components/organisms/EmployeeForm";
+import CircularButton from "../components/atoms/buttons/CircularButton";
 
 function EmployeeCRUD() {
   const [employees, setEmployees] = useState<Employee[]>(employeesExample);
@@ -29,7 +30,12 @@ function EmployeeCRUD() {
     setOpenModal(prev => ({ ...prev, isOpen: true }));
   };
 
-  const onConfirm = () => {
+  const onConfirmEdit = (employee: Employee) => {
+    if(employee.codigo) {
+        setEmployees(prev => prev.map(emp => emp.codigo === employee.codigo ? employee : emp));
+    } else {
+        setEmployees(prev => [...prev, { ...employee, codigo: prev.length + 1 }]);
+    }
     setOpenModal(prev => ({ ...prev, isOpen: false }));
     setSelectedEmployee(null);
   }
@@ -42,10 +48,15 @@ function EmployeeCRUD() {
         deleteEmployee={handleDeleteEmployee}
         onViewMoreClick={() => alert("Ver mais funcionários não implementado")}
       />
+
+      <div className="fixed bottom-20 right-4">
+        <CircularButton onClick={handleOpenModal}/>
+      </div>
       
       <BasicModal open={openModal}>
-        <EmployeeForm setEmployees={setEmployees} employees={employees} employee={selectedEmployee} onConfirm={onConfirm}/>
+        <EmployeeForm  employee={selectedEmployee} onConfirm={onConfirmEdit}/>
       </BasicModal>
+
     </div>
   );
 }
