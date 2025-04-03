@@ -1,9 +1,9 @@
 interface Custumer {
-    "codigo": Number,
+    "codigo": number,
     "cpf": string,
     "email": string,
     "nome": string,
-    "saldoMilhas": Number,
+    "saldoMilhas": number,
     "endereco": {
         "cep": string,
         "uf": string,

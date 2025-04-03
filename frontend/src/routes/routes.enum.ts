@@ -4,7 +4,7 @@ export enum Routes {
   REGISTER = "/register",
 }
 
-export enum EmployeeRoutes {
+export enum EmployeeRoutesEnum {
   BASE = "/",
   HOME = "/employee-home",
   REGISTER_FLIGHTS = "/register-flights",
@@ -12,7 +12,7 @@ export enum EmployeeRoutes {
   CRUD = "/employee",
 }
 
-export enum CustomerRoutes {
+export enum CustomerRoutesEnum {
   BASE = "/",
   HOME = "/customer-home",
   CART = "/cart",

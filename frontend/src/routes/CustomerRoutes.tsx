@@ -1,7 +1,6 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
-import { CustomerRoutes as Routes } from "./routes.enum";
-
+import { CustomerRoutesEnum as Routes } from "./routes.enum";
 
 const CartLayout = Loadable(lazy(() => import("../layouts/Cart")));
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
@@ -10,14 +9,18 @@ const Cart = Loadable(lazy(() => import("../pages/Cart")));
 const CustomerHomePage = Loadable(
   lazy(() => import("../pages/CustomerHomePage"))
 );
-const BasicCustomerLayout = Loadable(lazy(() => import("../layouts/BasicCustomer")));
+const BasicCustomerLayout = Loadable(
+  lazy(() => import("../layouts/BasicCustomer"))
+);
 const CheckReservation = Loadable(
   lazy(() => import("../pages/CheckReservation"))
 );
 const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
 const CheckIn = Loadable(lazy(() => import("../pages/CheckIn")));
 const BuyMiles = Loadable(lazy(() => import("../pages/BuyMiles")));
-const ConsultStatement = Loadable(lazy(() => import("../pages/ConsultStatement")));
+const ConsultStatement = Loadable(
+  lazy(() => import("../pages/ConsultStatement"))
+);
 
 const CustomerRoutes = {
   path: Routes.BASE,
@@ -70,8 +73,8 @@ const CustomerRoutes = {
     {
       path: "consultStatement",
       element: <DashboardLayout />,
-      children: [ {index : true, element: <ConsultStatement />}]
-    }
+      children: [{ index: true, element: <ConsultStatement /> }],
+    },
   ],
 };
 
