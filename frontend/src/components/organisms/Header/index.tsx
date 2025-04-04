@@ -30,13 +30,18 @@ const Header = () => {
           </nav>
           <div className="flex items-center space-x-2">
             <input
-              className="border rounded px-2 py-1 w-64"
+              className="border rounded-xl px-2 py-1 w-64"
               placeholder="Pesquise por voos"
               type="text"
             />
             <button className="text-gray-600 hover:text-blue-500 transition-colors">
               <i className="fas fa-search"></i>
             </button>
+          </div>
+          <div className="py-6">
+            <a href="#" className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50">
+            Log in
+            </a>
           </div>
         </div>
 
@@ -69,7 +74,7 @@ const Header = () => {
             <div className="mt-4 space-y-4">
               <div className="flex items-center space-x-2 pb-3">
                 <input
-                  className="border rounded px-2 py-1 w-full"
+                  className="border rounded-xl px-3 py-1 w-full"
                   placeholder="Pesquise por voos"
                   type="text"
                 />
