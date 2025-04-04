@@ -1,0 +1,5 @@
+CREATE DATABASE auth_db;
+CREATE DATABASE customer_db;
+CREATE DATABASE employee_db;
+CREATE DATABASE flight_db;
+CREATE DATABASE reserve_db;
