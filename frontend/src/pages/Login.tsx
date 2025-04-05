@@ -75,7 +75,7 @@ const Login = () => {
           {/* Link para a pagina de cadastro*/}
           <p className="mt-4 text-center text-sm text-gray-600 cursor-default">
             Don't have an account?{" "}
-            <a href="#" className="text-blue-500 hover:underline">
+            <a href="/register" className="text-blue-500 hover:underline">
               Register
             </a>
           </p>
