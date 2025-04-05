@@ -25,6 +25,8 @@ const Header = () => {
             </LinkButton>
             <LinkButton href={"/buy-miles"}>Comprar Milhas</LinkButton>
             <LinkButton href={"/customer-home"}>Meu Perfil</LinkButton>
+            <LinkButton href={"/checkin"}>CheckIn</LinkButton>
+
           </nav>
           <div className="py-6">
             <a
