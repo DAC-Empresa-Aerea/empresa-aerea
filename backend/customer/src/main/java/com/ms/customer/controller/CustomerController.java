@@ -1,9 +1,11 @@
 package com.ms.customer.controller;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ms.customer.dto.CustomerResponseDTO;
 import com.ms.customer.repository.ClienteRepository;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -19,8 +21,9 @@ public class CustomerController {
     }
     
     @GetMapping("/cliente/{id}")
-    public String getCliente(@RequestParam Long id) {
-        return clienteRepository.findById(id).map(cliente -> cliente.getNome()).orElse("Cliente não encontrado");
+    public ResponseEntity<CustomerResponseDTO> getCliente(@RequestParam Long id) {
+
+        return null;
     }
 
     @GetMapping("/cliente/{id}/milhas")
