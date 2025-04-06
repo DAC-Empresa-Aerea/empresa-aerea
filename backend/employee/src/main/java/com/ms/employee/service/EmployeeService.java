@@ -8,6 +8,8 @@ import com.ms.employee.dto.EmployeeDTO;
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
 
+import jakarta.persistence.EntityNotFoundException;
+
 @Service
 public class EmployeeService {
 
@@ -38,8 +40,10 @@ public class EmployeeService {
      * @return O objeto Employee correspondente ao ID fornecido, ou null se não encontrado.
      */
     public Employee getEmployeeById(Long id) {
-        return employeeRepository.findById(id).orElse(null);
-    }   
+        return employeeRepository.findById(id)
+            .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
+    }
+
     //#endregion
   
     //#region Método para criar um funcionário
@@ -66,6 +70,16 @@ public class EmployeeService {
             throw new IllegalArgumentException("Telefone não pode ser null ou vazio");
         }
 
+        if (employeeRepository.existsByCpf(employee.getCpf())) {
+            throw new IllegalArgumentException("Já existe um funcionário cadastrado com o CPF " + employee.getCpf());
+        }
+        if (employeeRepository.existsByEmail(employee.getEmail())) {
+            throw new IllegalArgumentException("Já existe um funcionário cadastrado com o email " + employee.getEmail());
+        }
+        if (employeeRepository.existsByTelefone(employee.getTelefone())) {
+            throw new IllegalArgumentException("Já existe um funcionário cadastrado com o telefone " + employee.getTelefone());
+        }
+        
         Employee newEmployee = Employee.builder()
                 .cpf(employee.getCpf())
                 .email(employee.getEmail())
@@ -82,15 +96,37 @@ public class EmployeeService {
     //#endregion
     
     //#region Método para atualizar um funcionário
-    public Employee updateEmployee(Long id, Employee employee) {
-        // TODO - Implementar lógica para atualizar um funcionário existente
-        return null;
+    /**
+     * Atualiza os detalhes de um funcionário existente com base no ID fornecido.
+     *
+     * @param id       O ID do funcionário a ser atualizado.
+     * @param employee O objeto Employee contendo os novos detalhes a serem atualizados.
+     * @return O objeto Employee atualizado após ser salvo no repositório.
+     * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
+     */
+    public Employee updateEmployee(Long id, EmployeeDTO employee) {
+        Employee existingEmployee = getEmployeeById(id);
+
+        existingEmployee.setCpf(employee.getCpf());
+        existingEmployee.setEmail(employee.getEmail());
+        existingEmployee.setNome(employee.getNome());
+        existingEmployee.setTelefone(employee.getTelefone());
+
+        return employeeRepository.save(existingEmployee);
+
     }
     //#endregion
    
     //#region Método para deletar um funcionário
+    /**
+     * Deleta um funcionário existente com base no ID fornecido.
+     *
+     * @param id O ID do funcionário a ser deletado.
+     * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
+     */
     public void deleteEmployee(Long id) {
-        // TODO - Implementar lógica para deletar um funcionário existente
+        Employee existingEmployee = getEmployeeById(id);
+        employeeRepository.delete(existingEmployee);
     }
     //#endregion
 }
