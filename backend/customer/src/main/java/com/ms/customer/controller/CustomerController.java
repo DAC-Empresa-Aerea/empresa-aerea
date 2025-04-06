@@ -1,5 +1,6 @@
 package com.ms.customer.controller;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -19,11 +20,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 @RequestMapping("/cliente")
 public class CustomerController {
 
-    private final CustomerService customerService;
+    @Autowired
+    private CustomerService customerService;
 
-    public CustomerController(CustomerService customerService) {
-        this.customerService = customerService;
-    }
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> getCliente(@PathVariable Long id) {
         CustomerResponseDTO dto = customerService.findById(id);
