@@ -2,54 +2,44 @@ package com.ms.customer.controller;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.customer.dto.CheckMileResponseDTO;
 import com.ms.customer.dto.CustomerResponseDTO;
 import com.ms.customer.dto.UpdateMilesRequestDTO;
 import com.ms.customer.dto.UpdateMilesResponseDTO;
-import com.ms.customer.repository.ClienteRepository;
+import com.ms.customer.service.CustomerService;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
+@RequestMapping("/cliente")
 public class CustomerController {
 
-    private final ClienteRepository clienteRepository;
+    private final CustomerService customerService;
 
-    CustomerController(ClienteRepository clienteRepository) {
-        this.clienteRepository = clienteRepository;
+    public CustomerController(CustomerService customerService) {
+        this.customerService = customerService;
     }
-    
-    @GetMapping("/cliente/{id}")
-    public ResponseEntity<CustomerResponseDTO> getCliente(@RequestParam Long id) {
-
-        
-        return null;
+    @GetMapping("/{id}")
+    public ResponseEntity<CustomerResponseDTO> getCliente(@PathVariable Long id) {
+        CustomerResponseDTO dto = customerService.findById(id);
+        return ResponseEntity.ok(dto);
     }
 
-    @GetMapping("/cliente/{id}/milhas")
-    public ResponseEntity<CheckMileResponseDTO> milesStatement(@PathVariable String id) {
-
-        // Codigo Simulado para o retorno do saldo de milhas
-        CheckMileResponseDTO response = new CheckMileResponseDTO();
-        response.setCodigo(Long.valueOf(id));
-        response.setSaldoMilhas(1000);
-        response.setTransacoes(null);
+    @GetMapping("/{id}/milhas")
+    public ResponseEntity<CheckMileResponseDTO> milesStatement(@PathVariable Long id) {
+        CheckMileResponseDTO response = customerService.getMilesStatement(id);
         return ResponseEntity.ok(response);
     }
 
-    @PutMapping("/cliente/{id}/milhas")
-    public ResponseEntity<UpdateMilesResponseDTO> sumMiles(@PathVariable String id, @RequestBody UpdateMilesRequestDTO entity) {
-
-        // Codigo Simulado para o retorno do saldo de milhas
-        UpdateMilesResponseDTO response = new UpdateMilesResponseDTO();
-        response.setCodigo(Long.valueOf(id));
-        response.setSaldoMilhas(entity.getQuantidade() + 1000);
+    @PutMapping("/{id}/milhas")
+    public ResponseEntity<UpdateMilesResponseDTO> sumMiles(@PathVariable Long id, @RequestBody UpdateMilesRequestDTO entity) {
+        UpdateMilesResponseDTO response = customerService.updateMiles(id, entity);
         return ResponseEntity.ok(response);
-
     }
-    
+
 }
