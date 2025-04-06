@@ -11,7 +11,6 @@ public class UpdateMilesRequestDTO {
         this.quantidade = quantidade;
     }
 
-    // Getter e Setter
     public Integer getQuantidade() {
         return quantidade;
     }
