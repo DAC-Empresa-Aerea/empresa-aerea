@@ -10,14 +10,16 @@ const Header = () => {
         {/* DESKTOP */}
         <div className="hidden md:flex justify-between items-center">
           <div className="flex items-center">
+            <a href="/" className="flex items-center">
             <img
               src="/icon/favicon/favicon.ico"
               alt="Logo"
               className="mr-2 h-7 mb-2"
-            />
+              />
             <span className="text-xl font-bold font-museo-moderno">
               Fly<span className="text-lg">High</span>
             </span>
+              </a>
           </div>
           <nav className="flex space-x-4">
             <LinkButton href={"/search"} className="font-bold">
