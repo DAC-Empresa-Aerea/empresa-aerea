@@ -1,0 +1,179 @@
+version: '3.8'
+
+services:
+  # Bancos de dados
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservice-network
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5433:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - microservice-network
+      
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - microservice-network
+  
+  # Microserviços
+  ms-auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile.dev
+    container_name: ms-auth
+    volumes:
+      - ./auth:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - mongodb
+      - rabbitmq
+    ports:
+      - "8081:8081"
+    networks:
+      - microservice-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8081
+
+  ms-customer:
+    build:
+      context: ./customer
+      dockerfile: Dockerfile.dev
+    container_name: ms-customer
+    volumes:
+      - ./customer:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - rabbitmq
+      - ms-auth
+    ports:
+      - "8082:8082"
+    networks:
+      - microservice-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8082
+  ms-employee:
+    build:
+      context: ./employee
+      dockerfile: Dockerfile.dev
+    container_name: ms-employee
+    volumes:
+      - ./employee:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - rabbitmq
+      - ms-auth
+    ports:
+      - "8083:8083"
+    networks:
+      - microservice-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8083
+
+  ms-flight:
+    build:
+      context: ./flight
+      dockerfile: Dockerfile.dev
+    container_name: ms-flight
+    volumes:
+      - ./flight:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8084:8084"
+    networks:
+      - microservice-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8084
+
+  ms-reserve:
+    build:
+      context: ./reserve
+      dockerfile: Dockerfile.dev
+    container_name: ms-reserve
+    volumes:
+      - ./reserve:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - rabbitmq
+      - ms-customer
+      - ms-flight
+    ports:
+      - "8085:8085"
+    networks:
+      - microservice-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8085
+
+  ms-saga:
+    build:
+      context: ./saga
+      dockerfile: Dockerfile.dev
+    container_name: ms-saga
+    volumes:
+      - ./saga:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - rabbitmq
+      - ms-auth
+      - ms-customer
+      - ms-employee
+      - ms-flight
+      - ms-reserve
+    ports:
+      - "8086:8086"
+    networks:
+      - microservice-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+      - SERVER_PORT=8086
+
+networks:
+  microservice-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  postgres_data:
+  rabbitmq_data:
