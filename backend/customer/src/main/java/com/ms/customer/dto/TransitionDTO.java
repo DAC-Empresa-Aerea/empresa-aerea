@@ -1,13 +1,13 @@
 package com.ms.customer.dto;
 
 import java.math.BigDecimal;
-import java.time.OffsetDateTime;
+import java.time.LocalDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 public class TransitionDTO {
 
-    private OffsetDateTime data;
+    private LocalDateTime data;
 
     @JsonProperty("valor_reais")
     private BigDecimal valorReais;
@@ -25,7 +25,7 @@ public class TransitionDTO {
     public TransitionDTO() {
     }
 
-    public TransitionDTO(OffsetDateTime data, BigDecimal valorReais, Integer quantidadeMilhas, String descricao, String codigoReserva, String tipo) {
+    public TransitionDTO(LocalDateTime data, BigDecimal valorReais, Integer quantidadeMilhas, String descricao, String codigoReserva, String tipo) {
         this.data = data;
         this.valorReais = valorReais;
         this.quantidadeMilhas = quantidadeMilhas;
@@ -34,11 +34,11 @@ public class TransitionDTO {
         this.tipo = tipo;
     }
 
-    public OffsetDateTime getData() {
+    public LocalDateTime getData() {
         return data;
     }
 
-    public void setData(OffsetDateTime data) {
+    public void setData(LocalDateTime data) {
         this.data = data;
     }
 
