@@ -4,8 +4,6 @@ import java.io.Serializable;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
@@ -27,12 +25,8 @@ import lombok.Setter;
 @Setter
 public class Airport implements Serializable {
     private static final long serialVersionUID = 1L;
-    
     @Id
-    @GeneratedValue(strategy= GenerationType.IDENTITY)
-    private Long id;
-
-    @Column(name = "codigo_aeroporto", nullable = false, length = 3, unique = true)
+    @Column(nullable = false, length = 3, unique = true)
     private String codigo;
 
     @Column(nullable = false)

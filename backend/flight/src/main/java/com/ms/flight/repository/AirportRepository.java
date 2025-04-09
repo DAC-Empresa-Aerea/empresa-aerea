@@ -4,6 +4,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import com.ms.flight.models.Airport;
 
-public interface AirportRepository extends JpaRepository<Airport, Long> {
+public interface AirportRepository extends JpaRepository<Airport, String> {
       
 }
