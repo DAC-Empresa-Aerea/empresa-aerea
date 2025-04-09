@@ -1,0 +1,93 @@
+version: '3.8'
+
+services:
+  # Bancos de dados
+  mongodb:
+    image: mongo:latest
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservice-network
+
+  postgres:
+    image: postgres:alpine
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_PASSWORD: example
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - microservice-network
+      
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    ports:
+      - "5672:5672"   # Standard AMQP protocol port
+      - "15672:15672" # Management UI port
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - microservice-network
+  
+  # Microserviços
+  ms-auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile.dev
+    container_name: ms-auth
+    volumes:
+      - ./auth:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - mongodb
+      - rabbitmq
+    ports:
+      - "8081:8081"
+    networks:
+      - microservice-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+  ms-customer:
+    build:
+      context: ./customer
+      dockerfile: Dockerfile.dev
+    container_name: ms-customer
+    volumes:
+      - ./customer:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      - postgres
+      - rabbitmq
+    ports:
+      - "8082:8082"
+    networks:
+      - microservice-network
+    environment:
+      - SPRING_PROFILES_ACTIVE=dev
+
+networks:
+  microservice-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  postgres_data:
+  rabbitmq_data:
