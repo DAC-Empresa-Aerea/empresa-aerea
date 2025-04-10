@@ -1,4 +1,4 @@
-package com.ms.customer.dto;
+package com.ms.customer.dto.updateMiles;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -11,17 +11,11 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CustomerResponseDTO {
-
+public class UpdateMilesResponseDTO {
+    
     private Long codigo;
-    private String cpf;
-    private String email;
-    private String nome;
-
+    
     @JsonProperty("saldo_milhas")
     private Integer saldoMilhas;
-
-    private AddressDTO endereco;
-
+    
 }
-

@@ -7,8 +7,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.customer.dto.CheckMileResponseDTO;
 import com.ms.customer.dto.CustomerResponseDTO;
-import com.ms.customer.dto.UpdateMilesRequestDTO;
-import com.ms.customer.dto.UpdateMilesResponseDTO;
+import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
+import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
 import com.ms.customer.service.CustomerService;
 
 import org.springframework.web.bind.annotation.PutMapping;
