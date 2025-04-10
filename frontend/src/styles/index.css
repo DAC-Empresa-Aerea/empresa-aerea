@@ -19,3 +19,7 @@
   --font-roboto: "Roboto", sans-serif;
   --font-museo-moderno: "MuseoModerno", sans-serif;
 }
+
+a, button, input[type="submit"], input[type="button"], .clickable, [role="button"] {
+  cursor: pointer;
+}
