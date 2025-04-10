@@ -1,6 +1,7 @@
-package com.ms.customer.dto;
+package com.ms.customer.dto.customer;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ms.customer.model.Address;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -21,7 +22,7 @@ public class CustomerResponseDTO {
     @JsonProperty("saldo_milhas")
     private Integer saldoMilhas;
 
-    private AddressDTO endereco;
+    private Address endereco;
 
 }
 
