@@ -12,11 +12,17 @@ services:
       MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
       MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
     ports:
-      - "${MONGO_PORT}:27017"
+      - "${MONGO_PORT}:${MONGO_PORT}"
     volumes:
       - mongodb_data:/data/db
     networks:
       - microservice-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:${MONGO_PORT}/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
 
   postgres:
     image: postgres:alpine
@@ -29,12 +35,18 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: postgres
     ports:
-      - "${PG_PORT}:5432"
+      - "${PG_PORT}:${PG_PORT}"
     volumes:
       - postgres_data:/var/lib/postgresql/data
       - ./init.sql:/docker-entrypoint-initdb.d/init.sql
     networks:
       - microservice-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USERNAME} -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
       
   rabbitmq:
     image: rabbitmq:3-management
@@ -52,6 +64,12 @@ services:
       - rabbitmq_data:/var/lib/rabbitmq
     networks:
       - microservice-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
   
   # Microserviços
   ms-auth:
@@ -65,8 +83,10 @@ services:
       - ./auth:/app
       - ~/.m2:/root/.m2
     depends_on:
-      - mongodb
-      - rabbitmq
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     ports:
       - "${MS_AUTH_PORT}:${MS_AUTH_PORT}"
     networks:
@@ -100,9 +120,12 @@ services:
       - ./customer:/app
       - ~/.m2:/root/.m2
     depends_on:
-      - postgres
-      - rabbitmq
-      - ms-auth
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      ms-auth:
+        condition: service_started
     ports:
       - "${MS_CUSTOMER_PORT}:${MS_CUSTOMER_PORT}"
     networks:
@@ -136,9 +159,12 @@ services:
       - ./employee:/app
       - ~/.m2:/root/.m2
     depends_on:
-      - postgres
-      - rabbitmq
-      - ms-auth
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      ms-auth:
+        condition: service_started
     ports:
       - "${MS_EMPLOYEE_PORT}:${MS_EMPLOYEE_PORT}"
     networks:
@@ -172,8 +198,10 @@ services:
       - ./flight:/app
       - ~/.m2:/root/.m2
     depends_on:
-      - postgres
-      - rabbitmq
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
     ports:
       - "${MS_FLIGHT_PORT}:${MS_FLIGHT_PORT}"
     networks:
@@ -207,10 +235,14 @@ services:
       - ./reserve:/app
       - ~/.m2:/root/.m2
     depends_on:
-      - postgres
-      - rabbitmq
-      - ms-customer
-      - ms-flight
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      ms-customer:
+        condition: service_started
+      ms-flight:
+        condition: service_started
     ports:
       - "${MS_RESERVE_PORT}:${MS_RESERVE_PORT}"
     networks:
@@ -245,12 +277,18 @@ services:
       - ./saga:/app
       - ~/.m2:/root/.m2
     depends_on:
-      - rabbitmq
-      - ms-auth
-      - ms-customer
-      - ms-employee
-      - ms-flight
-      - ms-reserve
+      rabbitmq:
+        condition: service_healthy
+      ms-auth:
+        condition: service_started
+      ms-customer:
+        condition: service_started
+      ms-employee:
+        condition: service_started
+      ms-flight:
+        condition: service_started
+      ms-reserve:
+        condition: service_started
     ports:
       - "${MS_SAGA_PORT}:${MS_SAGA_PORT}"
     networks:
