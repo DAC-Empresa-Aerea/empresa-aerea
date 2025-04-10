@@ -9,13 +9,13 @@ Defina os valores em .env (ou copie o .env.example) em /backend/
 Execute na raiz do projeto (/backend):
 
 ```bash
-docker compose up --build -d
+docker compose --env-file .env up --build -d
 ```
 
 Caso utilize o Docker Compose clássico:
 
 ```bash
-docker-compose up --build -d
+docker-compose --env-file .env up --build -d
 ```
 
 ---
