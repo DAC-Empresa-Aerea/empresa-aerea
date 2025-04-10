@@ -1,8 +1,8 @@
 import { useState } from "react";
-import SubmitButton from "../components/atoms/buttons/SubmitButton";
-import LogoImage from "../components/atoms/images/LogoImage";
-import MaskedInput from "../components/atoms/inputs/MaskedInput";
-import BasicModal from "../components/atoms/modals/_BasicModal";
+import SubmitButton from "../../components/atoms/buttons/SubmitButton";
+import LogoImage from "../../components/atoms/images/LogoImage";
+import MaskedInput from "../../components/atoms/inputs/MaskedInput";
+import BasicModal from "../../components/atoms/modals/_BasicModal";
 
 const boardingCodes = ["AAA123", "ABC123"];
 

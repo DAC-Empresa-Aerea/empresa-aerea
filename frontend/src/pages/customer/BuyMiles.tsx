@@ -1,11 +1,11 @@
 import React, { useEffect, useState } from "react";
-import { User } from "../types/flightTypes";
-import MilesPurchaseHeader from "../components/organisms/milesOrganisms/MilesPurchaseHeader";
-import BalanceDisplay from "../components/molecules/milesMolecules/BalanceDisplay";
-import MilesOptionsSelector from "../components/molecules/milesMolecules/MilesOptionsSelector";
-import MilesSlider from "../components/molecules/milesMolecules/MilesSlider";
-import PriceSummary from "../components/molecules/milesMolecules/PriceSummary";
-import TransactionConfirmation from "../components/organisms/milesOrganisms/TransactionConfirmation";
+import { User } from "../../types/flightTypes";
+import MilesPurchaseHeader from "../../components/organisms/milesOrganisms/MilesPurchaseHeader";
+import BalanceDisplay from "../../components/molecules/milesMolecules/BalanceDisplay";
+import MilesOptionsSelector from "../../components/molecules/milesMolecules/MilesOptionsSelector";
+import MilesSlider from "../../components/molecules/milesMolecules/MilesSlider";
+import PriceSummary from "../../components/molecules/milesMolecules/PriceSummary";
+import TransactionConfirmation from "../../components/organisms/milesOrganisms/TransactionConfirmation";
 
 // Dados simulados de usuário
 const mockUser: User = {

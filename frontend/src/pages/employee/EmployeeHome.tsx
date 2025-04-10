@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
-import { flightsDataExample } from "../data/FlightsExample";
-import { Flight } from "../components/atoms/FlightBasicInfo";
-import EmployeeFlightList from "../components/molecules/EmployeeFlightList";
+import { flightsDataExample } from "../../data/FlightsExample";
+import { Flight } from "../../components/atoms/FlightBasicInfo";
+import EmployeeFlightList from "../../components/molecules/EmployeeFlightList";
 
 function sortFlightsByDate(flights: Flight[]) {
   return flights.sort((a, b) => {
