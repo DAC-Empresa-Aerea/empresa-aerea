@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from "react";
-import FlightDetails from "../components/molecules/cartMolecules/FlightDetails";
-import TicketQuantitySelector from "../components/molecules/cartMolecules/TicketQuantitySelector";
-import PurchaseSummary from "../components/molecules/cartMolecules/PurchaseSummary";
-import BookingConfirmation from "../components/molecules/cartMolecules/BookingConfirmation";
-import { SelectedFlight, User } from "../types/flightTypes";
+import FlightDetails from "../../components/molecules/cartMolecules/FlightDetails";
+import TicketQuantitySelector from "../../components/molecules/cartMolecules/TicketQuantitySelector";
+import PurchaseSummary from "../../components/molecules/cartMolecules/PurchaseSummary";
+import BookingConfirmation from "../../components/molecules/cartMolecules/BookingConfirmation";
+import { SelectedFlight, User } from "../../types/flightTypes";
 
 // Dados simulados de usuário
 const mockUser: User = {

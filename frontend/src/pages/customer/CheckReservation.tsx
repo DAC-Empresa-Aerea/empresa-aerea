@@ -1,10 +1,10 @@
 import { useState } from "react";
-import { Reserve } from "../components/atoms/TableItem";
-import CancelReservation from "../components/molecules/modalsMolecules/CancelReservation";
-import BasicInput from "../components/atoms/inputs/BasicInput";
-import ReservationDetails from "../components/organisms/ReservationDetails/Index";
-import CityDetails from "../components/molecules/CityDetails";
-import FlightDetails from "../components/organisms/FlightDetails/Index";
+import { Reserve } from "../../components/atoms/TableItem";
+import CancelReservation from "../../components/molecules/modalsMolecules/CancelReservation";
+import BasicInput from "../../components/atoms/inputs/BasicInput";
+import ReservationDetails from "../../components/organisms/ReservationDetails/Index";
+import CityDetails from "../../components/molecules/CityDetails";
+import FlightDetails from "../../components/organisms/FlightDetails/Index";
 
 const ConsultarReserva = () => {
   const [codigoReserva, setCodigoReserva] = useState("");
@@ -14,63 +14,63 @@ const ConsultarReserva = () => {
   // Simulação de dados da API
   const [reserves] = useState<Reserve[]>([
     {
-      "codigo": "XPT789",
-      "data": new Date("2024-10-10T14:30:00Z-03:00"),
-      "valor": 250.00,
-      "milhas_utilizadas": 50,
-      "quantidade_poltronas": 1,
-      "codigo_cliente": 1,
-      "estado": "CONFIRMADO",
-      "voo": {
-        "codigo": "TADS0001",
-        "data": new Date("2024-10-10T14:30:00Z-03:00"),
-        "valor_passagem": 500.00,
-        "quantidade_poltronas_total": 100,
-        "quantidade_poltronas_ocupadas": 90,
-        "estado": "CRIADA",
-        "aeroporto_origem": {
-          "codigo": "GRU",
-          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
-          "cidade": "Guarulhos",
-          "uf": "SP"
+      codigo: "XPT789",
+      data: new Date("2024-10-10T14:30:00Z-03:00"),
+      valor: 250.0,
+      milhas_utilizadas: 50,
+      quantidade_poltronas: 1,
+      codigo_cliente: 1,
+      estado: "CONFIRMADO",
+      voo: {
+        codigo: "TADS0001",
+        data: new Date("2024-10-10T14:30:00Z-03:00"),
+        valor_passagem: 500.0,
+        quantidade_poltronas_total: 100,
+        quantidade_poltronas_ocupadas: 90,
+        estado: "CRIADA",
+        aeroporto_origem: {
+          codigo: "GRU",
+          nome: "Aeroporto Internacional de São Paulo/Guarulhos",
+          cidade: "Guarulhos",
+          uf: "SP",
         },
-        "aeroporto_destino": {
-          "codigo": "GIG",
-          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
-          "cidade": "Rio de Janeiro",
-          "uf": "RJ"
-        }
-      }
+        aeroporto_destino: {
+          codigo: "GIG",
+          nome: "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          cidade: "Rio de Janeiro",
+          uf: "RJ",
+        },
+      },
     },
     {
-      "codigo": "XPT788",
-      "data": new Date("2024-10-10T14:30:00Z-03:00"),
-      "valor": 250.00,
-      "milhas_utilizadas": 50,
-      "quantidade_poltronas": 1,
-      "codigo_cliente": 1,
-      "estado": "CRIADA",
-      "voo": {
-        "codigo": "TADS0001",
-        "data": new Date("2024-10-15T14:30:00Z-03:00"),
-        "valor_passagem": 500.00,
-        "quantidade_poltronas_total": 100,
-        "quantidade_poltronas_ocupadas": 90,
-        "estado": "CONFIRMADO",
-        "aeroporto_origem": {
-          "codigo": "GRU",
-          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
-          "cidade": "Guarulhos",
-          "uf": "SP"
+      codigo: "XPT788",
+      data: new Date("2024-10-10T14:30:00Z-03:00"),
+      valor: 250.0,
+      milhas_utilizadas: 50,
+      quantidade_poltronas: 1,
+      codigo_cliente: 1,
+      estado: "CRIADA",
+      voo: {
+        codigo: "TADS0001",
+        data: new Date("2024-10-15T14:30:00Z-03:00"),
+        valor_passagem: 500.0,
+        quantidade_poltronas_total: 100,
+        quantidade_poltronas_ocupadas: 90,
+        estado: "CONFIRMADO",
+        aeroporto_origem: {
+          codigo: "GRU",
+          nome: "Aeroporto Internacional de São Paulo/Guarulhos",
+          cidade: "Guarulhos",
+          uf: "SP",
         },
-        "aeroporto_destino": {
-          "codigo": "GIG",
-          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
-          "cidade": "Rio de Janeiro",
-          "uf": "RJ"
-        }
-      }
-    }
+        aeroporto_destino: {
+          codigo: "GIG",
+          nome: "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          cidade: "Rio de Janeiro",
+          uf: "RJ",
+        },
+      },
+    },
   ]);
 
   const handleSearch = () => {
@@ -129,7 +129,8 @@ const ConsultarReserva = () => {
           </div>
 
           {/* Botão para cancelar reserva */}
-          {(selectedReserve.estado === "CRIADA" || selectedReserve.estado === "CHECK-IN") && (
+          {(selectedReserve.estado === "CRIADA" ||
+            selectedReserve.estado === "CHECK-IN") && (
             <div className="mt-4">
               <button
                 onClick={() => setIsModalCancelOpen(true)}

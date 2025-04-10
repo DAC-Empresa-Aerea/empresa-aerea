@@ -18,7 +18,7 @@ function cancelFlight(flight: Flight) {
 
 function EmployeeFlight({ flight }: EmployeeFlightProps) {
   return (
-    <li className="border border-gray-light p-4 flex justify-between items-center hover:bg-gray-light">
+    <li className="border border-gray-light p-4 flex justify-between items-center hover:bg-gray-light rounded-2xl">
       <article className="font-roboto">
         <h3 className="font-semibold">Voo {flight.number}</h3>
         <p>
@@ -27,19 +27,19 @@ function EmployeeFlight({ flight }: EmployeeFlightProps) {
       </article>
       <div className="flex gap-4">
         <button
-          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark "
+          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
           onClick={() => board(flight)}
         >
           Embarques
         </button>
         <button
-          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark "
+          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
           onClick={() => performFlight(flight)}
         >
           Realizar Voo
         </button>
         <button
-          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark "
+          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
           onClick={() => cancelFlight(flight)}
         >
           Cancelar

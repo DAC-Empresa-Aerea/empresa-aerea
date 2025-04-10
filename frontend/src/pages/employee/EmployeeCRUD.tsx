@@ -1,12 +1,12 @@
 import { useState } from "react";
-import Employee from "../types/Employee";
-import employeesExample from "../data/EmployeesExample";
-import EmployeeTable from "../components/organisms/EmployeeTable";
+import Employee from "../../types/Employee";
+import employeesExample from "../../data/EmployeesExample";
+import EmployeeTable from "../../components/organisms/EmployeeTable";
 import BasicModal, {
   CloseOptions,
-} from "../components/atoms/modals/_BasicModal";
-import EmployeeForm from "../components/organisms/EmployeeForm";
-import CircularButton from "../components/atoms/buttons/CircularButton";
+} from "../../components/atoms/modals/_BasicModal";
+import EmployeeForm from "../../components/organisms/EmployeeForm";
+import CircularButton from "../../components/atoms/buttons/CircularButton";
 
 function EmployeeCRUD() {
   const [employees, setEmployees] = useState<Employee[]>(employeesExample);

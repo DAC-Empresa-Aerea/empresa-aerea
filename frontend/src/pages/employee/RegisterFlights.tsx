@@ -1,4 +1,4 @@
-import RegisterFlightsForm from "../components/organisms/registerFlight/RegisterFlightsForm";
+import RegisterFlightsForm from "../../components/organisms/registerFlight/RegisterFlightsForm";
 
 function RegisterFlights() {
   return <RegisterFlightsForm></RegisterFlightsForm>;
