@@ -5,6 +5,7 @@
 - Docker Compose (opcional)
 
 ### Subindo a aplicação
+Defina os valores em .env (ou copie o .env.example) em /backend/
 Execute na raiz do projeto (/backend):
 
 ```bash
