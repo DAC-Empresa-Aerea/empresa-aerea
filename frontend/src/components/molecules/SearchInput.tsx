@@ -44,7 +44,7 @@ function SearchInput({
     }
 
     return (
-        <div className="w-full md:w-14rem h-full flex flex-col justify-between bg-white  p-4  shadow-medium">
+        <div className=" w-60 md:w-14rem h-full flex flex-col justify-between bg-white  p-4  shadow-medium rounded-2xl">
             <div className="flex flex-col gap-4">
                 <h1 className="font-roboto text-2xl font-semibold text-alien mb-6">
                     Buscar Voos
@@ -53,9 +53,9 @@ function SearchInput({
                 <DropdownInput options={singles} setSelectedValue={setSelectedSecondValue} value={selectedSecondValue}/>
                 <button
                         onClick={() => {handleCancelSearch(); handleResetValues()}}
-                        className="w-10 rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 cursor-pointer self-end"
+                        className="w-10 rounded-md bg-blue-600 px-4 py-1 text-white hover:bg-blue-700 cursor-pointer self-end"
                         >
-                        X
+                            X
                 </button>
             </div>
             <div>
