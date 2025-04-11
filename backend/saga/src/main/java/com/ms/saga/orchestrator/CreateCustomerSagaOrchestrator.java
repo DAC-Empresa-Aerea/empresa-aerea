@@ -15,8 +15,6 @@ import com.ms.saga.dto.auth.create.CreateAuthResponseDTO;
 import com.ms.saga.dto.customer.CreateCustomerDTO;
 import com.ms.saga.dto.customer.CustomerRequestDTO;
 import com.ms.saga.dto.customer.CustomerResponseDTO;
-import com.ms.saga.dto.customer.delete.DeleteCustomerRequestDTO;
-import com.ms.saga.dto.customer.delete.DeleteCustomerResponseDTO;
 
 @Component
 public class CreateCustomerSagaOrchestrator {
@@ -24,7 +22,6 @@ public class CreateCustomerSagaOrchestrator {
     private RabbitTemplate rabbitTemplate;
 
     private final Map<String, CompletableFuture<CreateCustomerDTO>> pendingRequests = new ConcurrentHashMap<>();
-
     private final Map<String, CustomerResponseDTO> temporaryClientStorage = new ConcurrentHashMap<>();
 
     public CompletableFuture<CreateCustomerDTO> processCreate(CustomerRequestDTO customerRequest) {
@@ -34,7 +31,7 @@ public class CreateCustomerSagaOrchestrator {
         
         rabbitTemplate.convertAndSend(
                 "create.customer.exchange",
-                "create.customer",
+                "create.customer.queue",
                 customerRequest,
                 message -> {
                     message.getMessageProperties().setCorrelationId(correlationId);
@@ -54,7 +51,7 @@ public class CreateCustomerSagaOrchestrator {
             
             rabbitTemplate.convertAndSend(
                     "create.customer.exchange",
-                    "create.auth",
+                    "create.auth.queue",
                     authRequest,
                     message -> {
                         message.getMessageProperties().setCorrelationId(correlationId);
@@ -84,32 +81,12 @@ public class CreateCustomerSagaOrchestrator {
                 future.complete(response);
             }
         } else {
-            CustomerResponseDTO customer = temporaryClientStorage.remove(correlationId);
-            if (customer != null) {
-                DeleteCustomerRequestDTO deleteRequest = new DeleteCustomerRequestDTO();
-                deleteRequest.setEmail(customer.getEmail());
-    
-                rabbitTemplate.convertAndSend(
-                    "delete.customer.exchange",
-                    "delete.customer",
-                    deleteRequest
-                );
-            }
-            
             CompletableFuture<CreateCustomerDTO> future = pendingRequests.remove(correlationId);
             if (future != null) {
                 future.completeExceptionally(new RuntimeException("Falha na criação do cliente"));
             }
+            temporaryClientStorage.remove(correlationId);
         }
         
-    }
-
-    public void handleDeleteCustomerResponse(DeleteCustomerResponseDTO deleteResponse) {
-        String correlationId = deleteResponse.getCorrelationId();
-        if (deleteResponse.isDeleted()) {
-            System.out.println("Compensação concluída com sucesso para CorrelationId: " + correlationId);
-        } else {
-            System.err.println("Erro ao compensar cliente. CorrelationId: " + correlationId);
-        }
     }
 }
