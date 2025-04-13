@@ -1,5 +1,6 @@
 package com.ms.auth.model;
 
+import org.bson.types.ObjectId;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
@@ -14,11 +15,13 @@ import lombok.Setter;
 @Setter
 @Getter
 public class Auth {
-  
+
   @Id
-  private Long id;
+  private ObjectId id;
+
   private String login;
   private String senha;
   private String tipo;
+  private String salt;
   
 }
