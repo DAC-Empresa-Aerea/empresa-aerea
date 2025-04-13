@@ -1,7 +1,5 @@
 package com.ms.customer.dto.customer;
 
-import java.math.BigDecimal;
-
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.fasterxml.jackson.annotation.JsonProperty;

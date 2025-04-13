@@ -10,6 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ms.customer.dto.AddressDTO;
 import com.ms.customer.dto.CheckMileResponseDTO;
 import com.ms.customer.dto.TransitionDTO;
+import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
@@ -30,15 +31,23 @@ public class CustomerService {
     private HistoricoMilhasRepository historicoMilhasRepository;
 
     @Transactional
-    public CustomerResponseDTO save(Customer customer) {
-        Customer savedCustomer = clienteRepository.save(customer);
+    public CustomerResponseDTO create(CustomerRequestDTO customer) {
+        System.out.println("Criando cliente: " + customer.getNome());
+        Customer customerEntity = new Customer();
+        BeanUtils.copyProperties(customer, customerEntity);
+
+        Address address = new Address();
+        BeanUtils.copyProperties(customer.getEndereco(), address);
+        customerEntity.setEndereco(address);
+
+        Customer savedCustomer = clienteRepository.save(customerEntity);
 
         CustomerResponseDTO customerCreated = new CustomerResponseDTO();
         BeanUtils.copyProperties(savedCustomer, customerCreated);
 
-        Address address = new Address();
-        BeanUtils.copyProperties(savedCustomer.getEndereco(), address);
-        customerCreated.setEndereco(address);
+        AddressDTO addressDTO = new AddressDTO();
+        BeanUtils.copyProperties(savedCustomer.getEndereco(), addressDTO);
+        customerCreated.setEndereco(addressDTO);
         
         return customerCreated;
     }
@@ -102,7 +111,7 @@ public class CustomerService {
         dto.setSaldoMilhas(customer.getSaldoMilhas());
         
         if (customer.getEndereco() != null) {
-            Address address = new Address();
+            AddressDTO address = new AddressDTO();
             address.setCep(customer.getEndereco().getCep());
             address.setUf(customer.getEndereco().getUf());
             address.setCidade(customer.getEndereco().getCidade());

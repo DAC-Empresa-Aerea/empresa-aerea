@@ -1,4 +1,4 @@
-package com.ms.auth.config;
+package com.ms.customer.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
@@ -13,18 +13,22 @@ import org.springframework.context.annotation.Configuration;
 public class RabbitMQConfig {
 
     @Bean
-    public Queue createAuthQueue() {
-        return new Queue("create.auth.queue", true);
+    public Queue createCustomerQueue() {
+        return new Queue("create.customer.queue", true);
     }
 
     @Bean
-    public Exchange createAuthExchange() {
-        return new DirectExchange("create.auth.exchange", true, false);
+    public Exchange createCustomerExchange() {
+        return new DirectExchange("create.customer.exchange", true, false);
     }
 
-    @Bean
-    public Binding createAuthBinding(Queue createAuthQueue, Exchange createAuthExchange) {
-        return BindingBuilder.bind(createAuthQueue).to(createAuthExchange).with("create.auth.routing.key").noargs();
+    @Bean 
+    public Binding createCustomerBinding(Queue createCustomerQueue, Exchange createCustomerExchange) {
+        return BindingBuilder
+                .bind(createCustomerQueue)
+                .to(createCustomerExchange)
+                .with("create.customer.routing.key")
+                .noargs();
     }
 
     @Bean
