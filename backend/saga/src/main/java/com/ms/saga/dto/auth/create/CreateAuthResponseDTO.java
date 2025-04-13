@@ -10,8 +10,5 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CreateAuthResponseDTO {
-    private String accessToken;
-    private String tokenType;
-    private String tipo;
-    private boolean created;
+    private boolean success;
 }

@@ -1,6 +1,6 @@
 package com.ms.saga.dto.customer;
 
-import java.math.BigDecimal;
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -15,6 +15,7 @@ public class CustomerRequestDTO {
     private String cpf;
     private String email;
     private String nome;
-    private BigDecimal saldoMilhas;
+    @JsonProperty("saldo_milhas")
+    private Integer saldoMilhas;
     private AddressDTO endereco;
 }
