@@ -17,7 +17,7 @@ function EmployeeTable({
 }: EmployeeTableProps) {
   return (
     <EmployeeList
-      title="Funcionários"
+      title="Gerenciar Funcionários"
       employees={employees}
       editEmployee={editEmployee}
       deleteEmployee={deleteEmployee}

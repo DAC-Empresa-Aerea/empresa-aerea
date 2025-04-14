@@ -2,7 +2,9 @@ import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
 import { EmployeeRoutesEnum as Routes } from "./routes.enum";
 
-const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
+const EmployeeLayout = Loadable(
+  lazy(() => import("../layouts/EmployeeLayout"))
+);
 
 const EmployeeHomePage = Loadable(
   lazy(() => import("../pages/employee/EmployeeHome"))
@@ -22,7 +24,7 @@ const EmployeeRoutes = {
   children: [
     {
       path: Routes.HOME,
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [
         {
           index: true,
@@ -32,7 +34,7 @@ const EmployeeRoutes = {
     },
     {
       path: Routes.REGISTER_FLIGHTS,
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [
         {
           index: true,
@@ -42,7 +44,7 @@ const EmployeeRoutes = {
     },
     {
       path: Routes.CONFIRM_BOARDING,
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [
         {
           index: true,
@@ -52,7 +54,7 @@ const EmployeeRoutes = {
     },
     {
       path: Routes.CRUD,
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [
         {
           index: true,

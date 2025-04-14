@@ -1,7 +1,7 @@
 import { useState } from "react";
-import LogoImage from "../components/atoms/images/LogoImage";
-import BasicInput from "../components/atoms/inputs/BasicInput";
-import SubmitButton from "../components/atoms/buttons/SubmitButton";
+import LogoImage from "../../components/atoms/images/LogoImage";
+import BasicInput from "../../components/atoms/inputs/BasicInput";
+import SubmitButton from "../../components/atoms/buttons/SubmitButton";
 
 const Login = () => {
   const [email, setEmail] = useState("");

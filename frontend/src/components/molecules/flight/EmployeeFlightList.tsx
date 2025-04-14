@@ -1,5 +1,5 @@
-import EmployeeFlight from "../atoms/EmployeeFlight";
-import { Flight } from "../atoms/FlightBasicInfo";
+import EmployeeFlight from "../../atoms/EmployeeFlight";
+import { Flight } from "../../atoms/FlightBasicInfo";
 
 interface FlightListProps {
   title: string;
@@ -17,10 +17,7 @@ function EmployeeFlightList({
       <h2 className="font-roboto">{title}</h2>
       <ul className="flex flex-col gap-4 overflow-y-auto">
         {flights.map((flight) => (
-          <EmployeeFlight
-            key={flight.number}
-            flight={flight}
-          />
+          <EmployeeFlight key={flight.number} flight={flight} />
         ))}
       </ul>
       <button

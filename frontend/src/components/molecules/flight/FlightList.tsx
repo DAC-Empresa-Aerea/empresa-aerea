@@ -1,4 +1,4 @@
-import FlightBasicInfo, { Flight } from "../atoms/FlightBasicInfo";
+import FlightBasicInfo, { Flight } from "../../atoms/FlightBasicInfo";
 
 interface FlightListProps {
   title: string;

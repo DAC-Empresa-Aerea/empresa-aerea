@@ -3,7 +3,7 @@ import { Reserve } from "../../components/atoms/TableItem";
 import CancelReservation from "../../components/molecules/modalsMolecules/CancelReservation";
 import BasicInput from "../../components/atoms/inputs/BasicInput";
 import ReservationDetails from "../../components/organisms/ReservationDetails/Index";
-import CityDetails from "../../components/molecules/CityDetails";
+import CityDetails from "../../components/molecules/flight/CityDetails";
 import FlightDetails from "../../components/organisms/FlightDetails/Index";
 
 const ConsultarReserva = () => {

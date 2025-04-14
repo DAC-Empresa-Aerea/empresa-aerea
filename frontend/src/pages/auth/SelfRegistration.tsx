@@ -1,9 +1,9 @@
 import { useState } from "react";
-import LogoImage from "../components/atoms/images/LogoImage";
-import BasicInput from "../components/atoms/inputs/BasicInput";
-import MaskedInput from "../components/atoms/inputs/MaskedInput"; // Importando o MaskedInput
-import { fetchAddressByCep } from "../utils/ViaCep"; // Importando a função para buscar o endereço
-import SubmitButton from "../components/atoms/buttons/SubmitButton";
+import LogoImage from "../../components/atoms/images/LogoImage";
+import BasicInput from "../../components/atoms/inputs/BasicInput";
+import MaskedInput from "../../components/atoms/inputs/MaskedInput"; // Importando o MaskedInput
+import { fetchAddressByCep } from "../../utils/ViaCep"; // Importando a função para buscar o endereço
+import SubmitButton from "../../components/atoms/buttons/SubmitButton";
 
 const SelfRegistration = () => {
   const [name, setName] = useState("");
