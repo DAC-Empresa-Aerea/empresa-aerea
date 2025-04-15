@@ -1,5 +1,7 @@
 package com.ms.customer.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -9,6 +11,7 @@ import com.ms.customer.dto.CheckMileResponseDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
+import com.ms.customer.repository.ClienteRepository;
 import com.ms.customer.service.CustomerService;
 
 import org.springframework.web.bind.annotation.PutMapping;
@@ -23,6 +26,26 @@ public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
+
+    @Autowired
+    private ClienteRepository clienteRepository;
+
+    @GetMapping
+    public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
+        List<CustomerResponseDTO> customers = clienteRepository.findAll().stream()
+                .map(customer -> {
+                    CustomerResponseDTO dto = new CustomerResponseDTO();
+                    dto.setCodigo(customer.getCodigo());
+                    dto.setNome(customer.getNome());
+                    dto.setEmail(customer.getEmail());
+                    return dto;
+                })
+                .toList();
+        if (customers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(customers);
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable Long id) {
