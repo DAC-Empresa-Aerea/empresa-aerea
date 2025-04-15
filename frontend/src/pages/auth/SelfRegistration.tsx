@@ -1,10 +1,11 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LogoImage from "../../components/atoms/images/LogoImage";
 import BasicInput from "../../components/atoms/inputs/BasicInput";
-import MaskedInput from "../../components/atoms/inputs/MaskedInput"; // Importando o MaskedInput
-import { fetchAddressByCep } from "../../utils/ViaCep"; // Importando a função para buscar o endereço
+import MaskedInput from "../../components/atoms/inputs/MaskedInput";
+import { fetchAddressByCep } from "../../utils/ViaCep";
 import SubmitButton from "../../components/atoms/buttons/SubmitButton";
-import Customer from "../../types/Customer";
+import { register } from "../../services/authService";
 
 const SelfRegistration = () => {
   const [name, setName] = useState("");
@@ -17,57 +18,47 @@ const SelfRegistration = () => {
   const [number, setNumber] = useState("");
   const [complement, setComplement] = useState("");
   const [cepError, setCepError] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
+    setSuccess("");
+    setLoading(true);
 
-    console.log("Login: ", {
-      name,
-      email,
-      cpf,
-      cep,
-      state,
-      city,
-      street,
-      number,
-      complement,
-    });
-        const newCustomer: Omit<Customer, "codigo"> = {
-          nome: name,
-          email: email,
-          cpf: cpf.replace(/\D/g, ""), 
-          saldoMilhas: 0, 
-          endereco: {
-            cep: cep.replace("-", ""),
-            uf: state,
-            cidade: city,
-            bairro: "", 
-            rua: street,
-            numero: number,
-            complemento: complement,
-          },
-        };
-    
-        try {
-          const response = await fetch("http://localhost:3001/Customer", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/json",
-            },
-            body: JSON.stringify(newCustomer),
-          });
-    
-          if (!response.ok) {
-            throw new Error("Erro ao registrar cliente.");
-          }
-    
-          const createdCustomer: Customer = await response.json();
-          console.log("Cliente registrado com sucesso:", createdCustomer);
-          alert("Cadastro realizado com sucesso!");
-        } catch (error) {
-          console.error("Erro ao registrar cliente:", error);
-          alert("Erro ao registrar. Tente novamente.");
-        }
+    try {
+      const newCustomer = {
+        cpf: cpf.replace(/\D/g, ""),
+        email: email,
+        nome: name,
+        'endereco.cep': cep.replace("-", ""),
+        'endereco.uf': state,
+        'endereco.cidade': city,
+        'endereco.bairro': "",
+        'endereco.rua': street,
+        'endereco.numero': number,
+        'endereco.complemento': complement
+      };
+
+      await register(newCustomer);
+      setSuccess(
+        "Registration successful! A password will be sent to your email."
+      );
+
+      // Redirect after short delay
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+    } catch (err) {
+      const errorMessage = err instanceof Error ? err.message : "Registration failed. Please try again.";
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCepBlur = async (cep: string) => {
@@ -98,6 +89,18 @@ const SelfRegistration = () => {
         <h2 className="mb-4 text-center text-2xl text-gray-800 cursor-default">
           Self Registration
         </h2>
+
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="mb-4 p-2 bg-green-100 text-green-700 border border-green-400 rounded">
+            {success}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -193,10 +196,19 @@ const SelfRegistration = () => {
             />
           </div>
 
-          <SubmitButton text="Register" />
+          <SubmitButton
+            text={loading ? "Registering..." : "Register"}
+          />
 
           <p className="mt-4 text-center text-sm text-gray-800 cursor-default">
             Your password will be sent to your email.
+          </p>
+
+          <p className="mt-2 text-center text-sm text-gray-600 cursor-default">
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-500 hover:underline">
+              Login
+            </a>
           </p>
         </form>
       </div>

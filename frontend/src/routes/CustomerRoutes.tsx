@@ -1,6 +1,7 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
 import { CustomerRoutesEnum as Routes } from "./routes.enum";
+import ProtectedRoute from "../routes/ProtectedRoute";
 
 const CartLayout = Loadable(lazy(() => import("../layouts/Cart")));
 const EmployeeLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
@@ -24,8 +25,10 @@ const ConsultStatement = Loadable(
   lazy(() => import("../pages/customer/ConsultStatement"))
 );
 
+// Wrap all customer routes with protection
 const CustomerRoutes = {
   path: Routes.BASE,
+  element: <ProtectedRoute allowedTypes={["CLIENTE"]} />,
   children: [
     {
       path: Routes.HOME,
