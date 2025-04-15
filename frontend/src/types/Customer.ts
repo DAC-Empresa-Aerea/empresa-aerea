@@ -1,4 +1,4 @@
-interface Custumer {
+interface Customer {
     "codigo": number,
     "cpf": string,
     "email": string,
@@ -15,4 +15,4 @@ interface Custumer {
     }
 }
 
-export default Custumer;
+export default Customer;

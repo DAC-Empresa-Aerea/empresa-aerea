@@ -4,6 +4,7 @@ import BasicInput from "../../components/atoms/inputs/BasicInput";
 import MaskedInput from "../../components/atoms/inputs/MaskedInput"; // Importando o MaskedInput
 import { fetchAddressByCep } from "../../utils/ViaCep"; // Importando a função para buscar o endereço
 import SubmitButton from "../../components/atoms/buttons/SubmitButton";
+import Customer from "../../types/Customer";
 
 const SelfRegistration = () => {
   const [name, setName] = useState("");
@@ -17,7 +18,7 @@ const SelfRegistration = () => {
   const [complement, setComplement] = useState("");
   const [cepError, setCepError] = useState("");
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     console.log("Login: ", {
@@ -31,6 +32,42 @@ const SelfRegistration = () => {
       number,
       complement,
     });
+        const newCustomer: Omit<Customer, "codigo"> = {
+          nome: name,
+          email: email,
+          cpf: cpf.replace(/\D/g, ""), 
+          saldoMilhas: 0, 
+          endereco: {
+            cep: cep.replace("-", ""),
+            uf: state,
+            cidade: city,
+            bairro: "", 
+            rua: street,
+            numero: number,
+            complemento: complement,
+          },
+        };
+    
+        try {
+          const response = await fetch("http://localhost:3001/Customer", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify(newCustomer),
+          });
+    
+          if (!response.ok) {
+            throw new Error("Erro ao registrar cliente.");
+          }
+    
+          const createdCustomer: Customer = await response.json();
+          console.log("Cliente registrado com sucesso:", createdCustomer);
+          alert("Cadastro realizado com sucesso!");
+        } catch (error) {
+          console.error("Erro ao registrar cliente:", error);
+          alert("Erro ao registrar. Tente novamente.");
+        }
   };
 
   const handleCepBlur = async (cep: string) => {

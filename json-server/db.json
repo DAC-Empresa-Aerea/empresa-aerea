@@ -34,7 +34,6 @@
       "cpf": "12345678901",
       "email": "usuario@gmail.com",
       "nome": "Usuário",
-      "senha": "123456",
       "saldo_milhas": 0,
       "endereco": {
         "cep": "80111000",
@@ -52,7 +51,6 @@
       "cpf": "98765432100",
       "email": "maria@gmail.com",
       "nome": "Maria Souza",
-      "senha": "senha123",
       "saldo_milhas": 1500,
       "endereco": {
         "cep": "80220000",
@@ -71,7 +69,6 @@
       "cpf": "98765432100",
       "email": "cliente.novo@email.com",
       "nome": "Cliente Novo",
-      "senha": "senha123",
       "saldo_milhas": 1500,
       "endereco": {
         "cep": "80010000",

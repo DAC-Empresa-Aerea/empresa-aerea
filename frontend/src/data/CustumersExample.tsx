@@ -1,4 +1,4 @@
-import Custumer from "../types/Custumer";
+import Custumer from "../types/Customer";
 
 const customersExample: Custumer[] = [
   {
