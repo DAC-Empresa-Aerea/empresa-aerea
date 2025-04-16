@@ -26,6 +26,23 @@
       "nome": "Funcionário Silva",
       "telefone": "41988887777",
       "id": "0712"
+    },
+    {
+      "id": "12ff",
+      "codigo": 4,
+      "cpf": "89898989891",
+      "email": "testando@gmail.com",
+      "password": "123456",
+      "nome": "Testei",
+      "telefone": "41999999999"
+    },
+    {
+      "id": "5b86",
+      "cpf": "89898989831",
+      "email": "testa45@gmail.com",
+      "password": "123456",
+      "nome": "Testrfti",
+      "telefone": "41999999999"
     }
   ],
   "Customer": [
