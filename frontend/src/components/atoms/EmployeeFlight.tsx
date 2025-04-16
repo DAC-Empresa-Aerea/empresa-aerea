@@ -27,19 +27,19 @@ function EmployeeFlight({ flight }: EmployeeFlightProps) {
       </article>
       <div className="flex gap-4">
         <button
-          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
+          className="transition-colors px-4 py-2 bg-blue-600 font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
           onClick={() => board(flight)}
         >
           Embarques
         </button>
         <button
-          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
+          className="transition-colors px-4 py-2 bg-blue-600 font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
           onClick={() => performFlight(flight)}
         >
           Realizar Voo
         </button>
         <button
-          className="transition-colors px-4 py-2 bg-blue-medium font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
+          className="transition-colors px-4 py-2 bg-blue-600 font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
           onClick={() => cancelFlight(flight)}
         >
           Cancelar

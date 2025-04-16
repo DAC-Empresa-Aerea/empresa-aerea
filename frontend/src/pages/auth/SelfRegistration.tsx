@@ -35,26 +35,28 @@ const SelfRegistration = () => {
         cpf: cpf.replace(/\D/g, ""),
         email: email,
         nome: name,
-        'endereco.cep': cep.replace("-", ""),
-        'endereco.uf': state,
-        'endereco.cidade': city,
-        'endereco.bairro': "",
-        'endereco.rua': street,
-        'endereco.numero': number,
-        'endereco.complemento': complement
+        "endereco.cep": cep.replace("-", ""),
+        "endereco.uf": state,
+        "endereco.cidade": city,
+        "endereco.bairro": "",
+        "endereco.rua": street,
+        "endereco.numero": number,
+        "endereco.complemento": complement,
       };
 
       await register(newCustomer);
       setSuccess(
-        "Registration successful! A password will be sent to your email."
+        "Registration successful! A password has been generated and will be sent to your email."
       );
 
-      // Redirect after short delay
       setTimeout(() => {
         navigate("/login");
       }, 2000);
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Registration failed. Please try again.";
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Registration failed. Please try again.";
       setError(errorMessage);
     } finally {
       setLoading(false);
@@ -196,9 +198,7 @@ const SelfRegistration = () => {
             />
           </div>
 
-          <SubmitButton
-            text={loading ? "Registering..." : "Register"}
-          />
+          <SubmitButton text={loading ? "Registering..." : "Register"} />
 
           <p className="mt-4 text-center text-sm text-gray-800 cursor-default">
             Your password will be sent to your email.

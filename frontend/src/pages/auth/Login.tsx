@@ -4,6 +4,10 @@ import LogoImage from "../../components/atoms/images/LogoImage";
 import BasicInput from "../../components/atoms/inputs/BasicInput";
 import SubmitButton from "../../components/atoms/buttons/SubmitButton";
 import { useAuth } from "../../contexts/authContext";
+import {
+  CustomerRoutesEnum,
+  EmployeeRoutesEnum,
+} from "../../routes/routes.enum";
 
 const Login = () => {
   const [email, setEmail] = useState("");
@@ -17,14 +21,25 @@ const Login = () => {
     setError("");
 
     try {
-      await login({
+      const response = await login({
         login: email,
         senha: password,
       });
 
-      navigate("/dashboard");
+      console.log("Login successful", response.tipo);
+
+      if (response.tipo === "CLIENTE") {
+        navigate(`/${CustomerRoutesEnum.BASE}/${CustomerRoutesEnum.HOME}`);
+      } else if (response.tipo === "FUNCIONARIO") {
+        navigate(`/${EmployeeRoutesEnum.BASE}/${EmployeeRoutesEnum.HOME}`);
+      } else {
+        navigate("/");
+      }
     } catch (err) {
-      const errorMessage = err instanceof Error ? err.message : "Login failed. Please check your credentials.";
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Login failed. Please check your credentials.";
       setError(errorMessage);
     }
   };

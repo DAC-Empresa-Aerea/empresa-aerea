@@ -25,7 +25,6 @@ const ConsultStatement = Loadable(
   lazy(() => import("../pages/customer/ConsultStatement"))
 );
 
-// Wrap all customer routes with protection
 const CustomerRoutes = {
   path: Routes.BASE,
   element: <ProtectedRoute allowedTypes={["CLIENTE"]} />,

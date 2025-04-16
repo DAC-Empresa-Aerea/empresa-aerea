@@ -15,16 +15,13 @@ const ProtectedRoute: React.FC<ProtectedRouteProps> = ({ allowedTypes = [] }) =>
   }
 
   if (!isAuthenticated) {
-    // Redirect to login page with return path
     return <Navigate to="/login" state={{ from: location }} replace />;
   }
 
-  // If specific user types are required and user doesn't match
   if (allowedTypes.length > 0 && userType && !allowedTypes.includes(userType)) {
     return <Navigate to="/unauthorized" replace />;
   }
 
-  // User is authenticated and authorized
   return <Outlet />;
 };
 
