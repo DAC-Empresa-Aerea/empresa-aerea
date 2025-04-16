@@ -11,7 +11,7 @@ import com.ms.customer.dto.CheckMileResponseDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
-import com.ms.customer.repository.ClienteRepository;
+import com.ms.customer.repository.CustomerRepository;
 import com.ms.customer.service.CustomerService;
 
 import org.springframework.web.bind.annotation.PutMapping;
@@ -28,7 +28,7 @@ public class CustomerController {
     private CustomerService customerService;
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private CustomerRepository clienteRepository;
 
     @GetMapping
     public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {

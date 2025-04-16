@@ -7,6 +7,8 @@ import org.springframework.stereotype.Component;
 
 import com.ms.auth.dto.CreateAuthRequestDTO;
 import com.ms.auth.dto.CreateAuthResponseDTO;
+import com.ms.auth.dto.error.ErrorDTO;
+import com.ms.auth.dto.error.SagaResponse;
 import com.ms.auth.service.AuthService;
 
 import jakarta.validation.Valid;
@@ -18,8 +20,12 @@ public class AuthConsumer {
     private AuthService authService;
 
     @RabbitListener(queues = "create.auth.queue")
-    public CreateAuthResponseDTO receiveAuthQueue (@Payload @Valid CreateAuthRequestDTO authRequest) {
-        return authService.createAuth(authRequest);
-    }
-    
+    public SagaResponse<CreateAuthResponseDTO> receiveAuthQueue (@Payload @Valid CreateAuthRequestDTO authRequest) {
+
+        if (authService.emailExists(authRequest.getEmail())) {
+            return new SagaResponse<>(false, null, new ErrorDTO("EMAIL_EXISTS", "Email já cadastrado"));
+        }
+
+        return new SagaResponse<>(true, authService.createAuth(authRequest), null);
+    }    
 }

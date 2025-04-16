@@ -18,17 +18,19 @@ import com.ms.customer.exception.CustomerNotFoundException;
 import com.ms.customer.model.Address;
 import com.ms.customer.model.Customer;
 import com.ms.customer.model.MilesHistory;
-import com.ms.customer.repository.ClienteRepository;
+import com.ms.customer.repository.CustomerRepository;
 import com.ms.customer.repository.HistoricoMilhasRepository;
 
 @Service
 public class CustomerService {
 
     @Autowired
-    private ClienteRepository clienteRepository;
+    private CustomerRepository customerRepository;
 
     @Autowired
     private HistoricoMilhasRepository historicoMilhasRepository;
+
+
 
     @Transactional
     public CustomerResponseDTO create(CustomerRequestDTO customer) {
@@ -40,7 +42,7 @@ public class CustomerService {
         BeanUtils.copyProperties(customer.getEndereco(), address);
         customerEntity.setEndereco(address);
 
-        Customer savedCustomer = clienteRepository.save(customerEntity);
+        Customer savedCustomer = customerRepository.save(customerEntity);
 
         CustomerResponseDTO customerCreated = new CustomerResponseDTO();
         BeanUtils.copyProperties(savedCustomer, customerCreated);
@@ -53,13 +55,13 @@ public class CustomerService {
     }
 
     public CustomerResponseDTO findById(Long id) {
-        Customer customer = clienteRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado com o ID: " + id));
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado com o ID: " + id));
 
         return convertToCustomerResponseDTO(customer);
     }
 
     public CheckMileResponseDTO getMilesStatement(Long id) {
-        Customer customer = clienteRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado com ID: " + id));
+        Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado com ID: " + id));
 
         List<MilesHistory> transactions = historicoMilhasRepository.findByCliente(customer);
         CheckMileResponseDTO response = new CheckMileResponseDTO();
@@ -88,13 +90,13 @@ public class CustomerService {
 
     @Transactional
     public UpdateMilesResponseDTO updateMiles(Long id, UpdateMilesRequestDTO requestDTO) {
-        Customer customer = clienteRepository.findById(id)
+        Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado para o ID: " + id));
 
         Integer newBalance = customer.getSaldoMilhas() + requestDTO.getQuantidade();
         customer.setSaldoMilhas(newBalance);
 
-        clienteRepository.save(customer);
+        customerRepository.save(customer);
 
         UpdateMilesResponseDTO response = new UpdateMilesResponseDTO();
         response.setCodigo(customer.getCodigo());
@@ -123,6 +125,18 @@ public class CustomerService {
         }
 
         return dto;
+    }
+
+    public void deleteById(Long id) {
+        customerRepository.deleteById(id);
+    }
+
+    public boolean emailExists(String email) {
+        return customerRepository.existsByEmail(email);
+    }
+
+    public boolean cpfExists(String cpf) {
+        return customerRepository.existsByCpf(cpf);
     }
 
 }

@@ -32,6 +32,16 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue rollbackCustomerQueue() {
+        return new Queue("rollback.customer.queue", true);
+    }
+
+    @Bean
+    public Exchange rollbackCustomerExchange() {
+        return new DirectExchange("rollback.customer.exchange", true, false);
+    }
+
+    @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
         return converter;

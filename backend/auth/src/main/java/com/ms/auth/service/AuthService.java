@@ -29,6 +29,10 @@ public class AuthService {
     @Autowired
     private JWTGeneratorUtil jwtGeneratorUtil;
 
+    public boolean emailExists(String email) {
+        return authRepository.findByLogin(email) != null;
+    }
+
     public CreateAuthResponseDTO createAuth(CreateAuthRequestDTO authRequest) {
 
         String password = PasswordGeneratorUtil.generate();

@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.saga.dto.customer.CustomerRequestDTO;
 import com.ms.saga.dto.customer.CustomerResponseDTO;
-import com.ms.saga.orchestrator.SagaOrchestrator;
+import com.ms.saga.orchestrator.CustomerOrchestrator;
 
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -18,12 +18,12 @@ import org.springframework.web.bind.annotation.RequestBody;
 public class CustomerController {
     
     @Autowired
-    private SagaOrchestrator saga;
+    private CustomerOrchestrator saga;
     
     @PostMapping()
     public ResponseEntity<CustomerResponseDTO> createCustomer(@RequestBody CustomerRequestDTO customer) {
         
-        return ResponseEntity.ok(saga.processCreateCustomer(customer));
+        return ResponseEntity.ok(saga.processRegisterCustomer(customer));
     }
     
     
