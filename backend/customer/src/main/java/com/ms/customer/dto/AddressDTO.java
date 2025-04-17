@@ -1,82 +1,37 @@
 package com.ms.customer.dto;
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
+@Setter
 public class AddressDTO {
 
+    @NotBlank(message = "CEP é obrigatório")
+    @Pattern(regexp = "\\d{8}", message = "CEP deve conter exatamente 8 dígitos numéricos, sem traço")
     private String cep;
+
+    @NotBlank(message = "UF é obrigatória")
+    @Pattern(regexp = "[A-Z]{2}", message = "UF deve conter exatamente 2 letras maiúsculas")
     private String uf;
+
+    @NotBlank(message = "Cidade é obrigatória")
     private String cidade;
+
+    @NotBlank(message = "Bairro é obrigatório")
     private String bairro;
+
+    @NotBlank(message = "Rua é obrigatória")
     private String rua;
+
+    @NotBlank(message = "Número é obrigatório")
     private String numero;
+
     private String complemento;
-
-    public AddressDTO() {
-    }
-
-    public AddressDTO(String cep, String uf, String cidade, String bairro, String rua, String numero, String complemento) {
-        this.cep = cep;
-        this.uf = uf;
-        this.cidade = cidade;
-        this.bairro = bairro;
-        this.rua = rua;
-        this.numero = numero;
-        this.complemento = complemento;
-    }
-
-    // Getters e Setters
-    public String getCep() {
-        return cep;
-    }
-
-    public void setCep(String cep) {
-        this.cep = cep;
-    }
-
-    public String getUf() {
-        return uf;
-    }
-
-    public void setUf(String uf) {
-        this.uf = uf;
-    }
-
-    public String getCidade() {
-        return cidade;
-    }
-
-    public void setCidade(String cidade) {
-        this.cidade = cidade;
-    }
-
-    public String getBairro() {
-        return bairro;
-    }
-
-    public void setBairro(String bairro) {
-        this.bairro = bairro;
-    }
-
-    public String getRua() {
-        return rua;
-    }
-
-    public void setRua(String rua) {
-        this.rua = rua;
-    }
-
-    public String getNumero() {
-        return numero;
-    }
-
-    public void setNumero(String numero) {
-        this.numero = numero;
-    }
-
-    public String getComplemento() {
-        return complemento;
-    }
-
-    public void setComplemento(String complemento) {
-        this.complemento = complemento;
-    }
 }

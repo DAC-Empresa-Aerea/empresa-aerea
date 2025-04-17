@@ -1,14 +1,17 @@
 package com.ms.customer.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.customer.dto.CheckMileResponseDTO;
-import com.ms.customer.dto.CustomerResponseDTO;
-import com.ms.customer.dto.UpdateMilesRequestDTO;
-import com.ms.customer.dto.UpdateMilesResponseDTO;
+import com.ms.customer.dto.customer.CustomerResponseDTO;
+import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
+import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
+import com.ms.customer.repository.CustomerRepository;
 import com.ms.customer.service.CustomerService;
 
 import org.springframework.web.bind.annotation.PutMapping;
@@ -16,15 +19,36 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+
 @RestController
-@RequestMapping("/cliente")
+@RequestMapping("/clientes")
 public class CustomerController {
 
     @Autowired
     private CustomerService customerService;
 
+    @Autowired
+    private CustomerRepository clienteRepository;
+
+    @GetMapping
+    public ResponseEntity<List<CustomerResponseDTO>> getAllCustomers() {
+        List<CustomerResponseDTO> customers = clienteRepository.findAll().stream()
+                .map(customer -> {
+                    CustomerResponseDTO dto = new CustomerResponseDTO();
+                    dto.setCodigo(customer.getCodigo());
+                    dto.setNome(customer.getNome());
+                    dto.setEmail(customer.getEmail());
+                    return dto;
+                })
+                .toList();
+        if (customers.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(customers);
+    }
+
     @GetMapping("/{id}")
-    public ResponseEntity<CustomerResponseDTO> getCliente(@PathVariable Long id) {
+    public ResponseEntity<CustomerResponseDTO> getCustomer(@PathVariable Long id) {
         CustomerResponseDTO dto = customerService.findById(id);
         return ResponseEntity.ok(dto);
     }
