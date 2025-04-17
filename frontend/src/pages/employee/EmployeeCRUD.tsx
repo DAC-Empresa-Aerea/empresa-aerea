@@ -26,7 +26,7 @@ function EmployeeCRUD() {
     fetch(API_URL)
     .then((res) => res.json())
     .then((data) => setEmployees(data))
-    .catch((err) => console.error("Error ao buscar funcionarios:", err));
+    .catch((err) => console.error("Erro ao buscar funcionarios:", err));
   }, []);
 
   const handleDeleteEmployee = (employee: Employee | null) => {
@@ -40,7 +40,7 @@ function EmployeeCRUD() {
       setEmployees((prev) =>
         prev.filter((emp) => emp.codigo !== employee.codigo));
     }) 
-    .catch((err) => console.error("Error ao deletar funcionario:", err));
+    .catch((err) => console.error("Erro ao deletar funcionario:", err));
     }
   };
 
@@ -74,7 +74,7 @@ function EmployeeCRUD() {
       ]);
     }
   })
-  .catch((err) => console.error("Error ao atualizar ou criar funcionario:", err));
+  .catch((err) => console.error("Erro ao atualizar ou criar funcionario:", err));
   
     setOpenModal((prev) => ({ ...prev, isOpen: false }));
     setSelectedEmployee(null);
