@@ -114,41 +114,6 @@
         "numero": "342",
         "complemento": ""
       }
-    },
-    {
-      "id": "5c9a",
-      "codigo": 3564,
-      "cpf": "12345678912",
-      "email": "teste1@gmail.com",
-      "nome": "Teste 1",
-      "saldoMilhas": 0,
-      "endereco": {
-        "cep": "81270321",
-        "uf": "PR",
-        "cidade": "Curitiba",
-        "bairro": "",
-        "rua": "Rua Rodolfo Boeira da Fonseca",
-        "numero": "25",
-        "complemento": "teste"
-      }
-    },
-    {
-      "id": "d6b1",
-      "codigo": 9472,
-      "cpf": "07008135947",
-      "email": "joaopedroguerios@gmail.com",
-      "nome": "Joao P C Guerios",
-      "senha": "3589",
-      "saldoMilhas": 0,
-      "endereco": {
-        "cep": "81270321",
-        "uf": "PR",
-        "cidade": "Curitiba",
-        "bairro": "",
-        "rua": "Rua Rodolfo Boeira da Fonseca",
-        "numero": "140",
-        "complemento": "testestes"
-      }
     }
   ],
   "Airports": [
@@ -231,8 +196,8 @@
       "valor": 250,
       "milhas_utilizadas": 50,
       "quantidade_poltronas": 1,
-      "codigo_cliente": 1010,
-      "estado": "CONFIRMADO",
+      "codigo_cliente": 9472,
+      "estado": "CANCELADA",
       "voo": {
         "codigo": "TADS0001",
         "data": "2024-10-15T14:30:00-03:00",
@@ -261,7 +226,7 @@
       "valor": 300,
       "milhas_utilizadas": 100,
       "quantidade_poltronas": 2,
-      "codigo_cliente": 1011,
+      "codigo_cliente": 9472,
       "estado": "CONFIRMADO",
       "voo": {
         "codigo": "VOO0002",

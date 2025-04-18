@@ -2,31 +2,35 @@ import { useEffect, useState } from "react";
 import ReservationTable from "../../components/organisms/ReservationTable";
 import SeeReservation from "../../components/molecules/modalsMolecules/SeeReservation";
 import CancelReservation from "../../components/molecules/modalsMolecules/CancelReservation";
-import { Reserve } from "../../components/atoms/TableItem";
-import { getReservesByCustomerCode } from "../../services/reserveService"; // ajuste o caminho se necessário
+import Reserve from "../../types/Reserve";
+import { getReservesByCustomerCode } from "../../services/reserveService";
+import { useAuth } from "../../contexts/loginContext";
 
 const CustomerHomePage = () => {
+  const { user, isAuthenticated, loading } = useAuth();
   const [reserves, setReserves] = useState<Reserve[]>([]);
   const [selectedReserve, setSelectedReserve] = useState<Reserve | null>(null);
   const [isModalInfoOpen, setIsModalInfoOpen] = useState(false);
   const [isModalCancelOpen, setIsModalCancelOpen] = useState(false);
   const [error, setError] = useState<string>("");
 
-  const codigoCliente = "1010";
-
-  useEffect(() => {
-    const fetchReserves = async () => {
+  const fetchReserves = async () => {
+    if (isAuthenticated && user && user.codigo) {
       try {
-        const response = await getReservesByCustomerCode(codigoCliente);
+        const response = await getReservesByCustomerCode(user.codigo.toString());
         setReserves(response);
       } catch (err) {
         setError("Erro ao buscar reservas do cliente.");
         console.error(err);
       }
-    };
+    }
+  };
 
-    fetchReserves();
-  }, []);
+  useEffect(() => {
+    if (!loading) {
+      fetchReserves();
+    }
+  }, [isAuthenticated, user, loading]);
 
   const handleFlightClick = (reserve: Reserve) => {
     setSelectedReserve(reserve);
@@ -62,6 +66,7 @@ const CustomerHomePage = () => {
           cancelClose={() => setIsModalCancelOpen(false)}
           canceltitle={`Confirmar cancelamento da Reserva #${selectedReserve.codigo}`}
           selectedReserve={selectedReserve}
+          onUpdate={fetchReserves}
         />
       )}
     </div>
