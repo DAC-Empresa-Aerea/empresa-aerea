@@ -5,7 +5,8 @@ import BasicInput from "../../components/atoms/inputs/BasicInput";
 import MaskedInput from "../../components/atoms/inputs/MaskedInput";
 import { fetchAddressByCep } from "../../utils/ViaCep";
 import SubmitButton from "../../components/atoms/buttons/SubmitButton";
-import { register } from "../../services/authService";
+//import { register } from "../../services/authService";
+import { registerCustomer } from "../../services/customerService";
 
 const SelfRegistration = () => {
   const [name, setName] = useState("");
@@ -29,34 +30,32 @@ const SelfRegistration = () => {
     setError("");
     setSuccess("");
     setLoading(true);
-
+  
     try {
-      const newCustomer = {
-        cpf: cpf.replace(/\D/g, ""),
-        email: email,
+      await registerCustomer({
+        cpf,
+        email,
         nome: name,
-        "endereco.cep": cep.replace("-", ""),
-        "endereco.uf": state,
-        "endereco.cidade": city,
-        "endereco.bairro": "",
-        "endereco.rua": street,
-        "endereco.numero": number,
-        "endereco.complemento": complement,
-      };
-
-      await register(newCustomer);
-      setSuccess(
-        "Registration successful! A password has been generated and will be sent to your email."
-      );
-
+        endereco: {
+          cep,
+          uf: state,
+          cidade: city,
+          rua: street,
+          numero: number,
+          complemento: complement,
+        }
+      });
+  
+      setSuccess("Cadastro realizado com sucesso! Uma senha será enviada por e-mail.");
+  
       setTimeout(() => {
         navigate("/login");
       }, 2000);
-    } catch (err) {
+  
+    } catch (err: any) {
       const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "Registration failed. Please try again.";
+        err?.response?.data?.message ||
+        (err instanceof Error ? err.message : "Erro ao registrar. Tente novamente.");
       setError(errorMessage);
     } finally {
       setLoading(false);

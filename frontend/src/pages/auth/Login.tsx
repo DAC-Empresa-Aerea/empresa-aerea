@@ -1,9 +1,10 @@
+// Login.tsx
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/loginContext";
 import LogoImage from "../../components/atoms/images/LogoImage";
 import BasicInput from "../../components/atoms/inputs/BasicInput";
 import SubmitButton from "../../components/atoms/buttons/SubmitButton";
-import { useAuth } from "../../contexts/authContext";
 import {
   CustomerRoutesEnum,
   EmployeeRoutesEnum,
@@ -21,12 +22,7 @@ const Login = () => {
     setError("");
 
     try {
-      const response = await login({
-        login: email,
-        senha: password,
-      });
-
-      console.log("Login successful", response.tipo);
+      const response = await login({ login: email, senha: password });
 
       if (response.tipo === "CLIENTE") {
         navigate(`/${CustomerRoutesEnum.BASE}/${CustomerRoutesEnum.HOME}`);
