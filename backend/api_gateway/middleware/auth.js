@@ -1,21 +1,20 @@
-//refazer esse arquivo usando o auth posteriomente
+require('dotenv').config();
 const jwt = require('jsonwebtoken');
-require('dotenv-safe').config();
 
-module.exports = function verifyJWT(req, res, next) {
+module.exports = function authenticateJWT(req, res, next) {
   const authHeader = req.headers['authorization'];
-  const token = authHeader?.split(' ')[1]; // Ex: "Bearer token"
+  if (!authHeader) return res.status(401).json({ message: 'Token não fornecido' });
 
-  if (!token) {
-    return res.status(401).json({ message: 'Token não fornecido' });
+  const [scheme, token] = authHeader.split(' ');
+  if (!/^Bearer$/i.test(scheme) || !token) {
+    return res.status(401).json({ message: 'Formato de token inválido' });
   }
 
-  jwt.verify(token, process.env.SECRET, (err, decoded) => {
+  jwt.verify(token, process.env.SECRET, (err, payload) => {
     if (err) {
-      return res.status(403).json({ message: 'Token inválido' });
+      return res.status(403).json({ message: 'Token inválido ou expirado' });
     }
-
-    req.user = decoded;
+    req.user = { login: payload.sub, role: payload.role };
     next();
   });
 };
