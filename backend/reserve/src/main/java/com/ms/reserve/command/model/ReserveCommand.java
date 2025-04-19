@@ -44,10 +44,4 @@ public class ReserveCommand {
     @Column(name = "codigo_voo", nullable = false)
     private String codigoVoo;
 
-    @Column(name = "codigo_aeroporto_origem", nullable = false)
-    private String codigoAeroportoOrigem;
-
-    @Column(name = "codigo_aeroporto_destino", nullable = false)
-    private String codigoAeroportoDestino;
-
 }

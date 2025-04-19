@@ -6,7 +6,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.orm.jpa.JpaVendorAdapter;
 import org.springframework.orm.jpa.vendor.HibernateJpaVendorAdapter;
 import org.springframework.orm.jpa.persistenceunit.PersistenceUnitManager;
-import javax.sql.DataSource;
 import org.springframework.beans.factory.ObjectProvider;
 import java.util.HashMap;
 
