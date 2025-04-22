@@ -7,4 +7,5 @@ import com.ms.customer.model.Customer;
 public interface CustomerRepository extends JpaRepository<Customer, Long> {
     boolean existsByEmail(String email);
     boolean existsByCpf(String cpf);
+    Customer findByEmail(String email);
 }

@@ -4,7 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
-import com.ms.employee.dto.EmployeeDTO;
+import com.ms.employee.dto.EmployeeRequestDTO;
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
 
@@ -55,7 +55,7 @@ public class EmployeeService {
      * @return O objeto Employee recém-criado após ser salvo no repositório.
      * @throws IllegalArgumentException se qualquer campo obrigatório (CPF, email, nome ou telefone) for nulo ou vazio.
      */
-    public Employee createEmployee(EmployeeDTO employee) {
+    public Employee createEmployee(EmployeeRequestDTO employee) {
 
         if (employee.getCpf() == null || employee.getCpf().isEmpty()) {
             throw new IllegalArgumentException("CPF não pode ser null ou vazio");
@@ -63,7 +63,7 @@ public class EmployeeService {
         if (employee.getEmail() == null || employee.getEmail().isEmpty()) {
             throw new IllegalArgumentException("Email não pode ser null ou vazio");
         }
-        if (employee.getNome() == null || employee.getNome().isEmpty()) {
+        if (employee.getName() == null || employee.getName().isEmpty()) {
             throw new IllegalArgumentException("Nome não pode ser null ou vazio");
         }
         if (employee.getTelefone() == null || employee.getTelefone().isEmpty()) {
@@ -83,7 +83,7 @@ public class EmployeeService {
         Employee newEmployee = Employee.builder()
                 .cpf(employee.getCpf())
                 .email(employee.getEmail())
-                .nome(employee.getNome())
+                .nome(employee.getName())
                 .telefone(employee.getTelefone())
                 .build();
 
@@ -104,12 +104,12 @@ public class EmployeeService {
      * @return O objeto Employee atualizado após ser salvo no repositório.
      * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
      */
-    public Employee updateEmployee(Long id, EmployeeDTO employee) {
+    public Employee updateEmployee(Long id, EmployeeRequestDTO employee) {
         Employee existingEmployee = getEmployeeById(id);
 
         existingEmployee.setCpf(employee.getCpf());
         existingEmployee.setEmail(employee.getEmail());
-        existingEmployee.setNome(employee.getNome());
+        existingEmployee.setNome(employee.getName());
         existingEmployee.setTelefone(employee.getTelefone());
 
         return employeeRepository.save(existingEmployee);

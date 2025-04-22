@@ -1,5 +1,5 @@
 const axios = require('../utils/axiosInstance');
-const { RESERVATION, FLIGHT } = require('../config/services');
+const { RESERVATION, FLIGHT, AUTH, CUSTOMER } = require('../config/services');
 
 exports.listCustomerReservations = async customerId => {
   // 1) pega as reservas
@@ -24,3 +24,13 @@ exports.getReservationWithFlight = async codigo => {
   const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.voo.codigo}`);
   return { ...reserva, voo };
 };
+
+exports.getLoginWithCustomer = async (email, password) => {
+  const { data: login } = await axios.post(`${AUTH}/login`, {
+    login: email,
+    senha: password,
+  });
+  const { data: customer } = await axios.get(`${CUSTOMER}/clientes/email/${email}`);
+  login.usuario = customer;
+  return login;
+}
