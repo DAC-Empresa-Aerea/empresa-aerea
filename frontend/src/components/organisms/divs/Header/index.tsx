@@ -22,12 +22,12 @@ const Header = () => {
             </a>
           </div>
           <nav className="flex space-x-4">
-            <LinkButton href={"/search"} className="font-bold">
+            <LinkButton href={"/customer/search"} className="font-bold">
               Buscar
             </LinkButton>
-            <LinkButton href={"/buy-miles"}>Comprar Milhas</LinkButton>
-            <LinkButton href={"/customer-home"}>Meu Perfil</LinkButton>
-            <LinkButton href={"/checkin"}>CheckIn</LinkButton>
+            <LinkButton href={"/customer/buy-miles"}>Comprar Milhas</LinkButton>
+            <LinkButton href={"/customer/customer-home"}>Meu Perfil</LinkButton>
+            <LinkButton href={"/customer/checkin"}>CheckIn</LinkButton>
           </nav>
           <div className="py-6">
             <a
