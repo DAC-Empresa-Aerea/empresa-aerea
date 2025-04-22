@@ -18,6 +18,7 @@ public class RabbitMQConfig {
 
     public static final String ROLLBACK_CUSTOMER_QUEUE = "rollback.customer.queue";
     public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
+    public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.customer.routing.key";
 
     @Bean
     public Queue createCustomerQueue() {
@@ -40,12 +41,20 @@ public class RabbitMQConfig {
 
     @Bean
     public Queue rollbackCustomerQueue() {
-        return new Queue(ROLLBACK_CUSTOMER_EXCHANGE, true);
+        return new Queue(ROLLBACK_CUSTOMER_QUEUE, true);
     }
 
     @Bean
     public Exchange rollbackCustomerExchange() {
         return new DirectExchange(ROLLBACK_CUSTOMER_EXCHANGE, true, false);
+    }
+
+    @Bean Binding rollbackCustomerBinding(Queue rollbackCustomerQueue, Exchange rollbackCustomerExchange) {
+        return BindingBuilder
+                .bind(rollbackCustomerQueue)
+                .to(rollbackCustomerExchange)
+                .with(ROLLBACK_CUSTOMER_ROUTING_KEY)
+                .noargs();
     }
 
     @Bean
