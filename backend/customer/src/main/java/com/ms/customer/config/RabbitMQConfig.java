@@ -12,14 +12,21 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
+    public static final String CREATE_CUSTOMER_QUEUE = "create.customer.queue";
+    public static final String CREATE_CUSTOMER_EXCHANGE = "create.customer.exchange";
+    public static final String CREATE_CUSTOMER_ROUTING_KEY = "create.customer.routing.key";
+
+    public static final String ROLLBACK_CUSTOMER_QUEUE = "rollback.customer.queue";
+    public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
+
     @Bean
     public Queue createCustomerQueue() {
-        return new Queue("create.customer.queue", true);
+        return new Queue(CREATE_CUSTOMER_QUEUE, true);
     }
 
     @Bean
     public Exchange createCustomerExchange() {
-        return new DirectExchange("create.customer.exchange", true, false);
+        return new DirectExchange(CREATE_CUSTOMER_EXCHANGE, true, false);
     }
 
     @Bean 
@@ -27,18 +34,18 @@ public class RabbitMQConfig {
         return BindingBuilder
                 .bind(createCustomerQueue)
                 .to(createCustomerExchange)
-                .with("create.customer.routing.key")
+                .with(CREATE_CUSTOMER_ROUTING_KEY)
                 .noargs();
     }
 
     @Bean
     public Queue rollbackCustomerQueue() {
-        return new Queue("rollback.customer.queue", true);
+        return new Queue(ROLLBACK_CUSTOMER_EXCHANGE, true);
     }
 
     @Bean
     public Exchange rollbackCustomerExchange() {
-        return new DirectExchange("rollback.customer.exchange", true, false);
+        return new DirectExchange(ROLLBACK_CUSTOMER_EXCHANGE, true, false);
     }
 
     @Bean

@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
+import com.ms.customer.config.RabbitMQConfig;
 import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.error.ErrorDTO;
@@ -19,7 +20,7 @@ public class CreateCustomerConsumer {
     @Autowired
     private CustomerService customerService;
 
-    @RabbitListener(queues = "create.customer.queue")
+    @RabbitListener(queues = RabbitMQConfig.CREATE_CUSTOMER_QUEUE)
     public SagaResponse<CustomerResponseDTO> receiveCreateCustomer (@Payload @Valid CustomerRequestDTO customer) {
         if (customerService.emailExists(customer.getEmail())) {
             return new SagaResponse<>(false, null, new ErrorDTO("EMAIL_ALREADY_EXISTS", "Email já existe."));
@@ -32,7 +33,7 @@ public class CreateCustomerConsumer {
         return new SagaResponse<>(true, customerService.create(customer), null);
     }
 
-    @RabbitListener(queues = "rollback.customer.queue")
+    @RabbitListener(queues = RabbitMQConfig.ROLLBACK_CUSTOMER_QUEUE)
     public void receiveRollbackCustomer(@Payload Long customerId) {
         customerService.deleteById(customerId);
     }
