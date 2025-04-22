@@ -104,7 +104,7 @@
       "email": "voidalzk@gmail.com",
       "nome": "Gabriel Voidaleski",
       "senha": "1234",
-      "saldo_milhas": 0,
+      "saldo_milhas": 19100,
       "endereco": {
         "cep": "82410312",
         "uf": "PR",
@@ -249,6 +249,336 @@
         }
       },
       "id": "2535"
+    }
+  ],
+  "Miles": [
+    {
+      "codigo_cliente": 1010,
+      "data": "2025-03-10T15:30:00Z",
+      "valor_reais": 0,
+      "quantidade_milhas": 2000,
+      "descricao": "Bônus de boas-vindas",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "codigo_cliente": 1010,
+      "data": "2025-04-21T10:00:00Z",
+      "valor_reais": 250.75,
+      "quantidade_milhas": 1500,
+      "descricao": "Compra de passagem",
+      "codigo_reserva": "ABC123",
+      "tipo": "SAIDA"
+    },
+    {
+      "id": "35cf",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:33:23.119Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "3ac5",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:34:49.872Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0e99",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:36:09.836Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0370",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:37:09.965Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "a813",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:38:43.115Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "7d1f",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:39:32.300Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "5f25",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:40:03.053Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "78f1",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:40:33.727Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "3ee6",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:40:47.952Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "712e",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:40:57.855Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0849",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:41:00.395Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "97ec",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:57:34.947Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "1c30",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:00:57.541Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "beb2",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:03:26.710Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0104",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:08:42.169Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "d2a1",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:10:43.485Z",
+      "valor_reais": 125,
+      "quantidade_milhas": 25,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "3b29",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:24:50.150Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "8b23",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:28:58.640Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "479d",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:29:23.250Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "86de",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:29:44.723Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "e8f5",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:30:20.183Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "6579",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:30:31.349Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "3638",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:30:56.756Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "9e6e",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:31:28.437Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "9524",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:32:34.113Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "a829",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:32:39.967Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0eac",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:32:42.392Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "c803",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:33:03.317Z",
+      "valor_reais": 250,
+      "quantidade_milhas": 50,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "d800",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:33:50.215Z",
+      "valor_reais": 2500,
+      "quantidade_milhas": 500,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "30c5",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:35:23.665Z",
+      "valor_reais": 2500,
+      "quantidade_milhas": 500,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "41a2",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:35:28.579Z",
+      "valor_reais": 125,
+      "quantidade_milhas": 25,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
     }
   ]
 }

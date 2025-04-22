@@ -3,7 +3,7 @@ interface Customer {
     "cpf": string,
     "email": string,
     "nome": string,
-    "saldoMilhas": number,
+    "saldo_milhas": number,
     "endereco": {
         "cep": string,
         "uf": string,

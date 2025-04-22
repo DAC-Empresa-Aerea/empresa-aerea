@@ -27,16 +27,16 @@ export const registerCustomer = async (rawData: {
         complemento: string;
     };
 }) => {
-    const customer: Omit<Customer, "codigo" | "saldoMilhas"> & {
+    const customer: Omit<Customer, "codigo" | "saldo_milhas"> & {
         codigo: number;
         saldoMilhas: number;
-        senha: string; // <-- Adicionado apenas para envio ao json-server
+        senha: string; 
     } = {
         codigo: generate4DigitCode(),
         cpf: rawData.cpf.replace(/\D/g, ""),
         email: rawData.email,
         nome: rawData.nome.trim(),
-        senha: generatePassword(), // só vai pro json-server
+        senha: generatePassword(), 
         saldoMilhas: 0,
         endereco: {
             cep: rawData.endereco.cep.replace("-", "").trim(),
