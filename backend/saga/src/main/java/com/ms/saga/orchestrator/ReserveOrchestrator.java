@@ -3,6 +3,7 @@ package com.ms.saga.orchestrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.saga.producer.ReserveProducer;
@@ -23,6 +24,21 @@ public class ReserveOrchestrator {
         // Lembrar de usar o ErrorDTO e SagaResponse
         
         return new RegisterReserveResponseDTO();
+    }
+
+    public CancelReserveResponseDTO processCancelReserve(String id) {
+        // Validar existencia de reserva e se pode ser cancelada (estado = criada, checkin)
+            // Se erro, retorna 404
+        // Cancelar a reserva
+        // Retornar valor da reserva
+            // Se erro, rollback
+        // Atualiza poltronas do voo
+            // Se erro, rollback
+        // Retorna valor
+
+        // Lembrar de usar o ErrorDTO e SagaResponse
+        
+        return new CancelReserveResponseDTO();
     }
     
 }

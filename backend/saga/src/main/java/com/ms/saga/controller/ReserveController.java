@@ -3,6 +3,7 @@ package com.ms.saga.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.saga.orchestrator.ReserveOrchestrator;
@@ -30,9 +31,8 @@ public class ReserveController {
     }
 
     @DeleteMapping("/{id}")
-    public String cancelReserve(@PathVariable @Valid String entity) {
+    public ResponseEntity<CancelReserveResponseDTO> cancelReserve(@PathVariable @Valid String id) {
         
-        
-        return entity;
+        return ResponseEntity.ok(saga.processCancelReserve(id));
     }   
 }
