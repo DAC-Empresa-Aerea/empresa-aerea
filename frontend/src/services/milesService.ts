@@ -35,3 +35,12 @@ export const createMilesTransaction = async ({
   const response = await axios.post(`${API_URL}/Miles`, novaTransacao);
   return response.data;
 };
+
+
+export const getMilesStatementByCustomerCode = async (codigo_cliente: number) => {
+  const customer = await axios.get(`${API_URL}/Customer/?codigo=${codigo_cliente}`);
+  const clienteAtual = customer.data[0];
+  const response = await axios.get(`${API_URL}/Miles/?codigo_cliente=${clienteAtual.codigo}`);
+  console.log("Miles statement response:", response.data);
+  return response.data;
+};
