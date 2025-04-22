@@ -6,6 +6,15 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
+
+    public static final String CREATE_AUTH_EXCHANGE = "create.auth.exchange";
+    public static final String CREATE_AUTH_ROUTING_KEY = "create.auth.routing.key";
+
+    public static final String CREATE_CUSTOMER_EXCHANGE = "create.customer.exchange";
+    public static final String CREATE_CUSTOMER_ROUTING_KEY = "create.customer.routing.key";
+
+    public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
+    public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.customer.routing.key";
     
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
