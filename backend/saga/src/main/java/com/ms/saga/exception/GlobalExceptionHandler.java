@@ -21,4 +21,10 @@ public class GlobalExceptionHandler {
         ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage());
         return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
+
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleNotFound(NotFoundException ex) {
+        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage());
+        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
+    }
 }
