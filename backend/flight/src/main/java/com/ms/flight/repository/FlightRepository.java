@@ -1,12 +1,10 @@
 package com.ms.flight.repository;
 
-import java.util.UUID;
-
 import org.springframework.data.jpa.repository.JpaRepository;
 
-import com.ms.flight.models.Flight;
+import com.ms.flight.model.Flight;
 
 
-public interface FlightRepository extends JpaRepository<Flight, UUID> {
+public interface FlightRepository extends JpaRepository<Flight, String> {
 
 }

@@ -1,4 +1,4 @@
-package com.ms.flight.models;
+package com.ms.flight.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
