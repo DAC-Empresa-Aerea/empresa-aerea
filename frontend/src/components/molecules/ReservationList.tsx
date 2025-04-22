@@ -17,7 +17,7 @@ function ReservationList({
   cancelFlightClick,
 }: ReservationListProps) {
   return (
-    <section className="bg-white m-7 p-4 flex flex-col gap-4 rounded-xl shadow-md h-[49vh] overflow-hidden">
+    <section className="bg-white m-7 p-4 flex flex-col gap-4 rounded-xl shadow-md h-[80vh] overflow-hidden">
       <h2 className="font-roboto text-xl font-semibold text-gray-800">
         {title}
       </h2>

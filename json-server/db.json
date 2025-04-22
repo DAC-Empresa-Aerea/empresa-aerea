@@ -191,6 +191,7 @@
   ],
   "Reserve": [
     {
+      "id": "95a2",
       "codigo": "XPT789",
       "data": "2024-10-10T14:30:00-03:00",
       "valor": 250,
@@ -217,10 +218,10 @@
           "cidade": "Rio de Janeiro",
           "uf": "RJ"
         }
-      },
-      "id": "95a2"
+      }
     },
     {
+      "id": "2535",
       "codigo": "ABC123",
       "data": "2024-11-01T09:00:00-03:00",
       "valor": 300,
@@ -247,8 +248,127 @@
           "cidade": "Guarulhos",
           "uf": "SP"
         }
-      },
-      "id": "2535"
+      }
+    },
+    {
+      "id": "a123",
+      "codigo": "RES2026A",
+      "data": "2024-10-05T10:15:00-03:00",
+      "valor": 450,
+      "milhas_utilizadas": 0,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "CONFIRMADO",
+      "voo": {
+        "codigo": "FL7890",
+        "data": "2024-11-15T08:30:00-03:00",
+        "valor_passagem": 450,
+        "quantidade_poltronas_total": 120,
+        "quantidade_poltronas_ocupadas": 78,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "CWB",
+          "nome": "Aeroporto Internacional de Curitiba",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        },
+        "aeroporto_destino": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        }
+      }
+    },
+    {
+      "id": "b456",
+      "codigo": "RES2026B",
+      "data": "2024-10-07T14:30:00-03:00",
+      "valor": 380,
+      "milhas_utilizadas": 200,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "CONFIRMADO",
+      "voo": {
+        "codigo": "FL4567",
+        "data": "2024-12-20T16:45:00-03:00",
+        "valor_passagem": 580,
+        "quantidade_poltronas_total": 150,
+        "quantidade_poltronas_ocupadas": 120,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        }
+      }
+    },
+    {
+      "id": "c789",
+      "codigo": "RES2026C",
+      "data": "2024-10-10T09:45:00-03:00",
+      "valor": 720,
+      "milhas_utilizadas": 500,
+      "quantidade_poltronas": 2,
+      "codigo_cliente": 2026,
+      "estado": "PENDENTE",
+      "voo": {
+        "codigo": "FL1234",
+        "data": "2025-01-05T11:20:00-03:00",
+        "valor_passagem": 610,
+        "quantidade_poltronas_total": 180,
+        "quantidade_poltronas_ocupadas": 95,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "CWB",
+          "nome": "Aeroporto Internacional de Curitiba",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        }
+      }
+    },
+    {
+      "id": "d012",
+      "codigo": "RES2026D",
+      "data": "2024-09-25T16:30:00-03:00",
+      "valor": 330,
+      "milhas_utilizadas": 150,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "CANCELADA",
+      "voo": {
+        "codigo": "FL8901",
+        "data": "2024-10-30T07:15:00-03:00",
+        "valor_passagem": 480,
+        "quantidade_poltronas_total": 130,
+        "quantidade_poltronas_ocupadas": 89,
+        "estado": "CANCELADO",
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "CWB",
+          "nome": "Aeroporto Internacional de Curitiba",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        }
+      }
     }
   ],
   "Miles": [
