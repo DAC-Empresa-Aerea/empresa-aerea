@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 
+import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.customer.CustomerRequestDTO;
 import com.ms.saga.dto.customer.CustomerResponseDTO;
 import com.ms.saga.dto.error.SagaResponse;
@@ -17,8 +18,8 @@ public class CustomerProducer {
 
     public SagaResponse<CustomerResponseDTO> sendCreateCustomer(CustomerRequestDTO dto) {
         return rabbitTemplate.convertSendAndReceiveAsType(
-            "create.customer.exchange",
-            "create.customer.routing.key",
+            RabbitMQConfig.CREATE_CUSTOMER_EXCHANGE,
+            RabbitMQConfig.CREATE_CUSTOMER_ROUTING_KEY,
             dto,
             new ParameterizedTypeReference<SagaResponse<CustomerResponseDTO>>() {}
         );
@@ -26,8 +27,8 @@ public class CustomerProducer {
 
     public void sendRollbackCustomer(Long customerId) {
         rabbitTemplate.convertAndSend(
-            "rollback.customer.exchange",
-            "rollback.customer.routing.key",
+            RabbitMQConfig.ROLLBACK_CUSTOMER_EXCHANGE,
+            RabbitMQConfig.ROLLBACK_CUSTOMER_ROUTING_KEY,
             customerId
         );
     }
