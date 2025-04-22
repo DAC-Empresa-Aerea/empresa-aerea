@@ -4,14 +4,18 @@ import { EmployeeRoutesEnum as Routes } from "./routes.enum";
 
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
-const EmployeeHomePage = Loadable(lazy(() => import("../pages/EmployeeHome")));
+const EmployeeHomePage = Loadable(
+  lazy(() => import("../pages/employee/EmployeeHome"))
+);
 const ConfirmBoarding = Loadable(
-  lazy(() => import("../pages/ConfirmBoarding"))
+  lazy(() => import("../pages/employee/ConfirmBoarding"))
 );
 const RegisterFlights = Loadable(
-  lazy(() => import("../pages/RegisterFlights"))
+  lazy(() => import("../pages/employee/RegisterFlights"))
 );
-const EmployeeCRUD = Loadable(lazy(() => import("../pages/EmployeeCRUD")));
+const EmployeeCRUD = Loadable(
+  lazy(() => import("../pages/employee/EmployeeCRUD"))
+);
 
 const EmployeeRoutes = {
   path: Routes.BASE,

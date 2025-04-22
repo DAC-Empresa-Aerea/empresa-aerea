@@ -5,21 +5,23 @@ import { CustomerRoutesEnum as Routes } from "./routes.enum";
 const CartLayout = Loadable(lazy(() => import("../layouts/Cart")));
 const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
-const Cart = Loadable(lazy(() => import("../pages/Cart")));
+const Cart = Loadable(lazy(() => import("../pages/customer/Cart")));
 const CustomerHomePage = Loadable(
-  lazy(() => import("../pages/CustomerHomePage"))
+  lazy(() => import("../pages/customer/CustomerHomePage"))
 );
 const BasicCustomerLayout = Loadable(
   lazy(() => import("../layouts/BasicCustomer"))
 );
 const CheckReservation = Loadable(
-  lazy(() => import("../pages/CheckReservation"))
+  lazy(() => import("../pages/customer/CheckReservation"))
 );
-const SearchFlights = Loadable(lazy(() => import("../pages/SearchFlights")));
-const CheckIn = Loadable(lazy(() => import("../pages/CheckIn")));
-const BuyMiles = Loadable(lazy(() => import("../pages/BuyMiles")));
+const SearchFlights = Loadable(
+  lazy(() => import("../pages/customer/SearchFlights"))
+);
+const CheckIn = Loadable(lazy(() => import("../pages/customer/CheckIn")));
+const BuyMiles = Loadable(lazy(() => import("../pages/customer/BuyMiles")));
 const ConsultStatement = Loadable(
-  lazy(() => import("../pages/ConsultStatement"))
+  lazy(() => import("../pages/customer/ConsultStatement"))
 );
 
 const CustomerRoutes = {
