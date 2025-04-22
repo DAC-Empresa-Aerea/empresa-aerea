@@ -70,7 +70,7 @@ const Header = () => {
                 <LinkButton href={"/search"} className="font-bold">
                   Buscar
                 </LinkButton>
-                <LinkButton href={"/buy-miles"}>Comprar Milhas</LinkButton>
+                <LinkButton href={"/customer/buy-miles"}>Comprar Milhas</LinkButton>
                 <LinkButton href={"/customer-home"}>Meu Perfil</LinkButton>
               </nav>
               <div className="py-6">

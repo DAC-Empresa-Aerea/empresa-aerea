@@ -1,3 +1,4 @@
+/*
 import { LoginRequest, LoginResponse } from "../types/api/login";
 import { User } from "../types/users";
 
@@ -277,3 +278,5 @@ export const logout = () => {
   localStorage.removeItem("userType");
   localStorage.removeItem("userData");
 };
+
+*/

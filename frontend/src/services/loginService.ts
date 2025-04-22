@@ -1,5 +1,6 @@
 // loginService.ts
 import axios from "axios";
+import CustomerRoutes  from "../routes/CustomerRoutes"; // Ajuste o caminho conforme necessário
 
 const API_URL = "http://localhost:3001";
 
@@ -9,8 +10,8 @@ interface LoginPayload {
 }
 
 export const loginService = async ({ login, senha }: LoginPayload) => {
+  console.log("Rotas carregadas:", CustomerRoutes);
   try {
-    // Tentando acessar o funcionário primeiro
     const employeeResponse = await axios.get(`${API_URL}/Employee`, {
       params: {
         email: login,
