@@ -1,32 +1,31 @@
 package com.ms.flight.seed;
 
-import java.util.List;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
-import org.springframework.stereotype.Component;
-
+import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
+import com.ms.flight.enums.FlightStatusEnum;
 import com.ms.flight.model.FlightStatus;
 import com.ms.flight.repository.FlightStatusRepository;
 
-@Component
-public class FlightStatusInitializer implements ApplicationRunner {
+@Configuration
+public class FlightStatusInitializer {
 
-    @Autowired
-    private FlightStatusRepository flightStatusRepository;
+    @Bean
+    public ApplicationRunner initFlightStatuses(FlightStatusRepository repository) {
+        return args -> {
+            for (FlightStatusEnum statusEnum : FlightStatusEnum.values()) {
+                boolean exists = repository.existsById(statusEnum.getCodigo());
 
-    private static final List<FlightStatus> STATUS_INICIAIS = List.of(
-        new FlightStatus("CONFIRMADO", "CON", "Voo confirmado"),
-        new FlightStatus("REALIZADO", "REA", "Voo realizado"),
-        new FlightStatus("CANCELADO", "CAN", "Voo cancelada")
-    );
-
-    @Override
-    public void run(ApplicationArguments args) {
-        if (flightStatusRepository.count() == 0) {
-            flightStatusRepository.saveAll(STATUS_INICIAIS);
-        }
+                if (!exists) {
+                    FlightStatus status = new FlightStatus(
+                        statusEnum.getCodigo(),
+                        statusEnum.getSigla(),
+                        statusEnum.getDescricao()
+                    );
+                    repository.save(status);
+                }
+            }
+        };
     }
 }
 
