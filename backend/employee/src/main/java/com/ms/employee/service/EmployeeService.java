@@ -71,7 +71,7 @@ public class EmployeeService {
      * @param id O ID do funcionário a ser recuperado.
      * @return O objeto Employee correspondente ao ID fornecido, ou null se não encontrado.
      */
-    public Employee findById(Long id) {
+    public EmployeeResponseDTO findById(Long id) {
         Employee employee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
         return convertToEmployeeResponseDTO(employee);
@@ -90,16 +90,19 @@ public class EmployeeService {
      * @return O objeto Employee atualizado após ser salvo no repositório.
      * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
      */
-    public Employee updateEmployee(Long id, EmployeeRequestDTO employee) {
-        Employee existingEmployee = findById(id);
+    @Transactional
+    public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employee) {
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
 
         existingEmployee.setCpf(employee.getCpf());
         existingEmployee.setEmail(employee.getEmail());
         existingEmployee.setNome(employee.getName());
         existingEmployee.setTelefone(employee.getTelefone());
 
-        return employeeRepository.save(existingEmployee);
+        Employee updatedEmployee = employeeRepository.save(existingEmployee);
 
+        return convertToEmployeeResponseDTO(updatedEmployee);
     }
     //#endregion
    

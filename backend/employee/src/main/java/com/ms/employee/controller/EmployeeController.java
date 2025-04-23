@@ -55,16 +55,14 @@ public class EmployeeController {
     }
 
     @PostMapping
-    public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody EmployeeRequestDTO dto) {
-        Employee employee = employeeService.createEmployee(dto);
-        EmployeeResponseDTO responseDTO = new EmployeeResponseDTO(employee.getId(), employee.getCpf(), employee.getEmail(), employee.getNome(), employee.getTelefone());
-        return ResponseEntity.ok(responseDTO);
+    public ResponseEntity<EmployeeResponseDTO> create(@RequestBody EmployeeRequestDTO dto) {
+        EmployeeResponseDTO responseDTO = employeeService.create(dto);
+        return ResponseEntity.status(201).body(responseDTO); 
     }
 
     @PutMapping ("/{id}")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeRequestDTO dto) {
-        Employee employee = employeeService.updateEmployee(id, dto);
-        EmployeeResponseDTO responseDTO = new EmployeeResponseDTO(employee.getId(), employee.getCpf(), employee.getEmail(), employee.getNome(), employee.getTelefone());
+        EmployeeResponseDTO responseDTO = employeeService.updateEmployee(id, dto);
         return ResponseEntity.ok(responseDTO);
     }
 
