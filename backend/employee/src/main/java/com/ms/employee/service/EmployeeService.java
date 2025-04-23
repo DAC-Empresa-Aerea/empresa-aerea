@@ -114,7 +114,8 @@ public class EmployeeService {
      * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
      */
     public void deleteEmployee(Long id) {
-        Employee existingEmployee = findById(id);
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
         employeeRepository.delete(existingEmployee);
     }
     //#endregion

@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.employee.dto.EmployeeResponseDTO;
-import com.ms.employee.model.Employee;
 import com.ms.employee.dto.EmployeeRequestDTO;
 import com.ms.employee.service.EmployeeService;
 
