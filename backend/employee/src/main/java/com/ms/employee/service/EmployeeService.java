@@ -25,13 +25,20 @@ public class EmployeeService {
     /**
      * Cria um novo funcionário e o salva no repositório.
      *
-     * @param employee O objeto funcionário contendo os detalhes a serem criados.
+     * @param employee O objeto EmployeeRequestDTO contendo os detalhes do funcionário a ser criado.
      *                 Deve incluir valores não nulos e não vazios para CPF, email, nome e telefone.
-     * @return O objeto Employee recém-criado após ser salvo no repositório.
+     * @return O objeto EmployeeResponseDTO representando o funcionário recém-criado após ser salvo no repositório.
      * @throws IllegalArgumentException se qualquer campo obrigatório (CPF, email, nome ou telefone) for nulo ou vazio.
      */
     @Transactional
     public EmployeeResponseDTO create(EmployeeRequestDTO employee) {
+        if (employee.getCpf() == null || employee.getCpf().isEmpty() ||
+            employee.getEmail() == null || employee.getEmail().isEmpty() ||
+            employee.getName() == null || employee.getName().isEmpty() ||
+            employee.getTelefone() == null || employee.getTelefone().isEmpty()) {
+            throw new IllegalArgumentException("CPF, email, nome e telefone são obrigatórios e não podem ser nulos ou vazios.");
+        }
+
         System.out.println("Criando funcionário: " + employee.getName());
         Employee employeeEntity = new Employee();
         BeanUtils.copyProperties(employee, employeeEntity);
