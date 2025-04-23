@@ -2,7 +2,7 @@ package com.ms.flight.model;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
-import java.util.Date;
+import java.time.LocalDateTime;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.DecimalMin;
@@ -29,7 +29,7 @@ public class Flight implements Serializable {
 
     @NotNull
     @Future
-    private Date data;
+    private LocalDateTime data;
 
     @NotNull
     @DecimalMin(value = "0.01")
@@ -39,12 +39,12 @@ public class Flight implements Serializable {
     @NotNull
     @Min(value = 1)
     @Column(nullable = false)
-    private Long poltronasTotais;
+    private Integer poltronasTotais;
 
     @NotNull
     @Min(value = 0)
     @Column(nullable = false)
-    private Long poltronasOcupadas;
+    private Integer poltronasOcupadas;
 
     @ManyToOne(optional = false)
     @JoinColumn(
