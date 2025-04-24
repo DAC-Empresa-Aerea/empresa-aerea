@@ -1,4 +1,4 @@
-import { Reserve } from "../../atoms/TableItem";
+import Reserve from "../../../types/Reserve";
 import ReservationList from "../../molecules/ReservationList";
 
 interface ReservationTableProps {

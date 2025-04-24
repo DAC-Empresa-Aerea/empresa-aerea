@@ -66,7 +66,7 @@ function FlightBasicInfo({
         </div>
 
         <button
-          className="transition-colors px-4 py-2 bg-blue-800 font-roboto text-white cursor-pointer hover:bg-blue-600 rounded-lg ml-4"
+          className="transition-colors px-4 py-2 bg-blue-600 font-roboto text-white cursor-pointer hover:bg-blue-800 rounded-lg ml-4"
           onClick={onClick}
         >
           {buttonText}

@@ -1,9 +1,12 @@
 import { useState } from "react";
-import LogoImage from "../components/atoms/images/LogoImage";
-import BasicInput from "../components/atoms/inputs/BasicInput";
-import MaskedInput from "../components/atoms/inputs/MaskedInput"; // Importando o MaskedInput
-import { fetchAddressByCep } from "../utils/ViaCep"; // Importando a função para buscar o endereço
-import SubmitButton from "../components/atoms/buttons/SubmitButton";
+import { useNavigate } from "react-router-dom";
+import LogoImage from "../../components/atoms/images/LogoImage";
+import BasicInput from "../../components/atoms/inputs/BasicInput";
+import MaskedInput from "../../components/atoms/inputs/MaskedInput";
+import { fetchAddressByCep } from "../../utils/ViaCep";
+import SubmitButton from "../../components/atoms/buttons/SubmitButton";
+//import { register } from "../../services/authService";
+import { registerCustomer } from "../../services/customerService";
 
 const SelfRegistration = () => {
   const [name, setName] = useState("");
@@ -16,21 +19,47 @@ const SelfRegistration = () => {
   const [number, setNumber] = useState("");
   const [complement, setComplement] = useState("");
   const [cepError, setCepError] = useState("");
+  const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
-    console.log("Login: ", {
-      name,
-      email,
-      cpf,
-      cep,
-      state,
-      city,
-      street,
-      number,
-      complement,
-    });
+    setError("");
+    setSuccess("");
+    setLoading(true);
+  
+    try {
+      await registerCustomer({
+        cpf,
+        email,
+        nome: name,
+        endereco: {
+          cep,
+          uf: state,
+          cidade: city,
+          rua: street,
+          numero: number,
+          complemento: complement,
+        }
+      });
+  
+      setSuccess("Cadastro realizado com sucesso! Uma senha será enviada por e-mail.");
+  
+      setTimeout(() => {
+        navigate("/login");
+      }, 2000);
+  
+    } catch (err: any) {
+      const errorMessage =
+        err?.response?.data?.message ||
+        (err instanceof Error ? err.message : "Erro ao registrar. Tente novamente.");
+      setError(errorMessage);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleCepBlur = async (cep: string) => {
@@ -61,6 +90,18 @@ const SelfRegistration = () => {
         <h2 className="mb-4 text-center text-2xl text-gray-800 cursor-default">
           Self Registration
         </h2>
+
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
+
+        {success && (
+          <div className="mb-4 p-2 bg-green-100 text-green-700 border border-green-400 rounded">
+            {success}
+          </div>
+        )}
 
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
@@ -156,10 +197,17 @@ const SelfRegistration = () => {
             />
           </div>
 
-          <SubmitButton text="Register" />
+          <SubmitButton text={loading ? "Registering..." : "Register"} />
 
           <p className="mt-4 text-center text-sm text-gray-800 cursor-default">
             Your password will be sent to your email.
+          </p>
+
+          <p className="mt-2 text-center text-sm text-gray-600 cursor-default">
+            Already have an account?{" "}
+            <a href="/login" className="text-blue-500 hover:underline">
+              Login
+            </a>
           </p>
         </form>
       </div>

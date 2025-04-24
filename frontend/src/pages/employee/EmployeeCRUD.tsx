@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import Employee from "../../types/Employee";
 import employeesExample from "../../data/EmployeesExample";
 import EmployeeTable from "../../components/organisms/EmployeeTable";
@@ -7,6 +7,8 @@ import BasicModal, {
 } from "../../components/atoms/modals/_BasicModal";
 import EmployeeForm from "../../components/organisms/EmployeeForm";
 import CircularButton from "../../components/atoms/buttons/CircularButton";
+
+const API_URL = "http://localhost:3001/Employee";
 
 function EmployeeCRUD() {
   const [employees, setEmployees] = useState<Employee[]>(employeesExample);
@@ -20,33 +22,60 @@ function EmployeeCRUD() {
     text: "Fechar",
   });
 
+  useEffect(() => {
+    fetch(API_URL)
+    .then((res) => res.json())
+    .then((data) => setEmployees(data))
+    .catch((err) => console.error("Erro ao buscar funcionarios:", err));
+  }, []);
+
   const handleDeleteEmployee = (employee: Employee | null) => {
     if (employee) {
       if (!window.confirm("Deseja realmente deletar este funcionário?")) return;
+
+      fetch(`${API_URL}/${employee.codigo}`, {
+        method: "DELETE",
+      })
+      .then(() => {
       setEmployees((prev) =>
-        prev.filter((emp) => emp.codigo !== employee.codigo)
-      );
+        prev.filter((emp) => emp.codigo !== employee.codigo));
+    }) 
+    .catch((err) => console.error("Erro ao deletar funcionario:", err));
     }
   };
 
   const handleOpenModal = (employee: Employee | null) => {
-    if (employee) {
+    if (!employee) {
       setSelectedEmployee(employee);
     }
     setOpenModal((prev) => ({ ...prev, isOpen: true }));
   };
 
   const onConfirmEdit = (employee: Employee) => {
+    const method = employee.codigo ? "PUT" : "POST";
+    const url = employee.codigo ? `${API_URL}/${employee.codigo}` : API_URL;
+    fetch(url, {
+      method,
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(employee),
+    })
+    .then((res) => res.json())
+    .then((data) => {
     if (employee.codigo) {
       setEmployees((prev) =>
         prev.map((emp) => (emp.codigo === employee.codigo ? employee : emp))
       );
     } else {
       setEmployees((prev) => [
-        ...prev,
-        { ...employee, codigo: prev.length + 1 },
+        ...prev, 
+        data
       ]);
     }
+  })
+  .catch((err) => console.error("Erro ao atualizar ou criar funcionario:", err));
+  
     setOpenModal((prev) => ({ ...prev, isOpen: false }));
     setSelectedEmployee(null);
   };

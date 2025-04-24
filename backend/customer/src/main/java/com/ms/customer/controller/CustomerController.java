@@ -52,6 +52,15 @@ public class CustomerController {
         CustomerResponseDTO dto = customerService.findById(id);
         return ResponseEntity.ok(dto);
     }
+    
+    @GetMapping("/email/{email}")
+    public ResponseEntity<CustomerResponseDTO> getCustomerByEmail(@PathVariable String email) {
+        CustomerResponseDTO dto = customerService.findByEmail(email);
+        if (dto == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(dto);
+    }
 
     @GetMapping("/{id}/milhas")
     public ResponseEntity<CheckMileResponseDTO> milesStatement(@PathVariable Long id) {

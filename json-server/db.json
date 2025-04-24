@@ -1,0 +1,704 @@
+{
+  "Employee": [
+    {
+      "codigo": 1,
+      "cpf": "12345678901",
+      "email": "usuario@gmail.com",
+      "password": "123456",
+      "nome": "Usuario",
+      "telefone": "41999999999",
+      "id": "19ee"
+    },
+    {
+      "codigo": 2,
+      "cpf": "23456789012",
+      "email": "usu@gmail.com",
+      "password": "123456",
+      "nome": "Usu usu",
+      "telefone": "41999999888",
+      "id": "c677"
+    },
+    {
+      "codigo": 3,
+      "cpf": "34567890123",
+      "email": "funcionario@empresa.com",
+      "password": "abc123",
+      "nome": "Funcionário Silva",
+      "telefone": "41988887777",
+      "id": "0712"
+    },
+    {
+      "id": "12ff",
+      "codigo": 4,
+      "cpf": "89898989891",
+      "email": "testando@gmail.com",
+      "password": "123456",
+      "nome": "Testei",
+      "telefone": "41999999999"
+    },
+    {
+      "id": "5b86",
+      "cpf": "89898989831",
+      "email": "testa45@gmail.com",
+      "password": "123456",
+      "nome": "Testrfti",
+      "telefone": "41999999999"
+    }
+  ],
+  "Customer": [
+    {
+      "codigo": 1010,
+      "cpf": "12345678901",
+      "email": "usuario@gmail.com",
+      "nome": "Usuário",
+      "saldo_milhas": 0,
+      "endereco": {
+        "cep": "80111000",
+        "uf": "PR",
+        "cidade": "Pontal do Paraná",
+        "bairro": "Praia de Leste",
+        "rua": "Rua das Palmeiras",
+        "numero": "500",
+        "complemento": "Casa"
+      },
+      "id": "25d8"
+    },
+    {
+      "codigo": 1011,
+      "cpf": "98765432100",
+      "email": "maria@gmail.com",
+      "nome": "Maria Souza",
+      "saldo_milhas": 1500,
+      "endereco": {
+        "cep": "80220000",
+        "uf": "PR",
+        "cidade": "Curitiba",
+        "bairro": "Centro",
+        "rua": "Rua XV de Novembro",
+        "numero": "123",
+        "complemento": "Apto 202"
+      },
+      "id": "095b"
+    },
+    {
+      "id": "8109",
+      "codigo": 2025,
+      "cpf": "98765432100",
+      "email": "cliente.novo@email.com",
+      "nome": "Cliente Novo",
+      "saldo_milhas": 1500,
+      "endereco": {
+        "cep": "80010000",
+        "uf": "PR",
+        "cidade": "Curitiba",
+        "bairro": "Centro",
+        "rua": "Rua Nova",
+        "numero": "123",
+        "complemento": "Apto 101"
+      }
+    },
+    {
+      "id": "1a41",
+      "codigo": 2026,
+      "cpf": "12345678909",
+      "email": "voidalzk@gmail.com",
+      "nome": "Gabriel Voidaleski",
+      "senha": "1234",
+      "saldo_milhas": 19100,
+      "endereco": {
+        "cep": "82410312",
+        "uf": "PR",
+        "cidade": "Curitiba",
+        "bairro": "",
+        "rua": "Rua Rachel Corayola Bajerski",
+        "numero": "342",
+        "complemento": ""
+      }
+    }
+  ],
+  "Airports": [
+    {
+      "codigo": "GRU",
+      "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+      "cidade": "Guarulhos",
+      "uf": "SP",
+      "id": "4883"
+    },
+    {
+      "codigo": "GIG",
+      "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+      "cidade": "Rio de Janeiro",
+      "uf": "RJ",
+      "id": "5edd"
+    },
+    {
+      "codigo": "CWB",
+      "nome": "Aeroporto Internacional de Curitiba",
+      "cidade": "Curitiba",
+      "uf": "PR",
+      "id": "6ae5"
+    }
+  ],
+  "Flights": [
+    {
+      "data": "2024-10-13T16:00:00-03:00",
+      "origem": "CWB",
+      "destino": "GRU",
+      "voos": [
+        {
+          "codigo": "VOO0001",
+          "data": "2025-08-10T10:30:00-03:00",
+          "valor_passagem": 100,
+          "quantidade_poltronas_total": 100,
+          "quantidade_poltronas_ocupadas": 10,
+          "estado": "CONFIRMADO",
+          "aeroporto_origem": {
+            "codigo": "POA",
+            "nome": "Aeroporto Internacional de POA",
+            "cidade": "Porto Alegre",
+            "uf": "RS"
+          },
+          "aeroporto_destino": {
+            "codigo": "CWB",
+            "nome": "Aeroporto Internacional de CWB",
+            "cidade": "Curitiba",
+            "uf": "PR"
+          }
+        },
+        {
+          "codigo": "VOO0002",
+          "data": "2025-09-15T18:45:00-03:00",
+          "valor_passagem": 120,
+          "quantidade_poltronas_total": 150,
+          "quantidade_poltronas_ocupadas": 45,
+          "estado": "CONFIRMADO",
+          "aeroporto_origem": {
+            "codigo": "CWB",
+            "nome": "Aeroporto Internacional de Curitiba",
+            "cidade": "Curitiba",
+            "uf": "PR"
+          },
+          "aeroporto_destino": {
+            "codigo": "GRU",
+            "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+            "cidade": "Guarulhos",
+            "uf": "SP"
+          }
+        }
+      ],
+      "id": "3842"
+    }
+  ],
+  "Reserve": [
+    {
+      "id": "95a2",
+      "codigo": "XPT789",
+      "data": "2024-10-10T14:30:00-03:00",
+      "valor": 250,
+      "milhas_utilizadas": 50,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 9472,
+      "estado": "CANCELADA",
+      "voo": {
+        "codigo": "TADS0001",
+        "data": "2024-10-15T14:30:00-03:00",
+        "valor_passagem": 500,
+        "quantidade_poltronas_total": 100,
+        "quantidade_poltronas_ocupadas": 90,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        }
+      }
+    },
+    {
+      "id": "2535",
+      "codigo": "ABC123",
+      "data": "2024-11-01T09:00:00-03:00",
+      "valor": 300,
+      "milhas_utilizadas": 100,
+      "quantidade_poltronas": 2,
+      "codigo_cliente": 9472,
+      "estado": "CONFIRMADO",
+      "voo": {
+        "codigo": "VOO0002",
+        "data": "2025-09-15T18:45:00-03:00",
+        "valor_passagem": 120,
+        "quantidade_poltronas_total": 150,
+        "quantidade_poltronas_ocupadas": 45,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "CWB",
+          "nome": "Aeroporto Internacional de Curitiba",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        },
+        "aeroporto_destino": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        }
+      }
+    },
+    {
+      "id": "a123",
+      "codigo": "RES2026A",
+      "data": "2024-10-05T10:15:00-03:00",
+      "valor": 450,
+      "milhas_utilizadas": 0,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "CONFIRMADO",
+      "voo": {
+        "codigo": "FL7890",
+        "data": "2024-11-15T08:30:00-03:00",
+        "valor_passagem": 450,
+        "quantidade_poltronas_total": 120,
+        "quantidade_poltronas_ocupadas": 78,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "CWB",
+          "nome": "Aeroporto Internacional de Curitiba",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        },
+        "aeroporto_destino": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        }
+      }
+    },
+    {
+      "id": "b456",
+      "codigo": "RES2026B",
+      "data": "2024-10-07T14:30:00-03:00",
+      "valor": 380,
+      "milhas_utilizadas": 200,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "CONFIRMADO",
+      "voo": {
+        "codigo": "FL4567",
+        "data": "2024-12-20T16:45:00-03:00",
+        "valor_passagem": 580,
+        "quantidade_poltronas_total": 150,
+        "quantidade_poltronas_ocupadas": 120,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        }
+      }
+    },
+    {
+      "id": "c789",
+      "codigo": "RES2026C",
+      "data": "2024-10-10T09:45:00-03:00",
+      "valor": 720,
+      "milhas_utilizadas": 500,
+      "quantidade_poltronas": 2,
+      "codigo_cliente": 2026,
+      "estado": "PENDENTE",
+      "voo": {
+        "codigo": "FL1234",
+        "data": "2025-01-05T11:20:00-03:00",
+        "valor_passagem": 610,
+        "quantidade_poltronas_total": 180,
+        "quantidade_poltronas_ocupadas": 95,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "CWB",
+          "nome": "Aeroporto Internacional de Curitiba",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        }
+      }
+    },
+    {
+      "id": "d012",
+      "codigo": "RES2026D",
+      "data": "2024-09-25T16:30:00-03:00",
+      "valor": 330,
+      "milhas_utilizadas": 150,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "CANCELADA",
+      "voo": {
+        "codigo": "FL8901",
+        "data": "2024-10-30T07:15:00-03:00",
+        "valor_passagem": 480,
+        "quantidade_poltronas_total": 130,
+        "quantidade_poltronas_ocupadas": 89,
+        "estado": "CANCELADO",
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "CWB",
+          "nome": "Aeroporto Internacional de Curitiba",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        }
+      }
+    }
+  ],
+  "Miles": [
+    {
+      "codigo_cliente": 1010,
+      "data": "2025-03-10T15:30:00Z",
+      "valor_reais": 0,
+      "quantidade_milhas": 2000,
+      "descricao": "Bônus de boas-vindas",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "codigo_cliente": 1010,
+      "data": "2025-04-21T10:00:00Z",
+      "valor_reais": 250.75,
+      "quantidade_milhas": 1500,
+      "descricao": "Compra de passagem",
+      "codigo_reserva": "ABC123",
+      "tipo": "SAIDA"
+    },
+    {
+      "id": "35cf",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:33:23.119Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "3ac5",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:34:49.872Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0e99",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:36:09.836Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0370",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:37:09.965Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "a813",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:38:43.115Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "7d1f",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:39:32.300Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "5f25",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:40:03.053Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "78f1",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:40:33.727Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "3ee6",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:40:47.952Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "712e",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:40:57.855Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0849",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:41:00.395Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "97ec",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T18:57:34.947Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "1c30",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:00:57.541Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "beb2",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:03:26.710Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0104",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:08:42.169Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "d2a1",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:10:43.485Z",
+      "valor_reais": 125,
+      "quantidade_milhas": 25,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "3b29",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:24:50.150Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "8b23",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:28:58.640Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "479d",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:29:23.250Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "86de",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:29:44.723Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "e8f5",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:30:20.183Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "6579",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:30:31.349Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "3638",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:30:56.756Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "9e6e",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:31:28.437Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "9524",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:32:34.113Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "a829",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:32:39.967Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "0eac",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:32:42.392Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "c803",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:33:03.317Z",
+      "valor_reais": 250,
+      "quantidade_milhas": 50,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "d800",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:33:50.215Z",
+      "valor_reais": 2500,
+      "quantidade_milhas": 500,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "30c5",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:35:23.665Z",
+      "valor_reais": 2500,
+      "quantidade_milhas": 500,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "41a2",
+      "codigo_cliente": "2026",
+      "data": "2025-04-22T19:35:28.579Z",
+      "valor_reais": 125,
+      "quantidade_milhas": 25,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    }
+  ]
+}

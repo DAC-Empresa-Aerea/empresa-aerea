@@ -1,9 +1,10 @@
 import React from "react";
-import { MilesTransaction, User } from "../../../types/flightTypes";
+import {MilesTransaction} from "../../../types/Miles";
+import Customer from "../../../types/Customer";
 
 interface TransactionConfirmationProps {
   transaction: MilesTransaction | null;
-  user: User;
+  user: Customer;
   formatCurrency: (value: number) => string;
   onNewPurchase: () => void;
 }
@@ -14,6 +15,20 @@ const TransactionConfirmation: React.FC<TransactionConfirmationProps> = ({
   formatCurrency,
   onNewPurchase,
 }) => {
+  const transactionDate = transaction?.data
+  ? new Date(transaction.data).toLocaleString("pt-BR", {
+      day: "2-digit",
+      month: "long",
+      year: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
+    })
+  : "Data indisponível";
+  const milesAmount = transaction?.quantidade_milhas ? transaction.quantidade_milhas.toLocaleString() : "0";
+  const amountInReais = formatCurrency(transaction?.valor_reais || 0);
+  const description = transaction?.descricao ?? "Sem descrição disponível";
+  const userMiles = user.saldo_milhas ?? "0";
+
   return (
     <div className="bg-white rounded-lg shadow-lg overflow-hidden">
       <div className="bg-green-50 px-6 py-8 border-b border-green-100">
@@ -44,46 +59,31 @@ const TransactionConfirmation: React.FC<TransactionConfirmationProps> = ({
         </div>
       </div>
 
+      {/* Transaction Details */}
       <div className="px-6 py-6">
         <dl className="grid grid-cols-1 gap-x-4 gap-y-6 sm:grid-cols-2">
           <div>
-            <dt className="text-sm font-medium text-gray-500">
-              Data da transação
-            </dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              {transaction?.date.toLocaleString("pt-BR")}
-            </dd>
+            <dt className="text-sm font-medium text-gray-500">Data da transação</dt>
+            <dd className="mt-1 text-sm text-gray-900">{transactionDate}</dd>
           </div>
 
           <div>
-            <dt className="text-sm font-medium text-gray-500">Identificador</dt>
-            <dd className="mt-1 text-sm text-gray-900">{transaction?.id}</dd>
-          </div>
-
-          <div>
-            <dt className="text-sm font-medium text-gray-500">
-              Milhas adquiridas
-            </dt>
-            <dd className="mt-1 text-sm text-gray-900 font-medium">
-              {transaction?.milesAmount.toLocaleString()} milhas
-            </dd>
+            <dt className="text-sm font-medium text-gray-500">Milhas adquiridas</dt>
+            <dd className="mt-1 text-sm text-gray-900 font-medium">{milesAmount} milhas</dd>
           </div>
 
           <div>
             <dt className="text-sm font-medium text-gray-500">Valor pago</dt>
-            <dd className="mt-1 text-sm text-gray-900 font-medium">
-              {formatCurrency(transaction?.amountInReais || 0)}
-            </dd>
+            <dd className="mt-1 text-sm text-gray-900 font-medium">{amountInReais}</dd>
           </div>
 
           <div className="sm:col-span-2">
             <dt className="text-sm font-medium text-gray-500">Descrição</dt>
-            <dd className="mt-1 text-sm text-gray-900">
-              {transaction?.description}
-            </dd>
+            <dd className="mt-1 text-sm text-gray-900">{description}</dd>
           </div>
         </dl>
 
+        {/* User Balance */}
         <div className="mt-8 bg-blue-50 rounded-md p-4">
           <div className="flex">
             <div className="flex-shrink-0">
@@ -104,14 +104,13 @@ const TransactionConfirmation: React.FC<TransactionConfirmationProps> = ({
             <div className="ml-3 flex-1">
               <p className="text-sm text-blue-700">
                 Seu saldo atual de milhas:{" "}
-                <span className="font-bold">
-                  {user.milesBalance.toLocaleString()} milhas
-                </span>
+                <span className="font-bold">{userMiles} milhas</span>
               </p>
             </div>
           </div>
         </div>
 
+        {/* Button to Make New Purchase */}
         <div className="mt-6">
           <button
             onClick={onNewPurchase}

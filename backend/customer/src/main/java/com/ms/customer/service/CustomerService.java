@@ -59,6 +59,14 @@ public class CustomerService {
 
         return convertToCustomerResponseDTO(customer);
     }
+    
+    public CustomerResponseDTO findByEmail(String email) {
+        Customer customer = customerRepository.findByEmail(email);
+        if (customer == null) {
+            return null;
+        }
+        return convertToCustomerResponseDTO(customer);
+    }
 
     public CheckMileResponseDTO getMilesStatement(Long id) {
         Customer customer = customerRepository.findById(id).orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado com ID: " + id));

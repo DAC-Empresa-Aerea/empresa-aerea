@@ -1,8 +1,9 @@
-import StatementListItem, {Statement} from "../atoms/StatementListItem";
+import StatementListItem from "../atoms/StatementListItem";
+import { MilesTransaction } from "../../types/Miles";
 
 interface StatementListProps {
     title: string;
-    statements: Statement[]; // Certifique-se de que Statement está importado ou definido
+    statements: MilesTransaction[];
     buttonText: string;
     onViewMoreClick: () => void;
 }
@@ -19,7 +20,7 @@ function StatementList({
             <ul className="flex flex-col gap-4">
                 {statements.map((statement) => (
                     <StatementListItem 
-                        key={statement.reservation_code} 
+                        key={statement.codigo_reserva} 
                         statement={statement}
                         buttonText={buttonText} onClick={() => {}} />
                 ))}

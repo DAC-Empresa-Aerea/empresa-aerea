@@ -38,4 +38,9 @@ public class Customer {
     @Valid
     private Address endereco;
 
+    public Customer orElseThrow(Object object) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
+    }
+
 }

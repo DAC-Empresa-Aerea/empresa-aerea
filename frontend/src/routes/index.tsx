@@ -9,7 +9,7 @@ import CustomerRoutes from "./CustomerRoutes";
 import EmployeeRoutes from "./EmployeeRoutes";
 
 //Para layouts
-const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
+const EmployeeLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
 //Para pages
 const Teste = Loadable(lazy(() => import("../pages/LandingPage")));
@@ -17,13 +17,12 @@ const Teste = Loadable(lazy(() => import("../pages/LandingPage")));
 const router = createBrowserRouter([
   {
     path: Routes.HOME,
-    element: <DashboardLayout />,
+    element: <EmployeeLayout />,
     children: [
       {
         index: true,
         element: <Teste />,
       },
-      
     ],
   },
   LoginRoutes,

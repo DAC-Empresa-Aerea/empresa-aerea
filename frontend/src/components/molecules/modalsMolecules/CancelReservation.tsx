@@ -1,15 +1,36 @@
-import { Reserve } from "../../atoms/TableItem";
+import Reserve from "../../../types/Reserve";
 import { FaTimes } from "react-icons/fa";
+import { UpdateReserve } from "../../../services/reserveService";
 
 interface CancelReservationProps {
   cancelisOpen: boolean;
   cancelClose: () => void;
   canceltitle: string;
   selectedReserve: Reserve;
+  onUpdate: () => void; 
 }
 
-function CancelReservation({ cancelisOpen, cancelClose, canceltitle, selectedReserve }: CancelReservationProps) {
+function CancelReservation({
+  cancelisOpen,
+  cancelClose,
+  canceltitle,
+  selectedReserve,
+  onUpdate,
+}: CancelReservationProps) {
   if (!cancelisOpen) return null;
+
+  const handleCancel = async () => {
+    try {
+      await UpdateReserve(selectedReserve.codigo, {
+        ...selectedReserve,
+        estado: "CANCELADA",
+      });
+      onUpdate();
+      cancelClose();
+    } catch (error) {
+      console.error("Erro ao cancelar a reserva:", error);
+      setErrorMessage("Não foi possível cancelar a reserva. Tente novamente mais tarde.");
+  };
 
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-opacity-30 backdrop-blur-sm">
@@ -31,7 +52,10 @@ function CancelReservation({ cancelisOpen, cancelClose, canceltitle, selectedRes
           <p><strong>Milhas Gastas:</strong> {selectedReserve.milhas_utilizadas.toString()}</p>
           <p><strong>Status:</strong> {selectedReserve.estado}</p>
         </div>
-        <button className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md w-full" onClick={cancelClose}>
+        <button
+          className="mt-4 px-4 py-2 bg-red-500 text-white rounded-md w-full"
+          onClick={handleCancel}
+        >
           Confirmar Cancelamento
         </button>
       </div>

@@ -1,20 +1,29 @@
 package com.ms.employee.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class EmployeeDTO {
+@Getter
+@Setter
+public class EmployeeResponseDTO {
 
-    //#region Atributos
+    @JsonProperty("codigo")
     private Long id;
+
     private String cpf;
+
     private String email;
+
     private String nome;
+    
     private String telefone;
-    //#endregion
 
 }

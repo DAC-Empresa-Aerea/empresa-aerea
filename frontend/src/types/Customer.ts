@@ -1,9 +1,9 @@
-interface Custumer {
+interface Customer {
     "codigo": number,
     "cpf": string,
     "email": string,
     "nome": string,
-    "saldoMilhas": number,
+    "saldo_milhas": number,
     "endereco": {
         "cep": string,
         "uf": string,
@@ -15,4 +15,4 @@ interface Custumer {
     }
 }
 
-export default Custumer;
+export default Customer;

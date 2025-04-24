@@ -1,7 +1,13 @@
 const express = require('express');
-const proxyService = require('../services/proxyService');
-const { FLIGHT } = require('../config/services');
+const flightController = require('../controllers/flightController');
 
-const router = express.Router();
-router.use('/', proxyService(FLIGHT, '/voos'));
-module.exports = router;
+const airportRoutes = express.Router();
+airportRoutes.use('/', flightController.proxyToAirports);
+
+const flightRoutes = express.Router();
+flightRoutes.use('/', flightController.proxyToFlight);
+
+module.exports = {
+    airportRoutes,
+    flightRoutes,
+};

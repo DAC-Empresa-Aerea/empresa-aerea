@@ -1,16 +1,43 @@
+// Login.tsx
 import { useState } from "react";
-import LogoImage from "../components/atoms/images/LogoImage";
-import BasicInput from "../components/atoms/inputs/BasicInput";
-import SubmitButton from "../components/atoms/buttons/SubmitButton";
+import { useNavigate } from "react-router-dom";
+import { useAuth } from "../../contexts/loginContext";
+import LogoImage from "../../components/atoms/images/LogoImage";
+import BasicInput from "../../components/atoms/inputs/BasicInput";
+import SubmitButton from "../../components/atoms/buttons/SubmitButton";
+import {
+  CustomerRoutesEnum,
+  EmployeeRoutesEnum,
+} from "../../routes/routes.enum";
 
 const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
+  const { login } = useAuth();
+  const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setError("");
 
-    console.log("Login: ", { email, password });
+    try {
+      const response = await login({ login: email, senha: password });
+
+      if (response.tipo === "CLIENTE") {
+        navigate(`/${CustomerRoutesEnum.BASE}/${CustomerRoutesEnum.HOME}`);
+      } else if (response.tipo === "FUNCIONARIO") {
+        navigate(`/${EmployeeRoutesEnum.BASE}/${EmployeeRoutesEnum.HOME}`);
+      } else {
+        navigate("/");
+      }
+    } catch (err) {
+      const errorMessage =
+        err instanceof Error
+          ? err.message
+          : "Login failed. Please check your credentials.";
+      setError(errorMessage);
+    }
   };
 
   return (
@@ -29,9 +56,15 @@ const Login = () => {
           Login
         </h2>
 
+        {error && (
+          <div className="mb-4 p-2 bg-red-100 text-red-700 border border-red-400 rounded">
+            {error}
+          </div>
+        )}
+
         {/* Form */}
         <form onSubmit={handleSubmit}>
-          {/* Campo de Email */}
+          {/* Email field */}
           <div className="mb-4">
             <BasicInput
               type="email"
@@ -42,7 +75,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Campo de Senha */}
+          {/* Password field */}
           <div className="mb-4">
             <BasicInput
               type="password"
@@ -53,7 +86,7 @@ const Login = () => {
             />
           </div>
 
-          {/* Opcoes entre os inputs e o botao de login */}
+          {/* Options */}
           <div className="mb-4 flex items-center justify-between">
             <label className="flex items-center">
               <input
@@ -69,10 +102,10 @@ const Login = () => {
             </a>
           </div>
 
-          {/* Botao de Login */}
+          {/* Login button */}
           <SubmitButton text="Login" />
 
-          {/* Link para a pagina de cadastro*/}
+          {/* Registration link */}
           <p className="mt-4 text-center text-sm text-gray-600 cursor-default">
             Don't have an account?{" "}
             <a href="/register" className="text-blue-500 hover:underline">
