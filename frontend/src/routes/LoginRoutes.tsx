@@ -7,9 +7,9 @@ const SelfRegistrationLayout = Loadable(
   lazy(() => import("../layouts/Self-registration"))
 );
 
-const Login = Loadable(lazy(() => import("../pages/Login")));
+const Login = Loadable(lazy(() => import("../pages/auth/Login")));
 const SelfRegistration = Loadable(
-  lazy(() => import("../pages/SelfRegistration"))
+  lazy(() => import("../pages/auth/SelfRegistration"))
 );
 
 const LoginRoutes = {

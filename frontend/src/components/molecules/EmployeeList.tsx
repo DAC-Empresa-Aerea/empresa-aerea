@@ -19,8 +19,8 @@ function EmployeeList({
   onViewMoreClick,
 }: EmployeeListProps) {
   return (
-    <section className="bg-white m-7 p-4 min-w-3/4 max-w-full h-full shadow-medium flex gap-4 flex-col">
-      <h2 className="font-roboto">{title}</h2>
+    <section className="bg-white m-7 p-4 min-w-3/4 max-w-full h-full shadow-medium flex gap-4 flex-col rounded-2xl">
+      <h2 className="font-roboto font-bold">{title}</h2>
       <ul className="flex flex-col gap-4">
         {employees.map((employee) => (
           <EmployeeListItem

@@ -1,8 +1,8 @@
 import { Outlet } from "react-router-dom";
-import Header from "../../components/organisms/Header";
-import Footer from "../../components/organisms/Footer";
+import Header from "../../components/organisms/divs/Header";
+import Footer from "../../components/organisms/divs/Footer";
 
-function DashboardLayout() {
+function EmployeeLayout() {
   return (
     <div className="contents flex-col h-full bg-gray-extra-light">
       <Header />
@@ -15,4 +15,4 @@ function DashboardLayout() {
   );
 }
 
-export default DashboardLayout;
+export default EmployeeLayout;
