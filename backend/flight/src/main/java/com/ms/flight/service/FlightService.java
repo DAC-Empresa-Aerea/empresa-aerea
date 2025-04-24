@@ -1,9 +1,13 @@
 package com.ms.flight.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import com.ms.flight.dto.airport.AirportResponseDTO;
 import com.ms.flight.dto.flight.FlightResponseDTO;
+import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
 import com.ms.flight.enums.FlightStatusEnum;
 import com.ms.flight.model.Airport;
@@ -25,7 +29,6 @@ public class FlightService {
     private FlightStatusService flightStatusService;
 
     public FlightResponseDTO registerFlight(RegisterFlightRequestDTO flightRequest) {
-
         Airport origem = airportService.getAirportByCode(flightRequest.getCodigoAeroportoOrigem());
         Airport destino = airportService.getAirportByCode(flightRequest.getCodigoAeroportoDestino());
         FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(FlightStatusEnum.CONFIRMADO.getCodigo());
@@ -61,7 +64,26 @@ public class FlightService {
         flightResponse.setEstado(flight.getEstado().getDescricao());
 
         return flightResponse;
+    }
+
+    public FlightWithAirportResponseDTO searchFlightByCode(String id) {
+        Flight flight = flightRepository.findById(id)
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voo não encontrado."));
         
+        Airport origem = flight.getOrigem();
+        Airport destino = flight.getDestino();
+
+        FlightWithAirportResponseDTO flightResponse = new FlightWithAirportResponseDTO();
+        flightResponse.setCodigo(flight.getCodigo());
+        flightResponse.setData(flight.getData());
+        flightResponse.setValorPassagem(flight.getValor());
+        flightResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
+        flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
+        flightResponse.setEstado(flight.getEstado().getDescricao());
+        flightResponse.setAeroportoOrigem(new AirportResponseDTO(origem.getCodigo(), origem.getNome(), origem.getCidade(), origem.getUF()));
+        flightResponse.setAeroportoDestino(new AirportResponseDTO(destino.getCodigo(), destino.getNome(), destino.getCidade(), destino.getUF()));
+
+        return new FlightWithAirportResponseDTO();
     }
 
 }

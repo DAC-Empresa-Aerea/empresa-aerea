@@ -4,6 +4,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.flight.dto.flight.FlightResponseDTO;
+import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
 import com.ms.flight.service.FlightService;
 
@@ -13,7 +14,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 
 @RestController
 @RequestMapping("voos")
@@ -27,5 +29,12 @@ public class FlightController {
         
         return ResponseEntity.ok(flightService.registerFlight(flightRequest));
     }
+
+    @GetMapping("/{codigo}")
+    public ResponseEntity<FlightWithAirportResponseDTO> searchFlightByCode(@PathVariable @Valid String id) {
+
+        return ResponseEntity.ok(flightService.searchFlightByCode(id));
+    }
+    
     
 }
