@@ -1,14 +1,18 @@
 package com.ms.flight.controller;
 
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.ms.flight.dto.flight.FlightByAirportDTO;
 import com.ms.flight.dto.flight.FlightResponseDTO;
 import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
 import com.ms.flight.service.FlightService;
 
 import jakarta.validation.Valid;
+
+import java.time.LocalDateTime;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -35,6 +39,15 @@ public class FlightController {
 
         return ResponseEntity.ok(flightService.searchFlightByCode(id));
     }
-    
+
+    @GetMapping
+    public ResponseEntity<FlightByAirportDTO> searchFlightsByAirport(
+            @RequestParam LocalDateTime data,
+            @RequestParam String origem,
+            @RequestParam String destino
+    ) {
+         
+        return ResponseEntity.ok(flightService.searchFlightsByAirport(data, origem, destino));
+    }
     
 }

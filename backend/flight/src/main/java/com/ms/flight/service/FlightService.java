@@ -1,11 +1,15 @@
 package com.ms.flight.service;
 
+import java.time.LocalDateTime;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ms.flight.dto.airport.AirportResponseDTO;
+import com.ms.flight.dto.flight.FlightByAirportDTO;
 import com.ms.flight.dto.flight.FlightResponseDTO;
 import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
@@ -86,4 +90,28 @@ public class FlightService {
         return new FlightWithAirportResponseDTO();
     }
 
+    public FlightByAirportDTO searchFlightsByAirport(LocalDateTime data, String origem, String destino) {
+        List<Flight> flights = flightRepository.findByAirportAndDate(origem, destino, data);
+
+        List<FlightWithAirportResponseDTO> flightResponses = flights.stream()
+            .map(flight -> {
+                FlightWithAirportResponseDTO flightResponse = new FlightWithAirportResponseDTO();
+                flightResponse.setCodigo(flight.getCodigo());
+                flightResponse.setData(flight.getData());
+                flightResponse.setValorPassagem(flight.getValor());
+                flightResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
+                flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
+                flightResponse.setEstado(flight.getEstado().getCodigo());
+                return flightResponse;
+            })
+            .toList();
+
+        FlightByAirportDTO flightByAirportDTO = new FlightByAirportDTO();
+        flightByAirportDTO.setOrigem(origem);
+        flightByAirportDTO.setDestino(destino);
+        flightByAirportDTO.setData(data);
+        flightByAirportDTO.setVoos(flightResponses);
+
+        return flightByAirportDTO;
+    }
 }
