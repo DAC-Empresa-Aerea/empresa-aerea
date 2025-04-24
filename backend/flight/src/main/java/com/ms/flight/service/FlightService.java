@@ -114,4 +114,21 @@ public class FlightService {
 
         return flightByAirportDTO;
     }
+
+    public List<FlightWithAirportResponseDTO> searchFlightsByDate (LocalDate dataInicio, LocalDate dataFim) {
+        List<Flight> flights = flightRepository.findAllByDateBetween(dataInicio.atStartOfDay(), dataFim.atStartOfDay());
+
+        return flights.stream()
+            .map(flight -> {
+                FlightWithAirportResponseDTO flightResponse = new FlightWithAirportResponseDTO();
+                flightResponse.setCodigo(flight.getCodigo());
+                flightResponse.setData(flight.getData());
+                flightResponse.setValorPassagem(flight.getValor());
+                flightResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
+                flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
+                flightResponse.setEstado(flight.getEstado().getCodigo());
+                return flightResponse;
+            })
+            .toList();
+    }
 }

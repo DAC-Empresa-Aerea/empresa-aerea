@@ -22,4 +22,10 @@ public interface FlightRepository extends JpaRepository<Flight, String> {
         @Param("data") LocalDateTime data
     );
 
+    @Query("SELECT f FROM Flight f WHERE f.data BETWEEN :dataInicio AND :dataFim")
+    List<Flight> findAllByDateBetween(
+        @Param("dataInicio") LocalDateTime dataInicio,
+        @Param("dataFim") LocalDateTime dataFim
+    );
+
 }

@@ -8,11 +8,14 @@ import com.ms.flight.dto.flight.FlightByAirportDTO;
 import com.ms.flight.dto.flight.FlightResponseDTO;
 import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
+import com.ms.flight.model.Flight;
 import com.ms.flight.service.FlightService;
 
 import jakarta.validation.Valid;
 
 import java.time.LocalDate;
+import java.time.LocalTime;
+import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -49,6 +52,15 @@ public class FlightController {
     ) {
          
         return ResponseEntity.ok(flightService.searchFlightsByAirport(data, origem, destino));
+    }
+
+    @GetMapping
+    public ResponseEntity<List<FlightWithAirportResponseDTO>> searchFlightsByDate(
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate data,
+            @RequestParam(name = "data-fim") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dataFim
+    ) {
+        
+        return ResponseEntity.ok(flightService.searchFlightsByDate(data, dataFim));
     }
     
 }
