@@ -33,9 +33,4 @@ public class ReserveResponseDTO {
     @JsonProperty("codigo_voo")
     private String codigoVoo;
 
-    @JsonProperty("codigo_aeroporto_origem")
-    private String codigoAeroportoOrigem;
-
-    @JsonProperty("codigo_aeroporto_destino")
-    private String codigoAeroportoDestino;
 }
