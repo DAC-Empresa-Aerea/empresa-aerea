@@ -28,7 +28,7 @@ public class Employee {
     private String email;
     @Column(nullable = false)
     private String nome;
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String telefone;
     //#endregion
 }
