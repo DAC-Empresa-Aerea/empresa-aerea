@@ -29,12 +29,9 @@ public class ReserveController {
     }
     
     @PatchMapping("/{id}/estado")
-    public ResponseEntity<String> updateReserve(@PathVariable @Valid String id, @RequestBody @Valid StatusDTO status) {
-        // Validar se status é um valor válido (aqui só CHECKIN e EMBARCADA são válidos)
-        // Validar se a pessoa tem acesso para alterar o status atual para o novo status (CHECKIN PARA CLIENTE E EMBARCADA PARA FUNCIONARIO)
-        // Alterar valor aqui e retornar o status correto
-        
-        return ResponseEntity.ok(status.getStatus());
+    public ResponseEntity<ReserveResponseDTO> updateReserve(@PathVariable @Valid String id, @RequestBody @Valid StatusDTO status) {
+    
+        return ResponseEntity.ok(reserveService.updateReserveStatusFromUser(id, status.getStatus()));
     }
     
 }
