@@ -5,12 +5,9 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -20,18 +17,28 @@ public class ReserveHistoryQuery {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "codigo_reserva", referencedColumnName = "codigo", nullable = false)
-    private ReserveQuery reserva;
+    @Column(name = "codigo_reserva", nullable = false)
+    private String codigoReserva;
 
     @Column(nullable = false)
     private LocalDateTime data;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_origem", referencedColumnName = "codigo", nullable = false)
-    private ReserveStatusQuery estadoOrigem;
+    @Column(name = "estado_origem_codigo", nullable = false)
+    private String estadoOrigemCodigo;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_destino", referencedColumnName = "codigo", nullable = false)
-    private ReserveStatusQuery estadoDestino;
+    @Column(name = "estado_origem_sigla", nullable = false)
+    private String estadoOrigemSigla;
+
+    @Column(name = "estado_origem_descricao", nullable = false)
+    private String estadoOrigemDescricao;
+
+    @Column(name = "estado_destino_codigo", nullable = false)
+    private String estadoDestinoCodigo;
+
+    @Column(name = "estado_destino_sigla", nullable = false)
+    private String estadoDestinoSigla;
+
+    @Column(name = "estado_destino_descricao", nullable = false)
+    private String estadoDestinoDescricao;
 }
+

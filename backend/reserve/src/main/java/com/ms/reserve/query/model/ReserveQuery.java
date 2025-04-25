@@ -5,10 +5,7 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -34,12 +31,20 @@ public class ReserveQuery {
     @Column(name = "milhas_utilizadas", nullable = false)
     private Integer milhasUtilizadas;
 
+    @Column(name = "quantidade_poltronas", nullable = false)
+    private Integer quantidadePoltronas;
+
     @Column(name = "codigo_cliente", nullable = false)
     private Long codigoCliente;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado", referencedColumnName = "codigo", nullable = false)
-    private ReserveStatusQuery estado;
+    @Column(name = "estado_codigo", nullable = false)
+    private String estadoCodigo;
+
+    @Column(name = "estado_sigla", nullable = false)
+    private String estadoSigla;
+
+    @Column(name = "estado_descricao", nullable = false)
+    private String estadoDescricao;
 
     @Column(name = "codigo_voo", nullable = false)
     private String codigoVoo;
