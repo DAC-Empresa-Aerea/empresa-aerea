@@ -13,32 +13,34 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "historico_reservas")
 public class ReserveHistoryQuery {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "codigo_reserva", nullable = false)
-    private String codigoReserva;
+    private String reserveCode;
 
-    @Column(nullable = false)
-    private LocalDateTime data;
+    @Column(name = "data", nullable = false)
+    private LocalDateTime date;
 
     @Column(name = "estado_origem_codigo", nullable = false)
-    private String estadoOrigemCodigo;
+    private String originStatusCode;
 
     @Column(name = "estado_origem_sigla", nullable = false)
-    private String estadoOrigemSigla;
+    private String originStatusAbbreviation;
 
     @Column(name = "estado_origem_descricao", nullable = false)
-    private String estadoOrigemDescricao;
+    private String originStatusDescription;
 
     @Column(name = "estado_destino_codigo", nullable = false)
-    private String estadoDestinoCodigo;
+    private String destinyStatusCode;
 
     @Column(name = "estado_destino_sigla", nullable = false)
-    private String estadoDestinoSigla;
+    private String destinyStatusAbbreviation;
 
     @Column(name = "estado_destino_descricao", nullable = false)
-    private String estadoDestinoDescricao;
+    private String destinyStatusDescription;
+
 }
 

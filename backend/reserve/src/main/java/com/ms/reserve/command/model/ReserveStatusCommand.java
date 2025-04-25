@@ -1,5 +1,6 @@
 package com.ms.reserve.command.model;
 
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
@@ -15,10 +16,15 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReserveStatusCommand {
-    @Id
-    private String codigo;
-    
-    private String sigla;
 
-    private String descricao;
+    @Id
+    @Column(name = "codigo", nullable = false)
+    private String code;
+    
+    @Column(name = "sigla", nullable = false)
+    private String abbreviation;
+
+    @Column(name = "descricao", nullable = false)
+    private String description;
+    
 }

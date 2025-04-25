@@ -15,8 +15,8 @@ public class CQRSConsumer {
     private CQRSService cqrsService;
 
     @RabbitListener(queues = RabbitMQConfig.RESERVE_STATUS_UPDATED_QUEUE)
-    public void consumeReserveStatusUpdatedEvent(UpdateStatusDTO event) {
-        cqrsService.updateStatus(event.getReserveId(), event.getStatus());
+    public void receiveReserveStatusUpdated(UpdateStatusDTO event) {
+        cqrsService.updateStatus(event.getReserveCode(), event.getStatus());
     }
 
 }

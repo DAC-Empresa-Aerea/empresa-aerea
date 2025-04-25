@@ -18,12 +18,12 @@ public class ReserveStatusInitializer {
         return args -> {
             for (StatusEnum statusEnum : StatusEnum.values()) {
                 
-                boolean existsInCommand = commandRepository.existsById(statusEnum.getCodigo());
+                boolean existsInCommand = commandRepository.existsById(statusEnum.getCode());
                 if (!existsInCommand) {
                     ReserveStatusCommand commandStatus = new ReserveStatusCommand(
-                        statusEnum.getCodigo(),
-                        statusEnum.getSigla(),
-                        statusEnum.getDescricao()
+                        statusEnum.getCode(),
+                        statusEnum.getAbbreviation(),
+                        statusEnum.getDescription()
                     );
                     commandRepository.save(commandStatus);
                 }

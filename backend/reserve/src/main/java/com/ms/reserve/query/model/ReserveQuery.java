@@ -19,33 +19,36 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReserveQuery {
+
     @Id
-    private String codigo;
+    @Column(name = "codigo", nullable = false)
+    private String code;
 
-    @Column(nullable = false)
-    private LocalDateTime data;
+    @Column(name = "data", nullable = false)
+    private LocalDateTime date;
 
-    @Column(nullable = false)
-    private BigDecimal valor;
+    @Column(name = "valor", nullable = false)
+    private BigDecimal value;
 
     @Column(name = "milhas_utilizadas", nullable = false)
-    private Integer milhasUtilizadas;
+    private Integer milesUsed;
 
     @Column(name = "quantidade_poltronas", nullable = false)
-    private Integer quantidadePoltronas;
+    private Integer seatsQuantity;
 
     @Column(name = "codigo_cliente", nullable = false)
-    private Long codigoCliente;
+    private Long customerCode;
 
     @Column(name = "estado_codigo", nullable = false)
-    private String estadoCodigo;
+    private String statusCode;
 
     @Column(name = "estado_sigla", nullable = false)
-    private String estadoSigla;
+    private String statusAbbreviation;
 
     @Column(name = "estado_descricao", nullable = false)
-    private String estadoDescricao;
+    private String statusDescription;
 
     @Column(name = "codigo_voo", nullable = false)
-    private String codigoVoo;
+    private String flightCode;
+
 }

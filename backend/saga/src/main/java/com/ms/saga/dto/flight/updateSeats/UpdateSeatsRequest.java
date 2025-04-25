@@ -1,8 +1,7 @@
-package com.ms.reserve.dto.status;
+package com.ms.saga.dto.flight.updateSeats;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,10 +11,12 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class StatusDTO {
-
-    @NotNull(message = "O status não pode ser nulo")
-    @JsonProperty("estado")
-    private String status;
+public class UpdateSeatsRequest {
     
+    @JsonProperty("codigo_voo")
+    private String flightCode;
+
+    @JsonProperty("quantidade_poltronas")
+    private Integer seatsQuantity;
+
 }

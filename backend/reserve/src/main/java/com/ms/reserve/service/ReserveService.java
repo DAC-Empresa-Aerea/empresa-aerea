@@ -44,7 +44,7 @@ public class ReserveService {
     }
 
     public ReserveResponseDTO updateReserveStatusFromUser(String id, String status) {
-        List<StatusEnum> validStatuses = List.of(StatusEnum.CRIADA, StatusEnum.CHECK_IN);
+        List<StatusEnum> validStatuses = List.of(StatusEnum.CREATED, StatusEnum.CHECK_IN);
         StatusEnum newStatus = StatusEnum.fromCode(status);
 
         if (newStatus == null || !validStatuses.contains(newStatus)) {
@@ -54,28 +54,28 @@ public class ReserveService {
         ReserveQuery reserveQuery = reserveQueryRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
 
-        StatusEnum currentStatus = StatusEnum.fromCode(reserveQuery.getCodigo());
+        StatusEnum currentStatus = StatusEnum.fromCode(reserveQuery.getCode());
 
         if (currentStatus.equals(newStatus)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reserva já está no status " + newStatus.getCodigo());
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reserva já está no status " + newStatus.getCode());
         }
 
         if (!StatusEnum.canTransfer(currentStatus, newStatus)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                "Não é possível transferir do status " + currentStatus.getCodigo() + " para " + newStatus.getCodigo());
+                "Não é possível transferir do status " + currentStatus.getCode() + " para " + newStatus.getCode());
         }
 
         ReserveCommand reserveCommand = new ReserveCommand();
         BeanUtils.copyProperties(reserveQuery, reserveCommand);
 
-        ReserveStatusCommand novoStatus = statusCommandRepository.findById(newStatus.getCodigo()).orElseThrow(
+        ReserveStatusCommand novoStatus = statusCommandRepository.findById(newStatus.getCode()).orElseThrow(
             () -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status não encontrado no modelo de escrita")
         );
 
-        reserveCommand.setEstado(novoStatus);
+        reserveCommand.setStatus(novoStatus);
         reserveCommandRepository.save(reserveCommand);
 
-        cqrsProducer.sendStatusUpdate(reserveCommand.getCodigo(), newStatus.getCodigo());
+        cqrsProducer.sendStatusUpdate(reserveCommand.getCode(), newStatus.getCode());
 
         ReserveResponseDTO reserveResponseDTO = new ReserveResponseDTO();
         BeanUtils.copyProperties(reserveCommand, reserveResponseDTO);

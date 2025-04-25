@@ -13,12 +13,12 @@ public class CQRSProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public void sendStatusUpdate(String reserveId, String status) {
+    public void sendStatusUpdate(String reserveCode, String status) {
         
         rabbitTemplate.convertAndSend(
             RabbitMQConfig.RESERVE_STATUS_UPDATED_EXCHANGE, 
             RabbitMQConfig.RESERVE_STATUS_UPDATED_ROUTING_KEY, 
-            new UpdateStatusDTO(reserveId, status)
+            new UpdateStatusDTO(reserveCode, status)
         );
     }
 

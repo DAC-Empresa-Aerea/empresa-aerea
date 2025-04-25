@@ -23,10 +23,11 @@ public class CQRSService {
         ReserveQuery reserveQuery = reserveQueryRepository.findById(reserveId)
                 .orElseThrow(() -> new IllegalArgumentException("Reserve not found with ID: " + reserveId));
 
-        reserveQuery.setEstadoCodigo(statusEnum.getCodigo());
-        reserveQuery.setEstadoDescricao(statusEnum.getDescricao());
-        reserveQuery.setEstadoSigla(statusEnum.getSigla());
+        reserveQuery.setStatusCode(statusEnum.getCode());
+        reserveQuery.setStatusDescription(statusEnum.getDescription());
+        reserveQuery.setStatusAbbreviation(statusEnum.getAbbreviation());
 
         reserveQueryRepository.save(reserveQuery);
     }
+    
 }
