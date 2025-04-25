@@ -24,6 +24,9 @@ public class ReserveResponseDTO {
     @JsonProperty("milhas_utilizadas")
     private Integer milhasUtilizadas;
 
+    @JsonProperty("quantidade_poltronas")
+    private Integer quantidadePoltronas;
+
     @JsonProperty("codigo_cliente")
     private Long codigoCliente;
 

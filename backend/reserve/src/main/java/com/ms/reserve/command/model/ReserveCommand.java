@@ -22,6 +22,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class ReserveCommand {
+    
     @Id
     private String codigo;
 
@@ -33,6 +34,9 @@ public class ReserveCommand {
 
     @Column(name = "milhas_utilizadas", nullable = false)
     private Integer milhasUtilizadas;
+
+    @Column(name = "quantidade_poltronas", nullable = false)
+    private Integer quantidadePoltronas;
 
     @Column(name = "codigo_cliente", nullable = false)
     private Long codigoCliente;
