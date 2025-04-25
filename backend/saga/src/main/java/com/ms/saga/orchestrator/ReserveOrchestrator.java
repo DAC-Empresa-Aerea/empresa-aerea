@@ -3,6 +3,7 @@ package com.ms.saga.orchestrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
@@ -39,6 +40,11 @@ public class ReserveOrchestrator {
         // Lembrar de usar o ErrorDTO e SagaResponse
         
         return new CancelReserveResponseDTO();
+    }
+
+    //Update status reserve because the flight status changed
+    public void updateStatusReserve(FlightStatusDTO dto) {
+        reserveProducer.updateStatusReserve(dto);
     }
     
 }

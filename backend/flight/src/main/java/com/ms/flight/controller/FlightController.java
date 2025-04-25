@@ -34,7 +34,7 @@ public class FlightController {
         return ResponseEntity.ok(flightService.registerFlight(flightRequest));
     }
 
-    @GetMapping("/{codigo}")
+    @GetMapping("/{id}")
     public ResponseEntity<FlightWithAirportResponseDTO> searchFlightByCode(@PathVariable @Valid String id) {
 
         return ResponseEntity.ok(flightService.searchFlightByCode(id));

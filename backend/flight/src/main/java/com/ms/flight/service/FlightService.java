@@ -13,6 +13,7 @@ import com.ms.flight.dto.flight.FlightByAirportDTO;
 import com.ms.flight.dto.flight.FlightResponseDTO;
 import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
+import com.ms.flight.dto.flightStatus.FlightStatusRequestDTO;
 import com.ms.flight.enums.FlightStatusEnum;
 import com.ms.flight.model.Airport;
 import com.ms.flight.model.Flight;
@@ -33,6 +34,7 @@ public class FlightService {
     private FlightStatusService flightStatusService;
 
     public FlightResponseDTO registerFlight(RegisterFlightRequestDTO flightRequest) {
+
         Airport origem = airportService.getAirportByCode(flightRequest.getCodigoAeroportoOrigem());
         Airport destino = airportService.getAirportByCode(flightRequest.getCodigoAeroportoDestino());
         FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(FlightStatusEnum.CONFIRMADO.getCodigo());
@@ -65,7 +67,7 @@ public class FlightService {
         flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
         flightResponse.setCodigoAeroportoOrigem(flight.getOrigem().getCodigo());
         flightResponse.setCodigoAeroportoDestino(flight.getDestino().getCodigo());
-        flightResponse.setEstado(flight.getEstado().getDescricao());
+        flightResponse.setEstado(flight.getEstado().getCodigo());
 
         return flightResponse;
     }
@@ -83,11 +85,11 @@ public class FlightService {
         flightResponse.setValorPassagem(flight.getValor());
         flightResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
         flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
-        flightResponse.setEstado(flight.getEstado().getDescricao());
+        flightResponse.setEstado(flight.getEstado().getCodigo());
         flightResponse.setAeroportoOrigem(new AirportResponseDTO(origem.getCodigo(), origem.getNome(), origem.getCidade(), origem.getUF()));
         flightResponse.setAeroportoDestino(new AirportResponseDTO(destino.getCodigo(), destino.getNome(), destino.getCidade(), destino.getUF()));
 
-        return new FlightWithAirportResponseDTO();
+        return flightResponse;
     }
 
     public FlightByAirportDTO searchFlightsByAirport(LocalDate data, String origem, String destino) {
@@ -130,5 +132,45 @@ public class FlightService {
                 return flightResponse;
             })
             .toList();
+    }
+
+    public FlightResponseDTO updateFlight(FlightStatusRequestDTO flightRequest) {
+        Flight flight = flightRepository.findById(flightRequest.getFlightCode())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voo não encontrado."));
+        
+        FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(flightRequest.getStatusCode());
+
+        if (flightStatus == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Status de voo não encontrado.");
+        }
+
+        flight.setEstado(flightStatus);
+        flightRepository.save(flight);
+
+        FlightResponseDTO flightResponse = new FlightResponseDTO();
+        flightResponse.setCodigo(flight.getCodigo());
+        flightResponse.setData(flight.getData());
+        flightResponse.setValorPassagem(flight.getValor());
+        flightResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
+        flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
+        flightResponse.setEstado(flight.getEstado().getCodigo());
+        flightResponse.setCodigoAeroportoOrigem(flight.getOrigem().getCodigo());
+        flightResponse.setCodigoAeroportoDestino(flight.getDestino().getCodigo());
+
+        return flightResponse;
+    }
+
+    public void rollbackFlight(FlightStatusRequestDTO flightRequest) {
+        Flight flight = flightRepository.findById(flightRequest.getFlightCode())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voo não encontrado."));
+        
+        FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(FlightStatusEnum.CONFIRMADO.getCodigo());
+
+        if (flightStatus == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Status de voo não encontrado.");
+        }
+
+        flight.setEstado(flightStatus);
+        flightRepository.save(flight);
     }
 }
