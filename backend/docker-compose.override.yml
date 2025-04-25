@@ -70,11 +70,11 @@ services:
       timeout: 5s
       retries: 5
       start_period: 40s
-    
+
   api-gateway: 
     build:
       context: ./api_gateway
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     ports:
       - "8080:8080"
     env_file:
@@ -91,15 +91,19 @@ services:
       MS_FLIGHT_PORT: ${MS_FLIGHT_PORT}	
       MS_RESERVE_PORT: ${MS_RESERVE_PORT}
       SAGA_PORT: ${MS_SAGA_PORT}
-    
+      NODE_ENV: development
+  
   # Microserviços
   ms-auth:
     build:
       context: ./auth
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file:
       - .env
     container_name: ms-auth
+    volumes:
+      - ./auth:/app
+      - ~/.m2:/root/.m2
     depends_on:
       mongodb:
         condition: service_healthy
@@ -110,7 +114,7 @@ services:
     networks:
       - microservice-network
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: ${MS_AUTH_PORT}
       
       MONGO_HOST: ${MONGO_HOST}
@@ -130,10 +134,13 @@ services:
   ms-customer:
     build:
       context: ./customer
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file:
       - .env
     container_name: ms-customer
+    volumes:
+      - ./customer:/app
+      - ~/.m2:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
@@ -146,7 +153,7 @@ services:
     networks:
       - microservice-network
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: ${MS_CUSTOMER_PORT}
 
       DB_HOST: ${PG_HOST}
@@ -166,10 +173,13 @@ services:
   ms-employee:
     build:
       context: ./employee
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file:
       - .env
     container_name: ms-employee
+    volumes:
+      - ./employee:/app
+      - ~/.m2:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
@@ -182,7 +192,7 @@ services:
     networks:
       - microservice-network
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: ${MS_EMPLOYEE_PORT}
       
       DB_HOST: ${PG_HOST}
@@ -202,10 +212,13 @@ services:
   ms-flight:
     build:
       context: ./flight
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file:
       - .env
     container_name: ms-flight
+    volumes:
+      - ./flight:/app
+      - ~/.m2:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
@@ -216,7 +229,7 @@ services:
     networks:
       - microservice-network
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: ${MS_FLIGHT_PORT}
 
       DB_HOST: ${PG_HOST}
@@ -236,10 +249,13 @@ services:
   ms-reserve:
     build:
       context: ./reserve
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file:
       - .env
     container_name: ms-reserve
+    volumes:
+      - ./reserve:/app
+      - ~/.m2:/root/.m2
     depends_on:
       postgres:
         condition: service_healthy
@@ -254,7 +270,7 @@ services:
     networks:
       - microservice-network
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: ${MS_RESERVE_PORT}
 
       DB_HOST: ${PG_HOST}
@@ -275,10 +291,13 @@ services:
   ms-saga:
     build:
       context: ./saga
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.dev
     env_file:
       - .env
     container_name: ms-saga
+    volumes:
+      - ./saga:/app
+      - ~/.m2:/root/.m2
     depends_on:
       rabbitmq:
         condition: service_healthy
@@ -297,7 +316,7 @@ services:
     networks:
       - microservice-network
     environment:
-      SPRING_PROFILES_ACTIVE: prod
+      SPRING_PROFILES_ACTIVE: dev
       SERVER_PORT: ${MS_SAGA_PORT}
       
       RABBITMQ_HOST: ${RABBITMQ_HOST}
