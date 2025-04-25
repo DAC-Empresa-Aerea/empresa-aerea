@@ -104,7 +104,7 @@
       "email": "voidalzk@gmail.com",
       "nome": "Gabriel Voidaleski",
       "senha": "1234",
-      "saldo_milhas": 19100,
+      "saldo_milhas": 19200,
       "endereco": {
         "cep": "82410312",
         "uf": "PR",
@@ -141,52 +141,64 @@
   ],
   "Flights": [
     {
-      "data": "2024-10-13T16:00:00-03:00",
-      "origem": "CWB",
-      "destino": "GRU",
-      "voos": [
-        {
-          "codigo": "VOO0001",
-          "data": "2025-08-10T10:30:00-03:00",
-          "valor_passagem": 100,
-          "quantidade_poltronas_total": 100,
-          "quantidade_poltronas_ocupadas": 10,
-          "estado": "CONFIRMADO",
-          "aeroporto_origem": {
-            "codigo": "POA",
-            "nome": "Aeroporto Internacional de POA",
-            "cidade": "Porto Alegre",
-            "uf": "RS"
-          },
-          "aeroporto_destino": {
-            "codigo": "CWB",
-            "nome": "Aeroporto Internacional de CWB",
-            "cidade": "Curitiba",
-            "uf": "PR"
-          }
-        },
-        {
-          "codigo": "VOO0002",
-          "data": "2025-09-15T18:45:00-03:00",
-          "valor_passagem": 120,
-          "quantidade_poltronas_total": 150,
-          "quantidade_poltronas_ocupadas": 45,
-          "estado": "CONFIRMADO",
-          "aeroporto_origem": {
-            "codigo": "CWB",
-            "nome": "Aeroporto Internacional de Curitiba",
-            "cidade": "Curitiba",
-            "uf": "PR"
-          },
-          "aeroporto_destino": {
-            "codigo": "GRU",
-            "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
-            "cidade": "Guarulhos",
-            "uf": "SP"
-          }
-        }
-      ],
-      "id": "3842"
+      "codigo": "TADS0001",
+      "data": "2024-10-15T14:30:00-03:00",
+      "valor_passagem": 500.00,
+      "quantidade_poltronas_total": 100,
+      "quantidade_poltronas_ocupadas": 90,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      },
+      "aeroporto_destino": {
+        "codigo": "GIG",
+        "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+        "cidade": "Rio de Janeiro",
+        "uf": "RJ"
+      }
+    },
+    {
+      "codigo": "TADS0002",
+      "data": "2024-11-05T08:00:00-03:00",
+      "valor_passagem": 350.00,
+      "quantidade_poltronas_total": 90,
+      "quantidade_poltronas_ocupadas": 70,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GIG",
+        "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+        "cidade": "Rio de Janeiro",
+        "uf": "RJ"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "codigo": "TADS0003",
+      "data": "2024-12-01T17:45:00-03:00",
+      "valor_passagem": 420.00,
+      "quantidade_poltronas_total": 120,
+      "quantidade_poltronas_ocupadas": 115,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      },
+      "aeroporto_destino": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      }
     }
   ],
   "Reserve": [
@@ -379,7 +391,8 @@
       "quantidade_milhas": 2000,
       "descricao": "Bônus de boas-vindas",
       "codigo_reserva": "",
-      "tipo": "ENTRADA"
+      "tipo": "ENTRADA",
+      "id": "667b"
     },
     {
       "codigo_cliente": 1010,
@@ -388,7 +401,8 @@
       "quantidade_milhas": 1500,
       "descricao": "Compra de passagem",
       "codigo_reserva": "ABC123",
-      "tipo": "SAIDA"
+      "tipo": "SAIDA",
+      "id": "4aa3"
     },
     {
       "id": "35cf",
@@ -696,6 +710,26 @@
       "data": "2025-04-22T19:35:28.579Z",
       "valor_reais": 125,
       "quantidade_milhas": 25,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "a7cc",
+      "codigo_cliente": "2026",
+      "data": "2025-04-25T20:59:55.777Z",
+      "valor_reais": 250,
+      "quantidade_milhas": 50,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "256b",
+      "codigo_cliente": "2026",
+      "data": "2025-04-25T20:59:59.558Z",
+      "valor_reais": 250,
+      "quantidade_milhas": 50,
       "descricao": "COMPRA DE MILHAS",
       "codigo_reserva": "",
       "tipo": "ENTRADA"

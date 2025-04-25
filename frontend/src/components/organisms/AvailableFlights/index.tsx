@@ -1,4 +1,4 @@
-import { Flight } from "../../atoms/FlightBasicInfo";
+import Flight from "../../../types/Flight";
 import FlightList from "../../molecules/flight/FlightList";
 
 interface AvailableFlightsProps {
@@ -12,7 +12,7 @@ function AvailableFlights({ flights }: AvailableFlightsProps) {
       flights={flights}
       buttonText="Selecionar Voo"
       onFlightClick={(flight) =>
-        alert(`Não implementado | Selecionar Voo ${flight.number}`)
+        alert(`Não implementado | Selecionar Voo ${flight.codigo}`)
       }
       onViewMoreClick={() => alert("Não implementado")}
     />

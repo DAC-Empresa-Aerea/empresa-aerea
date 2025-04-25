@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Flight } from "../../atoms/FlightBasicInfo";
+import Flight  from "../../../types/Flight";
 import SearchInput from "../../molecules/SearchInput";
 import AvailableFlights from "../AvailableFlights";
 
@@ -15,14 +15,14 @@ function SearchAvailables({
 
     function handleSearch(origin: string, destination: string) {
         if(origin !==  "" && destination == "")  {
-            setFlights((flightsList || []).filter(flight => flight.origin === origin));
+            setFlights((flightsList || []).filter(flight => flight.aeroporto_origem.codigo === origin));
             return;
         }
         else if(origin === "" && destination !== "") {
-            setFlights((flightsList || []).filter(flight => flight.destination === destination));
+            setFlights((flightsList || []).filter(flight => flight.aeroporto_destino.codigo === destination));
             return;
         }
-        setFlights((flightsList || []).filter(flight => flight.origin === origin && flight.destination === destination));
+        setFlights((flightsList || []).filter(flight => flight.aeroporto_origem.codigo === origin && flight.aeroporto_destino.codigo === destination));
     }
 
     function handleCancelSearch() {

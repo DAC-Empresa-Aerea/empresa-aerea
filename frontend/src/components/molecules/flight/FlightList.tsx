@@ -1,4 +1,5 @@
-import FlightBasicInfo, { Flight } from "../../atoms/FlightBasicInfo";
+import FlightBasicInfo from "../../atoms/FlightBasicInfo";
+import Flight  from "../../../types/Flight";
 
 interface FlightListProps {
   title: string;
@@ -21,7 +22,7 @@ function FlightList({
       <ul className="flex flex-col gap-4 overflow-y-auto">
         {flights.map((flight) => (
           <FlightBasicInfo
-            key={flight.number}
+            key={flight.codigo}
             flight={flight}
             onClick={() => onFlightClick(flight)}
             buttonText={buttonText}

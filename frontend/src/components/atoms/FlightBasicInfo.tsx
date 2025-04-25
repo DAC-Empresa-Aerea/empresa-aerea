@@ -1,12 +1,5 @@
 import { useState } from "react";
-// Deve ser substituida por algo da api
-export interface Flight {
-  number: number;
-  departure: string;
-  arrival: string;
-  origin: string;
-  destination: string;
-}
+import Flight from "../../types/Flight";
 
 interface FlightBasicInfoProps {
   flight: Flight;
@@ -31,12 +24,11 @@ function FlightBasicInfo({
             onClick={() => setIsExpanded(!isExpanded)}
           >
             <h3 className="font-semibold flex items-center">
-              Voo {flight.number}
+              Voo {flight.codigo}
               <svg
                 xmlns="http://www.w3.org/2000/svg"
-                className={`ml-2 h-4 w-4 transform transition-transform ${
-                  isExpanded ? "rotate-180" : ""
-                }`}
+                className={`ml-2 h-4 w-4 transform transition-transform ${isExpanded ? "rotate-180" : ""
+                  }`}
                 fill="none"
                 viewBox="0 0 24 24"
                 stroke="currentColor"
@@ -50,16 +42,26 @@ function FlightBasicInfo({
               </svg>
             </h3>
             <p>
-              Saída: {flight.departure} - Chegada: {flight.arrival}
+              <p>
+                Saída: {new Date(flight.data).toLocaleString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
+              </p>
             </p>
           </article>
           <div
-            className={`overflow-hidden transition-all duration-300 ${
-              isExpanded ? "max-h-20 mt-2 opacity-100" : "max-h-0 opacity-0"
-            }`}
+            className={`overflow-hidden transition-all duration-300 ${isExpanded ? "max-h-20 mt-2 opacity-100" : "max-h-0 opacity-0"
+              }`}
           >
             <p>
-              Origem: {flight.origin} - Destino: {flight.destination}
+              <p>
+                Origem: {flight.aeroporto_origem?.cidade} ({flight.aeroporto_origem?.codigo}) -
+                Destino: {flight.aeroporto_destino?.cidade} ({flight.aeroporto_destino?.codigo})
+              </p>
             </p>
             <p className="text-gray-500">Data: 2025-05-10</p>
           </div>

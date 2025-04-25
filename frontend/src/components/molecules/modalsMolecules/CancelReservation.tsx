@@ -29,7 +29,6 @@ function CancelReservation({
       cancelClose();
     } catch (error) {
       console.error("Erro ao cancelar a reserva:", error);
-      setErrorMessage("Não foi possível cancelar a reserva. Tente novamente mais tarde.");
   };
 
   return (
@@ -61,6 +60,7 @@ function CancelReservation({
       </div>
     </div>
   );
+}
 }
 
 export default CancelReservation;
