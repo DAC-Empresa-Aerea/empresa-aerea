@@ -23,11 +23,7 @@ public class UpdateStatusFlight {
     @RabbitListener(queues = RabbitMQConfig.UPDATE_FLIGHT_QUEUE)
     public SagaResponse<FlightResponseDTO> receiveUpdateFlightStatus(FlightStatusRequestDTO flightCode) {
 
-        return new SagaResponse<>(
-            true,
-            flightService.updateFlight(flightCode),
-            null
-        );
+        return SagaResponse.success(flightService.updateFlight(flightCode));
     }
 
     @RabbitListener(queues = RabbitMQConfig.ROLLBACK_FLIGHT_QUEUE)

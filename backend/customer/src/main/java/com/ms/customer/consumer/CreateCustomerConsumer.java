@@ -8,7 +8,6 @@ import org.springframework.stereotype.Component;
 import com.ms.customer.config.RabbitMQConfig;
 import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
-import com.ms.customer.dto.error.ErrorDTO;
 import com.ms.customer.dto.error.SagaResponse;
 import com.ms.customer.service.CustomerService;
 
@@ -23,14 +22,14 @@ public class CreateCustomerConsumer {
     @RabbitListener(queues = RabbitMQConfig.CREATE_CUSTOMER_QUEUE)
     public SagaResponse<CustomerResponseDTO> receiveCreateCustomer (@Payload @Valid CustomerRequestDTO customer) {
         if (customerService.emailExists(customer.getEmail())) {
-            return new SagaResponse<>(false, null, new ErrorDTO("EMAIL_ALREADY_EXISTS", "Email já existe."));
+            return SagaResponse.error("EMAIL_ALREADY_EXISTS", "Email já existe.");
         }
 
         if (customerService.cpfExists(customer.getCpf())) {
-            return new SagaResponse<>(false, null, new ErrorDTO("CPF_ALREADY_EXISTS", "CPF já existe."));
+            return SagaResponse.error("CPF_ALREADY_EXISTS", "CPF já existe.");
         }
 
-        return new SagaResponse<>(true, customerService.create(customer), null);
+        return SagaResponse.success(customerService.create(customer));
     }
 
     @RabbitListener(queues = RabbitMQConfig.ROLLBACK_CUSTOMER_QUEUE)
