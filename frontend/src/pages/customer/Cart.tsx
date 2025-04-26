@@ -1,71 +1,46 @@
 import React, { useState, useEffect } from "react";
+import { useLocation} from "react-router-dom";
 import FlightDetails from "../../components/molecules/cartMolecules/FlightDetails";
 import TicketQuantitySelector from "../../components/molecules/cartMolecules/TicketQuantitySelector";
 import PurchaseSummary from "../../components/molecules/cartMolecules/PurchaseSummary";
 import BookingConfirmation from "../../components/molecules/cartMolecules/BookingConfirmation";
-import { SelectedFlight, User } from "../../types/flightTypes";
-
-// Dados simulados de usuário
-const mockUser: User = {
-  id: "user123",
-  name: "João Silva",
-  milesBalance: 5000, // saldo de milhas
-};
-
-// Voo selecionado mock (isso viria da tela de resultados de pesquisa)
-const mockSelectedFlight: SelectedFlight = {
-  id: "flight789",
-  origin: "São Paulo (GRU)",
-  destination: "Rio de Janeiro (SDU)",
-  departureDate: "2025-04-10",
-  departureTime: "08:30",
-  arrivalDate: "2025-04-10",
-  arrivalTime: "09:30",
-  seatPrice: 450.0,
-  airline: "Airline Brasil",
-  flightNumber: "AB1234",
-};
-
-// Função para gerar código de reserva único (3 letras maiúsculas + 3 números)
-const generateBookingCode = (): string => {
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  let code = "";
-
-  // Gerar 3 letras aleatórias
-  for (let i = 0; i < 3; i++) {
-    code += letters.charAt(Math.floor(Math.random() * letters.length));
-  }
-
-  // Gerar 3 números aleatórios
-  for (let i = 0; i < 3; i++) {
-    code += Math.floor(Math.random() * 10);
-  }
-
-  return code;
-};
+import { useAuth } from "../../contexts/loginContext";
+import {createReserve} from "../../services/reserveService";
+import Customer from "../../types/Customer";
 
 const Cart: React.FC = () => {
-  const selectedFlight = mockSelectedFlight;
 
-  const [user, setUser] = useState<User>(mockUser);
+  const generateBookingCode = (): string => {
+    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    let code = "";
+  
+    for (let i = 0; i < 3; i++) {
+      code += letters.charAt(Math.floor(Math.random() * letters.length));
+    }
+  
+    for (let i = 0; i < 3; i++) {
+      code += Math.floor(Math.random() * 10);
+    }
+  
+    return code;
+  };
+  const location = useLocation();
+  const selectedFlight = location.state?.flight;
 
-  // Quantidade de passagens e uso de milhas
+  const { user, setUser } = useAuth() as { user: Customer, setUser: (user: Customer) => void };
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [milesToUse, setMilesToUse] = useState(0);
-  const [bookingCode, setBookingCode] = useState<string | null>(null);
 
-  // Cálculos
-  const [totalPrice, setTotalPrice] = useState(selectedFlight.seatPrice);
+  const [totalPrice, setValor_passagem] = useState(selectedFlight.valor_passagem);
   const [requiredMiles, setRequiredMiles] = useState(0);
-  const [finalPrice, setFinalPrice] = useState(selectedFlight.seatPrice);
+  const [finalPrice, setFinalPrice] = useState(selectedFlight.valor_passagem);
   const [milesDiscount, setMilesDiscount] = useState(0);
 
-  //  1 milha = R$ 5,00
   const milesConversionRate = 5.0;
-
+  const [bookingCode, setBookingCode] = useState<string | null>(null);
   useEffect(() => {
-    const newTotalPrice = selectedFlight.seatPrice * ticketQuantity;
-    setTotalPrice(newTotalPrice);
+    const newTotalPrice = selectedFlight.valor_passagem * ticketQuantity;
+    setValor_passagem(newTotalPrice);
 
     // Milhas necessárias para o preço total
     const newRequiredMiles = Math.round(newTotalPrice / milesConversionRate);
@@ -81,7 +56,7 @@ const Cart: React.FC = () => {
     // Preço final após desconto de milhas
     const newFinalPrice = newTotalPrice - newMilesDiscount;
     setFinalPrice(newFinalPrice);
-  }, [ticketQuantity, milesToUse, selectedFlight.seatPrice]);
+  }, [ticketQuantity, milesToUse, selectedFlight.valor_passagem, user]);
 
   const handleTicketQuantityChange = (
     e: React.ChangeEvent<HTMLInputElement>
@@ -92,6 +67,7 @@ const Cart: React.FC = () => {
     }
   };
 
+   {/*Vai virar service
   const handleMilesToUseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const value = parseInt(e.target.value);
     if (value >= 0 && value <= user.milesBalance) {
@@ -99,9 +75,8 @@ const Cart: React.FC = () => {
     }
   };
 
-  // Confirmar compra
+ 
   const handleConfirmPurchase = () => {
-    //Atualizar saldo
     const updatedUser = {
       ...user,
       milesBalance: user.milesBalance - milesToUse,
@@ -109,7 +84,6 @@ const Cart: React.FC = () => {
 
     setUser(updatedUser);
 
-    // Gerar código de reserva
     const newBookingCode = generateBookingCode();
     setBookingCode(newBookingCode);
 
@@ -121,6 +95,7 @@ const Cart: React.FC = () => {
       bookingCode: newBookingCode,
     });
   };
+  */}
 
   return (
     <div className="bg-slate-50 min-h-screen pb-16">
@@ -162,15 +137,14 @@ const Cart: React.FC = () => {
                     Pagamento
                   </h2>
                 </div>
+                {/* Ajustar */}
                 <PurchaseSummary
-                  userMilesBalance={user.milesBalance}
                   totalPrice={totalPrice}
                   requiredMiles={requiredMiles}
                   milesToUse={milesToUse}
-                  onMilesChange={handleMilesToUseChange}
                   milesDiscount={milesDiscount}
                   finalPrice={finalPrice}
-                  onPurchase={handleConfirmPurchase}
+                  user={user}
                 />
               </div>
             </div>

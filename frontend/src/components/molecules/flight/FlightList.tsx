@@ -1,6 +1,7 @@
 import FlightBasicInfo from "../../atoms/FlightBasicInfo";
 import Flight  from "../../../types/Flight";
 
+
 interface FlightListProps {
   title: string;
   flights: Flight[];

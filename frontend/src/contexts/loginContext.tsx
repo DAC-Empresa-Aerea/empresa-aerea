@@ -8,7 +8,7 @@ type User = Customer | Employee;
 
 interface AuthContextType {
   isAuthenticated: boolean;
-  user: User | null;
+  user: User | Customer | Employee | null;
   setUser: (user: User | null) => void;
   userType: string | null;
   loading: boolean;
