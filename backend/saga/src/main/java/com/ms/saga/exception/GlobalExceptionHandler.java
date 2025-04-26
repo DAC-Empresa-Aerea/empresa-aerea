@@ -12,19 +12,19 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ResourceConflictException.class)
     public ResponseEntity<ErrorDTO> handleConflict(ResourceConflictException ex) {
-        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage());
+        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.CONFLICT.value());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
     }
 
     @ExceptionHandler(ServiceUnavailableException.class)
     public ResponseEntity<ErrorDTO> handleServiceUnavailable(ServiceUnavailableException ex) {
-        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage());
+        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value());
         return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @ExceptionHandler(NotFoundException.class)
     public ResponseEntity<ErrorDTO> handleNotFound(NotFoundException ex) {
-        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage());
+        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
 }

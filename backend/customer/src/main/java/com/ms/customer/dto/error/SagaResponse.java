@@ -22,8 +22,8 @@ public class SagaResponse<T> {
         return new SagaResponse<>(false, null, error);
     }
 
-    public static <T> SagaResponse<T> error(String code, String message) {
-        return new SagaResponse<>(false, null, new ErrorDTO(code, message));
+    public static <T> SagaResponse<T> error(String code, String message, Integer statusCode) {
+        return new SagaResponse<>(false, null, new ErrorDTO(code, message, statusCode));
     }
 }
 

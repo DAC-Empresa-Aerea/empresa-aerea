@@ -2,6 +2,7 @@ package com.ms.customer.consumer;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
@@ -22,11 +23,11 @@ public class CreateCustomerConsumer {
     @RabbitListener(queues = RabbitMQConfig.CREATE_CUSTOMER_QUEUE)
     public SagaResponse<CustomerResponseDTO> receiveCreateCustomer (@Payload @Valid CustomerRequestDTO customer) {
         if (customerService.emailExists(customer.getEmail())) {
-            return SagaResponse.error("EMAIL_ALREADY_EXISTS", "Email já existe.");
+            return SagaResponse.error("EMAIL_ALREADY_EXISTS", "Email já existe.", HttpStatus.CONFLICT.value());
         }
 
         if (customerService.cpfExists(customer.getCpf())) {
-            return SagaResponse.error("CPF_ALREADY_EXISTS", "CPF já existe.");
+            return SagaResponse.error("CPF_ALREADY_EXISTS", "CPF já existe.", HttpStatus.CONFLICT.value());
         }
 
         return SagaResponse.success(customerService.create(customer));
