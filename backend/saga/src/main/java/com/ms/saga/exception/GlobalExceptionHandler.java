@@ -10,16 +10,16 @@ import com.ms.saga.dto.error.ErrorDTO;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorDTO> handleBusinessException(BusinessException ex) {
+        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), ex.getStatus());
+        return new ResponseEntity<>(error, HttpStatus.valueOf(ex.getStatus()));
+    }
+
     @ExceptionHandler(ResourceConflictException.class)
     public ResponseEntity<ErrorDTO> handleConflict(ResourceConflictException ex) {
         ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.CONFLICT.value());
         return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(ServiceUnavailableException.class)
-    public ResponseEntity<ErrorDTO> handleServiceUnavailable(ServiceUnavailableException ex) {
-        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.SERVICE_UNAVAILABLE.value());
-        return new ResponseEntity<>(error, HttpStatus.SERVICE_UNAVAILABLE);
     }
 
     @ExceptionHandler(NotFoundException.class)
@@ -27,4 +27,5 @@ public class GlobalExceptionHandler {
         ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.NOT_FOUND.value());
         return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
     }
+     
 }
