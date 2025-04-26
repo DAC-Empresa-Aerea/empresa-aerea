@@ -15,17 +15,5 @@ public class GlobalExceptionHandler {
         ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), ex.getStatus());
         return new ResponseEntity<>(error, HttpStatus.valueOf(ex.getStatus()));
     }
-
-    @ExceptionHandler(ResourceConflictException.class)
-    public ResponseEntity<ErrorDTO> handleConflict(ResourceConflictException ex) {
-        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.CONFLICT.value());
-        return new ResponseEntity<>(error, HttpStatus.CONFLICT);
-    }
-
-    @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleNotFound(NotFoundException ex) {
-        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.NOT_FOUND.value());
-        return new ResponseEntity<>(error, HttpStatus.NOT_FOUND);
-    }
      
 }
