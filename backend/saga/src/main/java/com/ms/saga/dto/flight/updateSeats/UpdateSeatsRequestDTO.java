@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class UpdateSeatsRequestDO {
+public class UpdateSeatsRequestDTO {
     @JsonProperty("codigo_voo")
     private String flightCode;
 

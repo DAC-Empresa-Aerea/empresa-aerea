@@ -3,10 +3,14 @@ package com.ms.saga.orchestrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightStatusDTO;
+import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
+import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.saga.exception.BusinessException;
 import com.ms.saga.producer.CustomerProducer;
 import com.ms.saga.producer.FlightProducer;
 import com.ms.saga.producer.ReserveProducer;
@@ -24,7 +28,21 @@ public class ReserveOrchestrator {
     private CustomerProducer customerProducer;
 
     public RegisterReserveResponseDTO processRegisterReserve(RegisterReserveRequestDTO reserveRequest) {
-        flightProducer.sendReserveSeats(null);
+        UpdateSeatsRequestDTO seatsRequest = new UpdateSeatsRequestDTO(
+            reserveRequest.getFlightCode(), 
+            reserveRequest.getSeatsQuantity(), 
+            reserveRequest.getOriginAirportCode(), 
+            reserveRequest.getDestinyAirportCode(), 
+            reserveRequest.getValue(), 
+            reserveRequest.getMilesUsed()
+        );
+
+        SagaResponse<UpdateSeatsResponseDTO> seatsResponse = flightProducer.sendReserveSeats(seatsRequest);
+
+        if(!seatsResponse.isSuccess()) {
+            throw new BusinessException(seatsResponse.getError());
+        }
+
         customerProducer.sendSeatDebit();
         // flightProducer.sendReserveSeats(null);
         reserveProducer.sendCreateReserve();

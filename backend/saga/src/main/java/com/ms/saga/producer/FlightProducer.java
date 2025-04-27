@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 
 import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.error.SagaResponse;
-import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDO;
+import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
 
 import com.ms.saga.dto.flight.FlightResponseDTO;
@@ -19,7 +19,7 @@ public class FlightProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public SagaResponse<UpdateSeatsResponseDTO> sendReserveSeats(UpdateSeatsRequestDO request) {
+    public SagaResponse<UpdateSeatsResponseDTO> sendReserveSeats(UpdateSeatsRequestDTO request) {
 
         return rabbitTemplate.convertSendAndReceiveAsType(
             RabbitMQConfig.RESERVE_SEAT_EXCHANGE,
