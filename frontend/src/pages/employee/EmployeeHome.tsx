@@ -1,37 +1,40 @@
 import { useEffect, useState } from "react";
 import { flightsDataExample } from "../../data/FlightsExample";
-import { Flight } from "../../components/atoms/FlightBasicInfo";
+import Flight from "../../types/Flight";
 import EmployeeFlightList from "../../components/molecules/flight/EmployeeFlightList";
+import { getFlights } from "../../services/flightsService";
 
 interface EmployeeHomeProps {
   title: string;
   onViewMoreClick: () => void;
-  flights: Flight[];
 }
 
 function sortFlightsByDate(flights: Flight[]) {
   return flights.sort((a, b) => {
-    return new Date(a.departure).getTime() - new Date(b.departure).getTime();
-  });
-}
-
-function FAKE_sortFlightsByDate(flights: Flight[]) {
-  return flights.sort((a, b) => {
-    return parseInt(a.departure) - parseInt(b.departure);
+    return new Date(a.data).getTime() - new Date(b.data).getTime();
   });
 }
 
 function EmployeeHome({
   title,
   onViewMoreClick,
-  flights = [],
 }: EmployeeHomeProps) {
   const [sortedFlights, setSortedFlights] = useState<Array<Flight>>([]);
 
   useEffect(() => {
-    const flightsToSort = flights.length > 0 ? flights : flightsDataExample;
-    setSortedFlights(FAKE_sortFlightsByDate(flightsToSort));
-  }, [flights]);
+    const fetchFlights = async () => {
+      try {
+        const data = await getFlights();
+        const flightsToSort = data.length > 0 ? data : flightsDataExample;
+        setSortedFlights(sortFlightsByDate(flightsToSort));
+      } catch (error) {
+        console.error("Erro ao buscar voos:", error);
+        setSortedFlights(sortFlightsByDate(flightsDataExample));
+      }
+    };
+
+    fetchFlights();
+  }, []);
 
   return (
     <EmployeeFlightList

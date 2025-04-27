@@ -1,28 +1,34 @@
-import { Flight } from "./FlightBasicInfo";
+import Flight from "../../types/Flight";
 
 interface EmployeeFlightProps {
   flight: Flight;
 }
 
 function board(flight: Flight) {
-  alert(`R12 - ${flight.number} - ${flight.departure} - ${flight.arrival}`);
+  alert(`R12 - ${flight.codigo} - ${flight.data}`);
 }
 
 function performFlight(flight: Flight) {
-  alert(`R14 - ${flight.number} - ${flight.departure} - ${flight.arrival}`);
+  alert(`R12 - ${flight.codigo} - ${flight.data}`);
 }
 
 function cancelFlight(flight: Flight) {
-  alert(`R13 - ${flight.number} - ${flight.departure} - ${flight.arrival}`);
+  alert(`R12 - ${flight.codigo} - ${flight.data}`);
 }
 
 function EmployeeFlight({ flight }: EmployeeFlightProps) {
   return (
     <li className="border border-gray-light p-4 flex justify-between items-center hover:bg-gray-light rounded-2xl">
       <article className="font-roboto">
-        <h3 className="font-semibold">Voo {flight.number}</h3>
+        <h3 className="font-semibold">Voo {flight.codigo}</h3>
         <p>
-          Saída: {flight.departure} - Chegada: {flight.arrival}
+          Saída: {new Date(flight.data).toLocaleString("pt-BR", {
+                  day: "2-digit",
+                  month: "2-digit",
+                  year: "numeric",
+                  hour: "2-digit",
+                  minute: "2-digit",
+                })}
         </p>
       </article>
       <div className="flex gap-4">

@@ -97,9 +97,6 @@ const Login = () => {
                 Keep me signed in
               </span>
             </label>
-            <a href="#" className="text-sm text-blue-500">
-              Forgot Password?
-            </a>
           </div>
 
           {/* Login button */}
