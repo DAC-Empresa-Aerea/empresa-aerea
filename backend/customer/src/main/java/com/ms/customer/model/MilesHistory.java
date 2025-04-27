@@ -44,4 +44,5 @@ public class MilesHistory {
 
     @Column(name = "tipo", nullable = false)
     private String tipo;
+    
 }

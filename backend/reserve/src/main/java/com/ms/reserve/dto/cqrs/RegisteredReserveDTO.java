@@ -1,4 +1,4 @@
-package com.ms.saga.dto.reserve.register;
+package com.ms.reserve.dto.cqrs;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -14,13 +14,16 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RegisterReserveResponseDTO {
+public class RegisteredReserveDTO {
 
     @JsonProperty("codigo_reserva")
 	private String reserveCode;
 
     @JsonProperty("codigo_cliente")
 	private Long customerCode;
+
+    @JsonProperty("codigo_voo")
+    private String flightCode;
 
 	@JsonProperty("data")
 	private LocalDateTime date;

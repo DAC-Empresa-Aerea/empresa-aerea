@@ -27,6 +27,18 @@ public class RabbitMQConfig {
 
     public static final String UPDATE_RESERVE_EXCHANGE = "update.reserve.exchange";
     public static final String UPDATE_RESERVE_ROUTING_KEY = "update.reserve.routing.key";
+
+    public static final String REGISTER_RESERVE_EXCHANGE = "register.reserve.exchange";
+    public static final String REGISTER_RESERVE_ROUTING_KEY = "register.reserve.routing.key";
+
+    public static final String DEBIT_SEAT_EXCHANGE = "debit.seat.exchange";
+    public static final String DEBIT_SEAT_ROUTING_KEY = "debit.seat.routing.key";
+
+    public static final String ROLLBACK_RESERVE_SEAT_EXCHANGE = "rollback.debit.seat.exchange";
+    public static final String ROLLBACK_RESERVE_SEAT_ROUTING_KEY = "rollback.debit.seat.routing.key";
+
+    public static final String ROLLBACK_REGISTER_RESERVE_EXCHANGE = "rollback.register.reserve.exchange";
+    public static final String ROLLBACK_REGISTER_RESERVE_ROUTING_KEY = "rollback.register.reserve.routing.key";
     
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {

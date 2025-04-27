@@ -1,6 +1,7 @@
 package com.ms.flight.service;
 
 import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -19,6 +20,7 @@ import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
 import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsRequestDTO;
 import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsResponseDTO;
+import com.ms.flight.dto.flight.reserveSeat.rollback.RollbackReserveSeatsDTO;
 import com.ms.flight.dto.flightStatus.FlightStatusRequestDTO;
 import com.ms.flight.enums.FlightStatusEnum;
 import com.ms.flight.model.Airport;
@@ -213,9 +215,30 @@ public class FlightService {
         response.setOriginAirportCode(flight.getOrigem().getCodigo());
         response.setDestinyAirportCode(flight.getDestino().getCodigo());
         response.setValue(flight.getValor());
-        response.setMilesUsed(flight.getValor().divide(BigDecimal.valueOf(5)).intValue());
+        response.setMilesUsed(
+        flight.getValor()
+            .divide(BigDecimal.valueOf(5), 0, RoundingMode.CEILING)
+            .intValue()
+        );
 
         return SagaResponse.success(response);
     
+    }
+
+    public void rollbackReserveSeats(RollbackReserveSeatsDTO reserveSeats) {
+        Optional<Flight> flightOptional = flightRepository.findById(reserveSeats.getFlightCode());
+
+        if (flightOptional.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Voo não encontrado.");
+        }
+
+        Flight flight = flightOptional.get();
+
+        if(flight.getPoltronasOcupadas() - reserveSeats.getSeatsQuantity() < 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Número de poltronas ocupadas não pode ser menor que zero.");
+        }
+
+        flight.setPoltronasOcupadas(flight.getPoltronasOcupadas() - reserveSeats.getSeatsQuantity());
+        flightRepository.save(flight);
     }
 }

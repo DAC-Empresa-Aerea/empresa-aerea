@@ -1,4 +1,4 @@
-package com.ms.customer.dto.debitSeat;
+package com.ms.saga.dto.customer.debitSeat;
 
 import java.math.BigDecimal;
 
@@ -13,7 +13,7 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class DebitSeatResponseDTO {
+public class DebitSeatRequestDTO {
     
     @JsonProperty("codigo_cliente")
     private Long customerCode;
@@ -23,7 +23,7 @@ public class DebitSeatResponseDTO {
 
     @JsonProperty("milhas_utilizadas")
     private Integer milesUsed;
-
+    
     @JsonProperty("valor_reais")
     private BigDecimal value;
 

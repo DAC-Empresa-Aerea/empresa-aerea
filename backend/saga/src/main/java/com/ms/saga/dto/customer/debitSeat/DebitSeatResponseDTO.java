@@ -1,4 +1,4 @@
-package com.ms.customer.dto.debitSeat;
+package com.ms.saga.dto.customer.debitSeat;
 
 import java.math.BigDecimal;
 

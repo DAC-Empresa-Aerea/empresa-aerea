@@ -29,6 +29,7 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_RESERVE_SEAT_EXCHANGE = "rollback.reserve.seat.exchange";
     public static final String ROLLBACK_RESERVE_SEAT_ROUTING_KEY = "rollback.reserve.seat.routing.key";
 
+
     @Bean
     public Queue reserveSeatQueue() {
         return new Queue(RESERVE_SEAT_QUEUE, true);

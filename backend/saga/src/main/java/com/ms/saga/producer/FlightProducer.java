@@ -9,7 +9,7 @@ import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
-
+import com.ms.saga.dto.flight.updateSeats.rollback.RollbackReserveSeatsDTO;
 import com.ms.saga.dto.flight.FlightResponseDTO;
 import com.ms.saga.dto.flight.FlightStatusDTO;
 
@@ -29,7 +29,12 @@ public class FlightProducer {
         );
     }
 
-    public void sendRollbackReserveSeats(String flightId) {
+    public void sendRollbackReserveSeats(RollbackReserveSeatsDTO dto) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConfig.ROLLBACK_RESERVE_SEAT_EXCHANGE,
+            RabbitMQConfig.ROLLBACK_RESERVE_SEAT_ROUTING_KEY,
+            dto
+        );
     }
 
     public SagaResponse<FlightResponseDTO> sendUpdateFlightCommand(FlightStatusDTO flightDTO) {;
@@ -40,4 +45,5 @@ public class FlightProducer {
             new ParameterizedTypeReference<SagaResponse<FlightResponseDTO>>() {}
         );
     }
+
 }

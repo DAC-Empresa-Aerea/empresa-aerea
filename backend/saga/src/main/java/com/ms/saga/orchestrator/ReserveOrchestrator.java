@@ -3,13 +3,18 @@ package com.ms.saga.orchestrator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import com.ms.saga.dto.customer.debitSeat.DebitSeatRequestDTO;
+import com.ms.saga.dto.customer.debitSeat.DebitSeatResponseDTO;
 import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
+import com.ms.saga.dto.flight.updateSeats.rollback.RollbackReserveSeatsDTO;
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.saga.dto.reserve.reserveFlight.ReserveFlightRequestDTO;
+import com.ms.saga.dto.reserve.reserveFlight.ReserveFlightResponseDTO;
 import com.ms.saga.exception.BusinessException;
 import com.ms.saga.producer.CustomerProducer;
 import com.ms.saga.producer.FlightProducer;
@@ -27,7 +32,8 @@ public class ReserveOrchestrator {
     @Autowired
     private CustomerProducer customerProducer;
 
-    public RegisterReserveResponseDTO processRegisterReserve(RegisterReserveRequestDTO reserveRequest) {
+    public ReserveFlightResponseDTO processRegisterReserve(ReserveFlightRequestDTO reserveRequest) {
+        // Validacao do voo e atualizacao de poltronas
         UpdateSeatsRequestDTO seatsRequest = new UpdateSeatsRequestDTO(
             reserveRequest.getFlightCode(), 
             reserveRequest.getSeatsQuantity(), 
@@ -43,24 +49,52 @@ public class ReserveOrchestrator {
             throw new BusinessException(seatsResponse.getError());
         }
 
-        customerProducer.sendSeatDebit();
-        // flightProducer.sendReserveSeats(null);
-        reserveProducer.sendCreateReserve();
-        //customerProducer.sendRollbackSeatDebit();
-        // flightProducer.sendReserveSeats(null);
+        // Criação de uma reserva (precisa do código)
+        RegisterReserveRequestDTO registerReserveRequestDTO = new RegisterReserveRequestDTO(
+            reserveRequest.getCustomerCode(),
+            seatsResponse.getData().getValue(),
+            seatsResponse.getData().getMilesUsed(),
+            reserveRequest.getFlightCode()
+        );
+
+        SagaResponse<RegisterReserveResponseDTO> registerReserveResposne = reserveProducer.sendCreateReserve(registerReserveRequestDTO);
+
+        if(!registerReserveResposne.isSuccess()) {
+            RollbackReserveSeatsDTO rollbackReserveSeatsDTO = new RollbackReserveSeatsDTO(
+                seatsRequest.getFlightCode(), 
+                seatsRequest.getSeatsQuantity()
+            );
+            flightProducer.sendRollbackReserveSeats(rollbackReserveSeatsDTO);
+
+            throw new BusinessException(registerReserveResposne.getError());
+        }
+
+        // Validacao e debito de milhas do cliente  
+        DebitSeatRequestDTO seatDebit = new DebitSeatRequestDTO(
+            reserveRequest.getCustomerCode(), 
+            registerReserveResposne.getData().getReserveCode(),
+            seatsResponse.getData().getMilesUsed(),
+            seatsResponse.getData().getValue(),
+            seatsResponse.getData().getSeatsQuantity(),
+            seatsResponse.getData().getOriginAirportCode(),
+            seatsResponse.getData().getDestinyAirportCode()
+        );
+
+        SagaResponse<DebitSeatResponseDTO> debitSeatResponseDTO = customerProducer.sendSeatDebit(seatDebit);
+
+        if(!debitSeatResponseDTO.isSuccess()) {
+            RollbackReserveSeatsDTO rollbackReserveSeatsDTO = new RollbackReserveSeatsDTO(
+                seatsRequest.getFlightCode(), 
+                seatsRequest.getSeatsQuantity()
+            );
+            flightProducer.sendRollbackReserveSeats(rollbackReserveSeatsDTO);
+
+            reserveProducer.sendRollbackRegisterReserve(registerReserveResposne.getData().getReserveCode());
+
+            throw new BusinessException(debitSeatResponseDTO.getError());
+        }
         
-
-
-        // Validar existencia de voo, poltronas e validade da data de voo e então reduzir quantidade de poltronas do voo e retornar codigos de aeroportos
-        // Validar saldo da pessoa em cliente e se tem as milhas suficientes e então reduzir o saldo de milhas
-            // Se erro, rollback
-        // Criar reserva com status CRIADA 
-            // Se erro, rollback
-        // Retornar valor completo
-
-        // Lembrar de usar o ErrorDTO e SagaResponse
-        
-        return new RegisterReserveResponseDTO();
+        return new ReserveFlightResponseDTO();
     }
 
     public CancelReserveResponseDTO processCancelReserve(String id) {
