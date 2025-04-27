@@ -42,6 +42,17 @@ export const UpdateReserve = async (code: string, reserveUpdate: Partial<Reserve
         const reserva = await getReserveByCode(code);
         if (!reserva || !reserva.id) throw new Error("Reserva não encontrada");
         const response = await axios.patch(`${API_BASE_URL}/Reserve/${reserva.id}`, reserveUpdate);
+        if (reserveUpdate.estado === "CANCELADA") {
+            const response_update_miles = await updateCustomerMiles(reserva.codigo_cliente, reserva.milhas_utilizadas);
+            const newTransaction = await createMilesTransaction({
+                codigo_cliente: reserva.codigo_cliente.toString(),
+                valor_reais: reserva.valor,
+                quantidade_milhas: reserva.milhas_utilizadas,
+                descricao: `Reserva ${reserva.codigo} cancelada`,
+                codigo_reserva: reserva.codigo,
+                tipo: MilesTransactionType.ENTRADA,
+            });
+        }
         return response.data;
     } catch (error) {
         console.error('Erro ao atualizar a reserva:', error);

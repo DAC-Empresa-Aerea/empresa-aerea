@@ -481,12 +481,12 @@
     {
       "id": "0caa",
       "codigo": "HEW658",
-      "data": "2025-04-27T03:12:41.343Z",
+      "data": "2025-04-28T03:12:41.343Z",
       "valor": 50,
       "milhas_utilizadas": 74,
       "quantidade_poltronas": 1,
       "codigo_cliente": 2026,
-      "estado": "Reservado",
+      "estado": "CHECK-IN",
       "voo": {
         "codigo": "TADS0003",
         "data": "2024-12-01T17:45:00-03:00",

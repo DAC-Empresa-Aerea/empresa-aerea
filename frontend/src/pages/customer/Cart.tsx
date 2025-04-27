@@ -83,7 +83,7 @@ const Cart: React.FC = () => {
       milhas_utilizadas: milesToUse,
       quantidade_poltronas: ticketQuantity,
       codigo_cliente: user.codigo,
-      estado: "Reservado",
+      estado: "CRIADA",
       voo: selectedFlight,
     };
     createReserve(newReserve)
