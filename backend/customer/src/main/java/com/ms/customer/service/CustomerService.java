@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -12,8 +13,11 @@ import com.ms.customer.dto.CheckMileResponseDTO;
 import com.ms.customer.dto.TransitionDTO;
 import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
+import com.ms.customer.dto.debitSeat.DebitSeatRequestDTO;
+import com.ms.customer.dto.debitSeat.DebitSeatResponseDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
+import com.ms.customer.exception.BusinessException;
 import com.ms.customer.exception.CustomerNotFoundException;
 import com.ms.customer.model.Address;
 import com.ms.customer.model.Customer;
@@ -30,11 +34,15 @@ public class CustomerService {
     @Autowired
     private HistoricoMilhasRepository historicoMilhasRepository;
 
-
-
-    @Transactional
     public CustomerResponseDTO create(CustomerRequestDTO customer) {
-        System.out.println("Criando cliente: " + customer.getNome());
+        if (customerRepository.existsByEmail(customer.getEmail())) {
+            throw new BusinessException("EMAIL_EXISTS", "Email já existe.", HttpStatus.CONFLICT.value());
+        }
+
+        if (customerRepository.existsByCpf(customer.getCpf())) {
+            throw new BusinessException("CPF_EXISTS", "CPF já existe.", HttpStatus.CONFLICT.value());
+        }
+
         Customer customerEntity = new Customer();
         BeanUtils.copyProperties(customer, customerEntity);
 
@@ -135,16 +143,14 @@ public class CustomerService {
         return dto;
     }
 
+    public DebitSeatResponseDTO debitSeat(DebitSeatRequestDTO debitSeat) {
+
+        // FINISH
+        return new DebitSeatResponseDTO();
+    }
+
     public void deleteById(Long id) {
         customerRepository.deleteById(id);
-    }
-
-    public boolean emailExists(String email) {
-        return customerRepository.existsByEmail(email);
-    }
-
-    public boolean cpfExists(String cpf) {
-        return customerRepository.existsByCpf(cpf);
     }
 
 }
