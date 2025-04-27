@@ -16,6 +16,9 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
     public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.customer.routing.key";
 
+    public static final String RESERVE_SEAT_EXCHANGE = "reserve.seat.exchange";
+    public static final String RESERVE_SEAT_ROUTING_KEY = "reserve.seat.routing.key";
+
     public static final String UPDATE_FLIGHT_EXCHANGE = "update.flight.exchange";
     public static final String UPDATE_FLIGHT_ROUTING_KEY = "update.flight.routing.key";
 

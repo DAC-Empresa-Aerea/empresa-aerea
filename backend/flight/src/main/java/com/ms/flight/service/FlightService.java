@@ -1,7 +1,10 @@
 package com.ms.flight.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -9,10 +12,13 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.ms.flight.dto.airport.AirportResponseDTO;
+import com.ms.flight.dto.error.SagaResponse;
 import com.ms.flight.dto.flight.FlightByAirportDTO;
 import com.ms.flight.dto.flight.FlightResponseDTO;
 import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
+import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsRequestDTO;
+import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsResponseDTO;
 import com.ms.flight.dto.flightStatus.FlightStatusRequestDTO;
 import com.ms.flight.enums.FlightStatusEnum;
 import com.ms.flight.model.Airport;
@@ -20,6 +26,8 @@ import com.ms.flight.model.Flight;
 import com.ms.flight.model.FlightStatus;
 import com.ms.flight.repository.FlightRepository;
 import com.ms.flight.util.FlightCodeGenerator;
+
+import jakarta.validation.Valid;
 
 @Service
 public class FlightService {
@@ -172,5 +180,42 @@ public class FlightService {
 
         flight.setEstado(flightStatus);
         flightRepository.save(flight);
+    }
+
+    public SagaResponse<UpdateSeatsResponseDTO> reserveSeats(@Valid UpdateSeatsRequestDTO request) {
+
+        Optional<Flight> flightOptional = flightRepository.findById(request.getFlightCode());
+
+        if (flightOptional.isEmpty()) {
+            return SagaResponse.error("FLIGHT_NOT_FOUND", "Voo não encontrado.", HttpStatus.NOT_FOUND.value());
+        }
+
+        Flight flight = flightOptional.get();
+
+        if(flight.getEstado().getCodigo() != FlightStatusEnum.CONFIRMADO.getCodigo()) {
+            return SagaResponse.error("FLIGHT_RESERVE_NOT_ALLOWED", "O voo não pode ser reservado.", HttpStatus.BAD_REQUEST.value());
+        }
+
+        if(flight.getPoltronasOcupadas() + request.getSeatsQuantity() > flight.getPoltronasTotais()) {
+            return SagaResponse.error("SEAT_REQUEST_EXCEEDS_AVAILABILITY", "Número de poltronas ocupadas excede o total.", HttpStatus.BAD_REQUEST.value());
+        }
+
+        if(flight.getData().isBefore(LocalDateTime.now())) {
+            return SagaResponse.error("INVALID_FLIGHT_DATE_PAST", "A data do voo não pode ser anterior a data atual.", HttpStatus.BAD_REQUEST.value());
+        }
+
+        flight.setPoltronasOcupadas(flight.getPoltronasOcupadas() + request.getSeatsQuantity());
+        flightRepository.save(flight);
+
+        UpdateSeatsResponseDTO response = new UpdateSeatsResponseDTO();
+        response.setFlightCode(flight.getCodigo());
+        response.setSeatsQuantity(flight.getPoltronasOcupadas());
+        response.setOriginAirportCode(flight.getOrigem().getCodigo());
+        response.setDestinyAirportCode(flight.getDestino().getCodigo());
+        response.setValue(flight.getValor());
+        response.setMilesUsed(flight.getValor().divide(BigDecimal.valueOf(5)).intValue());
+
+        return SagaResponse.success(response);
+    
     }
 }

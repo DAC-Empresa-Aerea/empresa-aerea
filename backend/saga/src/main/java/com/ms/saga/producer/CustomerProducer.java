@@ -25,12 +25,21 @@ public class CustomerProducer {
         );
     }
 
-    public void sendRollbackCustomer(Long customerId) {
+    public void sendRollbackCreateCustomer(Long customerId) {
         rabbitTemplate.convertAndSend(
             RabbitMQConfig.ROLLBACK_CUSTOMER_EXCHANGE,
             RabbitMQConfig.ROLLBACK_CUSTOMER_ROUTING_KEY,
             customerId
         );
     }
+
+    public void sendSeatDebit() {
+        
+    }
+
+    public void sendRollbackSeatDebit() {
+        
+    }
+
 }
 

@@ -13,6 +13,9 @@ public class ReserveProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
+    public void sendCreateReserve() {
+    }
+
     //Isso sera para atualizar caso o voo tenha mudado estado
     public void updateStatusReserve(FlightStatusDTO dto) {
         rabbitTemplate.convertAndSend(

@@ -34,7 +34,7 @@ public class CustomerOrchestrator {
         );
 
         if (!authResponse.isSuccess()) {
-            customerProducer.sendRollbackCustomer(customerResponse.getData().getCodigo());
+            customerProducer.sendRollbackCreateCustomer(customerResponse.getData().getCodigo());
 
             throw new BusinessException(authResponse.getError());
         }

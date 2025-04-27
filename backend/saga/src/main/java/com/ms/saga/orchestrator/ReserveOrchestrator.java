@@ -7,14 +7,32 @@ import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.saga.producer.CustomerProducer;
+import com.ms.saga.producer.FlightProducer;
 import com.ms.saga.producer.ReserveProducer;
 
 @Component
 public class ReserveOrchestrator {
 
-    @Autowired ReserveProducer reserveProducer;
+    @Autowired 
+    private ReserveProducer reserveProducer;
+
+    @Autowired
+    private FlightProducer flightProducer;
+
+    @Autowired
+    private CustomerProducer customerProducer;
 
     public RegisterReserveResponseDTO processRegisterReserve(RegisterReserveRequestDTO reserveRequest) {
+        flightProducer.sendReserveSeats(null);
+        customerProducer.sendSeatDebit();
+        // flightProducer.sendReserveSeats(null);
+        reserveProducer.sendCreateReserve();
+        //customerProducer.sendRollbackSeatDebit();
+        // flightProducer.sendReserveSeats(null);
+        
+
+
         // Validar existencia de voo, poltronas e validade da data de voo e então reduzir quantidade de poltronas do voo e retornar codigos de aeroportos
         // Validar saldo da pessoa em cliente e se tem as milhas suficientes e então reduzir o saldo de milhas
             // Se erro, rollback
