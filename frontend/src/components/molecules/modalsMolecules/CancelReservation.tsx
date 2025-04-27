@@ -29,6 +29,7 @@ function CancelReservation({
       cancelClose();
     } catch (error) {
       console.error("Erro ao cancelar a reserva:", error);
+    }
   };
 
   return (
@@ -60,7 +61,6 @@ function CancelReservation({
       </div>
     </div>
   );
-}
 }
 
 export default CancelReservation;

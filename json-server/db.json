@@ -104,7 +104,7 @@
       "email": "voidalzk@gmail.com",
       "nome": "Gabriel Voidaleski",
       "senha": "1234",
-      "saldo_milhas": 18976,
+      "saldo_milhas": 19050,
       "endereco": {
         "cep": "82410312",
         "uf": "PR",
@@ -486,7 +486,7 @@
       "milhas_utilizadas": 74,
       "quantidade_poltronas": 1,
       "codigo_cliente": 2026,
-      "estado": "CHECK-IN",
+      "estado": "CANCELADA",
       "voo": {
         "codigo": "TADS0003",
         "data": "2024-12-01T17:45:00-03:00",
@@ -900,6 +900,16 @@
       "descricao": "CWB->GRU",
       "codigo_reserva": "HEW658",
       "tipo": "SAIDA"
+    },
+    {
+      "id": "fed8",
+      "codigo_cliente": "2026",
+      "data": "2025-04-27T04:10:55.944Z",
+      "valor_reais": 50,
+      "quantidade_milhas": 74,
+      "descricao": "Reserva HEW658 cancelada",
+      "codigo_reserva": "HEW658",
+      "tipo": "ENTRADA"
     }
   ]
 }
