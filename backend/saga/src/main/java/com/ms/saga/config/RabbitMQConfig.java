@@ -15,6 +15,15 @@ public class RabbitMQConfig {
 
     public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
     public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.customer.routing.key";
+
+    public static final String UPDATE_FLIGHT_EXCHANGE = "update.flight.exchange";
+    public static final String UPDATE_FLIGHT_ROUTING_KEY = "update.flight.routing.key";
+
+    public static final String ROLLBACK_FLIGHT_EXCHANGE = "rollback.flight.exchange";
+    public static final String ROLLBACK_FLIGHT_ROUTING_KEY = "rollback.flight.routing.key";
+
+    public static final String UPDATE_RESERVE_EXCHANGE = "update.reserve.exchange";
+    public static final String UPDATE_RESERVE_ROUTING_KEY = "update.reserve.routing.key";
     
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {

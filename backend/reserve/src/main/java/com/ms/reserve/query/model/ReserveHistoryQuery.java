@@ -5,33 +5,42 @@ import java.time.LocalDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
-import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "historico_reservas")
 public class ReserveHistoryQuery {
+    
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "codigo_reserva", referencedColumnName = "codigo", nullable = false)
-    private ReserveQuery reserva;
+    @Column(name = "codigo_reserva", nullable = false)
+    private String reserveCode;
 
-    @Column(nullable = false)
-    private LocalDateTime data;
+    @Column(name = "data", nullable = false)
+    private LocalDateTime date;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_origem", referencedColumnName = "codigo", nullable = false)
-    private ReserveStatusQuery estadoOrigem;
+    @Column(name = "estado_origem_codigo", nullable = false)
+    private String originStatusCode;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "estado_destino", referencedColumnName = "codigo", nullable = false)
-    private ReserveStatusQuery estadoDestino;
+    @Column(name = "estado_origem_sigla", nullable = false)
+    private String originStatusAbbreviation;
+
+    @Column(name = "estado_origem_descricao", nullable = false)
+    private String originStatusDescription;
+
+    @Column(name = "estado_destino_codigo", nullable = false)
+    private String destinyStatusCode;
+
+    @Column(name = "estado_destino_sigla", nullable = false)
+    private String destinyStatusAbbreviation;
+
+    @Column(name = "estado_destino_descricao", nullable = false)
+    private String destinyStatusDescription;
+
 }
+

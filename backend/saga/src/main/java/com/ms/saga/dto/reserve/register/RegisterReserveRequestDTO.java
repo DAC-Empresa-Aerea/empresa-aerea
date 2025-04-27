@@ -16,23 +16,24 @@ import lombok.Setter;
 public class RegisterReserveRequestDTO {
     
     @JsonProperty("codigo_cliente")
-    private String codigoCliente;
+    private String customerCode;
 
-    private BigDecimal valor;
+    @JsonProperty("valor")
+    private BigDecimal value;
 
     @JsonProperty("milhas_utilizadas")
-    private Integer milhasUtilizadas;
+    private Integer milesUsed;
 
     @JsonProperty("quantidade_poltronas")
-    private Integer quantidadePoltronas;
+    private Integer seatsQuantity;
 
     @JsonProperty("codigo_voo")
-    private String codigoVoo;
+    private String flightCode;
 
     @JsonProperty("codigo_aeroporto_origem")
-    private String codigoAeroportoOrigem;
+    private String originAirportCode;
 
     @JsonProperty("codigo_aeroporto_destino")
-    private String codigoAeroportoDestino;
+    private String destinyAirportCode;
     
 }

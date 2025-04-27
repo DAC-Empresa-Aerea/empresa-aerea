@@ -2,12 +2,12 @@ package com.ms.auth.consumer;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import com.ms.auth.dto.CreateAuthRequestDTO;
 import com.ms.auth.dto.CreateAuthResponseDTO;
-import com.ms.auth.dto.error.ErrorDTO;
 import com.ms.auth.dto.error.SagaResponse;
 import com.ms.auth.service.AuthService;
 
@@ -23,9 +23,9 @@ public class AuthConsumer {
     public SagaResponse<CreateAuthResponseDTO> receiveAuthQueue (@Payload @Valid CreateAuthRequestDTO authRequest) {
 
         if (authService.emailExists(authRequest.getEmail())) {
-            return new SagaResponse<>(false, null, new ErrorDTO("EMAIL_EXISTS", "Email já cadastrado"));
+            return SagaResponse.error("EMAIL_EXISTS", "Email já cadastrado", HttpStatus.CONFLICT.value());
         }
 
-        return new SagaResponse<>(true, authService.createAuth(authRequest), null);
+        return SagaResponse.success(authService.createAuth(authRequest));
     }    
 }

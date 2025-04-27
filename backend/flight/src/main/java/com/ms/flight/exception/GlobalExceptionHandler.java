@@ -15,7 +15,7 @@ public class GlobalExceptionHandler {
     
     @ExceptionHandler(AirportNotRegisteredException.class)
     public ResponseEntity<ErrorDTO> handleAirportNotRegistered(AirportNotRegisteredException ex) {
-        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage());
+        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), HttpStatus.BAD_REQUEST.value());
         return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
     }
 
