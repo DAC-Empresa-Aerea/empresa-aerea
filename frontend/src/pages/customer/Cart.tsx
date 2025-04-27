@@ -1,33 +1,34 @@
 import React, { useState, useEffect } from "react";
-import { useLocation} from "react-router-dom";
+import { useLocation } from "react-router-dom";
 import FlightDetails from "../../components/molecules/cartMolecules/FlightDetails";
 import TicketQuantitySelector from "../../components/molecules/cartMolecules/TicketQuantitySelector";
 import PurchaseSummary from "../../components/molecules/cartMolecules/PurchaseSummary";
 import BookingConfirmation from "../../components/molecules/cartMolecules/BookingConfirmation";
 import { useAuth } from "../../contexts/loginContext";
-import {createReserve} from "../../services/reserveService";
 import Customer from "../../types/Customer";
+import Reserve from "../../types/Reserve";
+import { createReserve } from "../../services/reserveService";
 
 const Cart: React.FC = () => {
 
   const generateBookingCode = (): string => {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
     let code = "";
-  
+
     for (let i = 0; i < 3; i++) {
       code += letters.charAt(Math.floor(Math.random() * letters.length));
     }
-  
+
     for (let i = 0; i < 3; i++) {
       code += Math.floor(Math.random() * 10);
     }
-  
+
     return code;
   };
   const location = useLocation();
   const selectedFlight = location.state?.flight;
 
-  const { user, setUser } = useAuth() as { user: Customer, setUser: (user: Customer) => void };
+  const { user } = useAuth() as { user: Customer, setUser: (user: Customer) => void };
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [milesToUse, setMilesToUse] = useState(0);
 
@@ -42,18 +43,15 @@ const Cart: React.FC = () => {
     const newTotalPrice = selectedFlight.valor_passagem * ticketQuantity;
     setValor_passagem(newTotalPrice);
 
-    // Milhas necessárias para o preço total
     const newRequiredMiles = Math.round(newTotalPrice / milesConversionRate);
     setRequiredMiles(newRequiredMiles);
 
-    // Desconto baseado nas milhas utilizadas
     const newMilesDiscount = Math.min(
       milesToUse * milesConversionRate,
       newTotalPrice
     );
     setMilesDiscount(newMilesDiscount);
 
-    // Preço final após desconto de milhas
     const newFinalPrice = newTotalPrice - newMilesDiscount;
     setFinalPrice(newFinalPrice);
   }, [ticketQuantity, milesToUse, selectedFlight.valor_passagem, user]);
@@ -67,35 +65,31 @@ const Cart: React.FC = () => {
     }
   };
 
-   {/*Vai virar service
-  const handleMilesToUseChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const value = parseInt(e.target.value);
-    if (value >= 0 && value <= user.milesBalance) {
+  const handleMilesToUseChange = (value: number) => {
+    if (value >= 0 && value <= user.saldo_milhas) {
       setMilesToUse(value);
     }
   };
 
- 
   const handleConfirmPurchase = () => {
-    const updatedUser = {
-      ...user,
-      milesBalance: user.milesBalance - milesToUse,
-    };
-
-    setUser(updatedUser);
 
     const newBookingCode = generateBookingCode();
     setBookingCode(newBookingCode);
 
-    console.log("Compra confirmada!", {
-      flight: selectedFlight,
-      quantity: ticketQuantity,
-      milesUsed: milesToUse,
-      finalPrice: finalPrice,
-      bookingCode: newBookingCode,
-    });
+    const newReserve: Reserve = {
+      codigo: newBookingCode,
+      data: new Date(),
+      valor: finalPrice,
+      milhas_utilizadas: milesToUse,
+      quantidade_poltronas: ticketQuantity,
+      codigo_cliente: user.codigo,
+      estado: "Reservado",
+      voo: selectedFlight,
+    };
+    createReserve(newReserve)
+    console.log("Compra confirmada!", newReserve);
   };
-  */}
+
 
   return (
     <div className="bg-slate-50 min-h-screen pb-16">
@@ -137,7 +131,6 @@ const Cart: React.FC = () => {
                     Pagamento
                   </h2>
                 </div>
-                {/* Ajustar */}
                 <PurchaseSummary
                   totalPrice={totalPrice}
                   requiredMiles={requiredMiles}
@@ -145,6 +138,8 @@ const Cart: React.FC = () => {
                   milesDiscount={milesDiscount}
                   finalPrice={finalPrice}
                   user={user}
+                  onConfirmPurchase={handleConfirmPurchase}
+                  onMilesChange={handleMilesToUseChange}
                 />
               </div>
             </div>

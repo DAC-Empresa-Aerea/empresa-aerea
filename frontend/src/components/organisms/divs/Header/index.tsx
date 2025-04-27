@@ -30,7 +30,7 @@ const Header = () => {
           </div>
           <nav className="flex space-x-4">
             <LinkButton href={"/customer/search"} className="font-bold">
-              Buscar
+              Buscar Voos
             </LinkButton>
             <LinkButton href={"/customer/buy-miles"}>Comprar Milhas</LinkButton>
             <LinkButton href={"/customer/home"}>Minhas Reservas</LinkButton>

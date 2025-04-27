@@ -104,7 +104,7 @@
       "email": "voidalzk@gmail.com",
       "nome": "Gabriel Voidaleski",
       "senha": "1234",
-      "saldo_milhas": 19200,
+      "saldo_milhas": 18976,
       "endereco": {
         "cep": "82410312",
         "uf": "PR",
@@ -143,7 +143,7 @@
     {
       "codigo": "TADS0001",
       "data": "2024-10-15T14:30:00-03:00",
-      "valor_passagem": 500.00,
+      "valor_passagem": 500,
       "quantidade_poltronas_total": 100,
       "quantidade_poltronas_ocupadas": 90,
       "estado": "CONFIRMADO",
@@ -158,12 +158,13 @@
         "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
         "cidade": "Rio de Janeiro",
         "uf": "RJ"
-      }
+      },
+      "id": "7933"
     },
     {
       "codigo": "TADS0002",
       "data": "2024-11-05T08:00:00-03:00",
-      "valor_passagem": 350.00,
+      "valor_passagem": 350,
       "quantidade_poltronas_total": 90,
       "quantidade_poltronas_ocupadas": 70,
       "estado": "CONFIRMADO",
@@ -178,12 +179,13 @@
         "nome": "Aeroporto Internacional de Curitiba",
         "cidade": "Curitiba",
         "uf": "PR"
-      }
+      },
+      "id": "eb7b"
     },
     {
       "codigo": "TADS0003",
       "data": "2024-12-01T17:45:00-03:00",
-      "valor_passagem": 420.00,
+      "valor_passagem": 420,
       "quantidade_poltronas_total": 120,
       "quantidade_poltronas_ocupadas": 115,
       "estado": "CONFIRMADO",
@@ -198,7 +200,8 @@
         "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
         "cidade": "Guarulhos",
         "uf": "SP"
-      }
+      },
+      "id": "d3d8"
     }
   ],
   "Reserve": [
@@ -380,6 +383,130 @@
           "cidade": "Curitiba",
           "uf": "PR"
         }
+      }
+    },
+    {
+      "id": "e33e",
+      "codigo": "EUM095",
+      "data": "2025-04-27T02:58:52.996Z",
+      "valor": 250,
+      "milhas_utilizadas": 50,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "Reservado",
+      "voo": {
+        "codigo": "TADS0001",
+        "data": "2024-10-15T14:30:00-03:00",
+        "valor_passagem": 500,
+        "quantidade_poltronas_total": 100,
+        "quantidade_poltronas_ocupadas": 90,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        },
+        "id": "7933"
+      }
+    },
+    {
+      "id": "679d",
+      "codigo": "YHN256",
+      "data": "2025-04-27T03:00:00.294Z",
+      "valor": 250,
+      "milhas_utilizadas": 50,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "Reservado",
+      "voo": {
+        "codigo": "TADS0001",
+        "data": "2024-10-15T14:30:00-03:00",
+        "valor_passagem": 500,
+        "quantidade_poltronas_total": 100,
+        "quantidade_poltronas_ocupadas": 90,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        },
+        "id": "7933"
+      }
+    },
+    {
+      "id": "8ef5",
+      "codigo": "TXC204",
+      "data": "2025-04-27T03:07:54.936Z",
+      "valor": 250,
+      "milhas_utilizadas": 50,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "Reservado",
+      "voo": {
+        "codigo": "TADS0001",
+        "data": "2024-10-15T14:30:00-03:00",
+        "valor_passagem": 500,
+        "quantidade_poltronas_total": 100,
+        "quantidade_poltronas_ocupadas": 90,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "aeroporto_destino": {
+          "codigo": "GIG",
+          "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+          "cidade": "Rio de Janeiro",
+          "uf": "RJ"
+        },
+        "id": "7933"
+      }
+    },
+    {
+      "id": "0caa",
+      "codigo": "HEW658",
+      "data": "2025-04-27T03:12:41.343Z",
+      "valor": 50,
+      "milhas_utilizadas": 74,
+      "quantidade_poltronas": 1,
+      "codigo_cliente": 2026,
+      "estado": "Reservado",
+      "voo": {
+        "codigo": "TADS0003",
+        "data": "2024-12-01T17:45:00-03:00",
+        "valor_passagem": 420,
+        "quantidade_poltronas_total": 120,
+        "quantidade_poltronas_ocupadas": 115,
+        "estado": "CONFIRMADO",
+        "aeroporto_origem": {
+          "codigo": "CWB",
+          "nome": "Aeroporto Internacional de Curitiba",
+          "cidade": "Curitiba",
+          "uf": "PR"
+        },
+        "aeroporto_destino": {
+          "codigo": "GRU",
+          "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+          "cidade": "Guarulhos",
+          "uf": "SP"
+        },
+        "id": "d3d8"
       }
     }
   ],
@@ -733,6 +860,46 @@
       "descricao": "COMPRA DE MILHAS",
       "codigo_reserva": "",
       "tipo": "ENTRADA"
+    },
+    {
+      "id": "8184",
+      "codigo_cliente": "2026",
+      "data": "2025-04-27T02:58:53.043Z",
+      "valor_reais": 250,
+      "quantidade_milhas": 50,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "SAIDA"
+    },
+    {
+      "id": "dc15",
+      "codigo_cliente": "2026",
+      "data": "2025-04-27T03:00:00.318Z",
+      "valor_reais": 250,
+      "quantidade_milhas": 50,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "SAIDA"
+    },
+    {
+      "id": "9a9f",
+      "codigo_cliente": "2026",
+      "data": "2025-04-27T03:07:54.956Z",
+      "valor_reais": 250,
+      "quantidade_milhas": 50,
+      "descricao": "GRU->GIG",
+      "codigo_reserva": "TXC204",
+      "tipo": "SAIDA"
+    },
+    {
+      "id": "0ebd",
+      "codigo_cliente": "2026",
+      "data": "2025-04-27T03:12:41.366Z",
+      "valor_reais": 50,
+      "quantidade_milhas": 74,
+      "descricao": "CWB->GRU",
+      "codigo_reserva": "HEW658",
+      "tipo": "SAIDA"
     }
   ]
 }

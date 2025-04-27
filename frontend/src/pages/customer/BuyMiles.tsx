@@ -9,6 +9,7 @@ import MilesOptionsSelector from "../../components/molecules/milesMolecules/Mile
 import MilesSlider from "../../components/molecules/milesMolecules/MilesSlider";
 import PriceSummary from "../../components/molecules/milesMolecules/PriceSummary";
 import TransactionConfirmation from "../../components/organisms/milesOrganisms/TransactionConfirmation";
+import {MilesTransactionType} from "../../types/Miles";
 
 const BuyMiles: React.FC = () => {
   const { user, setUser } = useAuth();
@@ -44,6 +45,8 @@ const BuyMiles: React.FC = () => {
         valor_reais: priceInReais,
         quantidade_milhas: milesAmount,
         descricao: "COMPRA DE MILHAS",
+        codigo_reserva: "",
+        tipo: MilesTransactionType.ENTRADA,
       });
 
       setTransaction(newTransaction);

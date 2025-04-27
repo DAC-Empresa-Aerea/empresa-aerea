@@ -1,11 +1,28 @@
 import axios from "axios";
 import Reserve from "../types/Reserve";
+import { updateCustomerMiles } from "./milesService";
+import { createMilesTransaction } from "./milesService";
+import { MilesTransactionType } from "../types/Miles";
 
 const API_BASE_URL = "http://localhost:3001";
 
 
 
 export const createReserve = async (reserva: Reserve) => {
+
+    if (reserva.milhas_utilizadas > 0) {
+        const response_update_miles = await updateCustomerMiles(reserva.codigo_cliente, -reserva.milhas_utilizadas);
+
+        const newTransaction = await createMilesTransaction({
+            codigo_cliente: reserva.codigo_cliente.toString(),
+            valor_reais: reserva.valor,
+            quantidade_milhas: reserva.milhas_utilizadas,
+            descricao: `${reserva.voo.aeroporto_origem.codigo}->${reserva.voo.aeroporto_destino.codigo}`,
+            codigo_reserva: reserva.codigo,
+            tipo: MilesTransactionType.SAIDA,
+        });
+    }
+
     const response = await axios.post(`${API_BASE_URL}/Reserve`, reserva);
     return response.data;
 };

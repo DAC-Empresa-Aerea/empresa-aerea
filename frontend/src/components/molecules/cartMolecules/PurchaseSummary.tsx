@@ -9,6 +9,8 @@ interface PurchaseSummaryProps {
   milesToUse: number;
   milesDiscount: number;
   finalPrice: number;
+  onMilesChange: (value: number) => void;
+  onConfirmPurchase: () => void;
 }
 
 const PurchaseSummary: React.FC<PurchaseSummaryProps> = ({
@@ -18,6 +20,8 @@ const PurchaseSummary: React.FC<PurchaseSummaryProps> = ({
   milesDiscount,
   finalPrice,
   user,
+  onConfirmPurchase,
+  onMilesChange
 }) => {
   return (
     <div className="bg-gray-50 p-4 rounded-md">
@@ -42,6 +46,7 @@ const PurchaseSummary: React.FC<PurchaseSummaryProps> = ({
         milesToUse={milesToUse}
         userMilesBalance={user.saldo_milhas}
         requiredMilesForFullPayment={requiredMiles}
+        onMilesChange={onMilesChange}
       />
 
       <div className="mb-6">
@@ -57,7 +62,7 @@ const PurchaseSummary: React.FC<PurchaseSummaryProps> = ({
       </div>
 
       <button
-        onClick={() => alert('Compra confirmada aqui colocar funcao do service!')}
+        onClick={onConfirmPurchase}
         className="bg-blue-600 text-white py-3 px-4 rounded w-full hover:bg-blue-700 transition-colors"
       >
         Confirmar Compra
