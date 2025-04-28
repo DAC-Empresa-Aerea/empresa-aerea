@@ -1,5 +1,6 @@
 import { useState } from "react";
 import LinkButton from "../../../atoms/buttons/LinkButton";
+import { EmployeeRoutesEnum as Routes } from "../../../../routes/routes.enum";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -29,10 +30,9 @@ const Header = () => {
             </a>
           </div>
           <nav className="flex space-x-4">
-            <LinkButton href={"/"}>Home</LinkButton>
-            <LinkButton href={"/"} className="font-bold">Reservas</LinkButton>
-            <LinkButton href={"/"}>Registrar Voos</LinkButton>
-            <LinkButton href={"/"}>Gerência</LinkButton>
+          <LinkButton href={Routes.HOME}>Home</LinkButton>
+            <LinkButton href={Routes.REGISTER_FLIGHTS}>Registrar Voos</LinkButton>
+            <LinkButton href={Routes.CRUD}>Gerência</LinkButton>
           </nav>
             {
             logedIn() ? (

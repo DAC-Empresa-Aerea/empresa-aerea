@@ -202,6 +202,73 @@
         "uf": "SP"
       },
       "id": "d3d8"
+    },
+    {
+      "id": "5f35",
+      "codigo": "ABDW1123",
+      "data": "2025-04-29T02:09:00.000Z",
+      "valor_passagem": 1231.24,
+      "quantidade_poltronas_total": 900,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP",
+        "id": "4883"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR",
+        "id": "6ae5"
+      }
+    },
+    {
+      "id": "c163",
+      "codigo": "ABDW1123",
+      "data": "2025-04-29T02:09:00.000Z",
+      "valor_passagem": 1231.24,
+      "quantidade_poltronas_total": 900,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP",
+        "id": "4883"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR",
+        "id": "6ae5"
+      }
+    },
+    {
+      "id": "a1f5",
+      "codigo": "CDAW3131",
+      "data": "2025-04-28T22:17:00.000Z",
+      "valor_passagem": 800,
+      "quantidade_poltronas_total": 123,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GIG",
+        "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+        "cidade": "Rio de Janeiro",
+        "uf": "RJ"
+      },
+      "aeroporto_destino": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      }
     }
   ],
   "Reserve": [

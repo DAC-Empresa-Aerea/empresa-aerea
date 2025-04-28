@@ -1,4 +1,5 @@
 import axios from "axios";
+import  Flight  from "../types/Flight";
 
 const API_BASE_URL = "http://localhost:3001/Flights";
 
@@ -7,7 +8,7 @@ export const getFlights = async () => {
     return response.data;
 };
 
-export async function createFlight(newFlight: any) {
+export async function createFlight(newFlight: Flight) {
   const response = await fetch(API_BASE_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
