@@ -21,8 +21,11 @@ export async function createFlight(newFlight: Flight) {
   return response.json();
 }
 
-export async function updateFlight(id: number, updatedFlight: any) {
-  const response = await fetch(`${API_BASE_URL}/${id}`, {
+export async function updateFlight(code: string, updatedFlight: any) {
+  const response_flight = await axios.get(`http://localhost:3001/Flights?codigo=${code}`);
+  const flight = response_flight.data[0];
+  
+  const response = await fetch(`${API_BASE_URL}/${flight.id}`, {
     method: "PUT",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify(updatedFlight),

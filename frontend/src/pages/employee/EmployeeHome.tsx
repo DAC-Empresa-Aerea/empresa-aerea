@@ -25,7 +25,15 @@ function EmployeeHome({
     const fetchFlights = async () => {
       try {
         const data = await getFlights();
-        const flightsToSort = data.length > 0 ? data : flightsDataExample;
+        const now = new Date();
+        const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+
+        const flightsNext48Hours = data.filter((flight: any) => {
+          const flightDate = new Date(flight.data);
+          return flightDate >= now && flightDate <= next48h;
+        });
+
+        const flightsToSort = flightsNext48Hours.length > 0 ? flightsNext48Hours : flightsDataExample;
         setSortedFlights(sortFlightsByDate(flightsToSort));
       } catch (error) {
         console.error("Erro ao buscar voos:", error);

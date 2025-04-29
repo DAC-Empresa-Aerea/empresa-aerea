@@ -38,6 +38,7 @@ const getReserveByCode = async (code: string) => {
 };
 
 export const UpdateReserve = async (code: string, reserveUpdate: Partial<Reserve>) => {
+    console.log("Updating reserve with code:", code, "and update data:", reserveUpdate);
     try {
         const reserva = await getReserveByCode(code);
         if (!reserva || !reserva.id) throw new Error("Reserva não encontrada");
@@ -55,7 +56,12 @@ export const UpdateReserve = async (code: string, reserveUpdate: Partial<Reserve
         }
         return response.data;
     } catch (error) {
-        console.error('Erro ao atualizar a reserva:', error);
+        console.error('Erro ao atualizar a reserva:', error, code);
         throw error;
     }
+};
+
+export const getReservesByFlightCode = async (flightCode: string) => {
+    const response = await axios.get(`${API_BASE_URL}/Reserve?codigo_voo=${flightCode}`);
+    return response.data;
 };
