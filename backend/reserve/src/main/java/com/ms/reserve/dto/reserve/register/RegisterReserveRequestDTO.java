@@ -1,4 +1,4 @@
-package com.ms.saga.dto.reserve.register;
+package com.ms.reserve.dto.reserve.register;
 
 import java.math.BigDecimal;
 

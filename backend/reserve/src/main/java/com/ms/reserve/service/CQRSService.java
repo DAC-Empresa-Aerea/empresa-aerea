@@ -3,6 +3,7 @@ package com.ms.reserve.service;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.ms.reserve.dto.cqrs.RegisteredReserveDTO;
 import com.ms.reserve.enums.StatusEnum;
 import com.ms.reserve.query.model.ReserveQuery;
 import com.ms.reserve.query.repository.ReserveQueryRepository;
@@ -28,6 +29,28 @@ public class CQRSService {
         reserveQuery.setStatusAbbreviation(statusEnum.getAbbreviation());
 
         reserveQueryRepository.save(reserveQuery);
+    }
+
+    public void createReserve(RegisteredReserveDTO reserveRequest) {
+        ReserveQuery reserveQuery = new ReserveQuery();
+
+        reserveQuery.setCode(reserveRequest.getReserveCode());
+        reserveQuery.setCustomerCode(reserveRequest.getCustomerCode());
+        reserveQuery.setFlightCode(reserveRequest.getFlightCode());
+        reserveQuery.setDate(reserveRequest.getDate());
+        reserveQuery.setValue(reserveRequest.getValue());
+        reserveQuery.setMilesUsed(reserveRequest.getMilesUsed());
+        reserveQuery.setStatusCode(reserveRequest.getStatus());
+        reserveQuery.setStatusDescription(StatusEnum.fromCode(reserveRequest.getStatus()).getDescription());
+        reserveQuery.setStatusAbbreviation(StatusEnum.fromCode(reserveRequest.getStatus()).getAbbreviation());                
+
+        reserveQueryRepository.save(reserveQuery);
+    }
+
+    public void deleteReserve(String reserveCode) {
+        ReserveQuery reserveQuery = reserveQueryRepository.findById(reserveCode)
+                .orElseThrow(() -> new IllegalArgumentException("Reserve not found with ID: " + reserveCode));
+        reserveQueryRepository.delete(reserveQuery);
     }
     
 }

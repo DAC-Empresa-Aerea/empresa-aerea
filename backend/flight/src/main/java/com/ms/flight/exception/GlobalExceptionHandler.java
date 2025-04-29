@@ -25,5 +25,12 @@ public class GlobalExceptionHandler {
         response.put("erro", ex.getMessage());
         return ResponseEntity.badRequest().body(response);
     }
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorDTO> handleBusinessException(BusinessException ex) {
+        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), ex.getStatus());
+        return new ResponseEntity<>(error, HttpStatus.valueOf(ex.getStatus()));
+    }
+
 }
 

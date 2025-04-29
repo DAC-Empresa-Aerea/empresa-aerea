@@ -1,4 +1,4 @@
-package com.ms.saga.dto.reserve.register;
+package com.ms.saga.dto.reserve.reserveFlight;
 
 import java.math.BigDecimal;
 
@@ -13,8 +13,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RegisterReserveRequestDTO {
-
+public class ReserveFlightRequestDTO {
+    
     @JsonProperty("codigo_cliente")
     private Long customerCode;
 
@@ -24,7 +24,16 @@ public class RegisterReserveRequestDTO {
     @JsonProperty("milhas_utilizadas")
     private Integer milesUsed;
 
+    @JsonProperty("quantidade_poltronas")
+    private Integer seatsQuantity;
+
     @JsonProperty("codigo_voo")
     private String flightCode;
+
+    @JsonProperty("codigo_aeroporto_origem")
+    private String originAirportCode;
+
+    @JsonProperty("codigo_aeroporto_destino")
+    private String destinyAirportCode;
     
 }

@@ -32,7 +32,7 @@ public class CancelReserveResponseDTO {
 	private Integer seatsQuantity;
 
 	@JsonProperty("codigo_cliente")
-	private String customerCode;
+	private Long customerCode;
 
 	@JsonProperty("estado")
 	private String status;
