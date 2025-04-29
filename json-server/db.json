@@ -11,6 +11,24 @@
     }
   ],
   "Customer": [
+    {
+      "id": "1a41",
+      "codigo": 2026,
+      "cpf": "12345678909",
+      "email": "voidalzk@gmail.com",
+      "nome": "Gabriel Voidaleski",
+      "senha": "1234",
+      "saldo_milhas": 21848,
+      "endereco": {
+        "cep": "82410312",
+        "uf": "PR",
+        "cidade": "Curitiba",
+        "bairro": "",
+        "rua": "Rua Bombardillo Crocodilo",
+        "numero": "342",
+        "complemento": ""
+      }
+    }
   ],
   "Airports": [
     {
