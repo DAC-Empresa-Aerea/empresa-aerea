@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { flightsDataExample } from "../../data/FlightsExample";
 import Flight from "../../types/Flight";
 import EmployeeFlightList from "../../components/molecules/flight/EmployeeFlightList";
 import { getFlights } from "../../services/flightsService";
@@ -33,11 +32,10 @@ function EmployeeHome({
           return flightDate >= now && flightDate <= next48h;
         });
 
-        const flightsToSort = flightsNext48Hours.length > 0 ? flightsNext48Hours : flightsDataExample;
+        const flightsToSort = flightsNext48Hours;
         setSortedFlights(sortFlightsByDate(flightsToSort));
       } catch (error) {
         console.error("Erro ao buscar voos:", error);
-        setSortedFlights(sortFlightsByDate(flightsDataExample));
       }
     };
 
