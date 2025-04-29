@@ -6,10 +6,10 @@ const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   function logedIn() {
-    const user = localStorage.getItem("userData");
+    const user = localStorage.getItem("user");
+    console.log(user);
     const userType = localStorage.getItem("userType");
-    const authToken = localStorage.getItem("authToken");
-    return user && authToken && userType;
+    return user && userType;
   }
 
   return (
