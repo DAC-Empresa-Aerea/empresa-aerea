@@ -1,33 +1,60 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import SubmitButton from "../../components/atoms/buttons/SubmitButton";
 import LogoImage from "../../components/atoms/images/LogoImage";
 import MaskedInput from "../../components/atoms/inputs/MaskedInput";
 import BasicModal from "../../components/atoms/modals/_BasicModal";
+import { getReservesByFlightCode } from "../../services/reserveService"; 
+import { UpdateReserve } from "../../services/reserveService";
+import Reserve from "../../types/Reserve";
+import { getReserveByCode } from "../../services/reserveService";
 
-const boardingCodes = ["AAA123", "ABC123"];
-
-function ConfirmBoarding() {
+function ConfirmBoarding({ flightCode }: { flightCode: string }) {
   const [boardingCode, setBoardingCode] = useState("");
   const [lastAdd, setLastAdd] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
+  const [boardingCodes, setBoardingCodes] = useState<string[]>([]);
+
+  useEffect(() => {
+    const fetchBoardingCodes = async () => {
+      try {
+        const reserves = await getReservesByFlightCode(flightCode); 
+        const codes = reserves.map((reserve: any) => reserve.codigo);
+        setBoardingCodes(codes);
+      } catch (error) {
+        console.error("Erro ao buscar reservas:", error);
+      }
+    };
+
+    fetchBoardingCodes();
+  }, [flightCode]); 
 
   const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setBoardingCode(event.target.value.toUpperCase());
   };
 
   const verifyCode = (code: string) => {
-    return /^[A-Z]{3}\d{3}$/.test(code) && boardingCodes.includes(code);
+    return /^[A-Z]{3}\d{3}$/.test(code) && boardingCodes.includes(code); 
   };
 
-  const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
     if (verifyCode(boardingCode)) {
       setLastAdd(boardingCode);
       setBoardingCode("");
-      console.log("Código confirmado:", boardingCode);
+      const reserve = await getReserveByCode(boardingCode);
+      updateReserveState(boardingCode, "EMBARCADO", reserve);
     } else {
       setModalVisible(true);
+    }
+  };
+
+  const updateReserveState = async (code: string, newState: string, reserve : Reserve) => {
+    try {
+      await UpdateReserve(code, { ...reserve, estado: newState }); 
+      console.log("Reserva atualizada para estado:", newState);
+    } catch (error) {
+      console.error("Erro ao atualizar o estado da reserva:", error);
     }
   };
 

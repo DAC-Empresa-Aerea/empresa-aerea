@@ -32,7 +32,7 @@ export const getReservesByCustomerCode = async (customerCode: string) => {
     return response.data;
 };
 
-const getReserveByCode = async (code: string) => {
+export const getReserveByCode = async (code: string) => {
     const response = await axios.get(`http://localhost:3001/Reserve?codigo=${code}`);
     return response.data[0];
 };

@@ -1,8 +1,9 @@
 import { useState } from "react";
 import Flight from "../../types/Flight";
-
+import { useNavigate } from "react-router-dom";
 import CancelFlightModal from "../molecules/modalsMolecules/CancelFlightModal";
 import RealizeFlightModal from "../molecules/modalsMolecules/RealizeFlightModal";
+import { EmployeeRoutesEnum as Routes } from "../../routes/routes.enum";
 
 interface EmployeeFlightProps {
   flight: Flight;
@@ -10,7 +11,8 @@ interface EmployeeFlightProps {
 
 function EmployeeFlight({ flight }: EmployeeFlightProps) {
   const [isModalCancelOpen, setIsModalCancelOpen] = useState(false);
-  const [isModalRealizeOpen, setIsModalRealizeOpen] = useState(false); 
+  const [isModalRealizeOpen, setIsModalRealizeOpen] = useState(false);
+  const navigate = useNavigate();
 
   const handleCancelClick = () => {
     setIsModalCancelOpen(true);
@@ -20,14 +22,24 @@ function EmployeeFlight({ flight }: EmployeeFlightProps) {
     setIsModalRealizeOpen(true);
   };
 
+  const handleFlightClick = (flight: Flight) => {
+    navigate("/employee/confirm", { state: { flight } });
+  };
+
   // Função para verificar o status e renderizar botões de acordo
   const renderButtons = () => {
     if (flight.estado === "CONFIRMADO") {
       return (
         <>
           <button
+            className="transition-colors px-4 py-2 bg-green-600 font-roboto text-white cursor-pointer hover:bg-green-700 rounded-lg"
+            onClick={handleRealizeClick}
+          >
+            Realizar Voo
+          </button>
+          <button
             className="transition-colors px-4 py-2 bg-blue-600 font-roboto text-white cursor-pointer hover:bg-blue-dark rounded-lg"
-            onClick={() => alert(`R12 - ${flight.codigo} - ${flight.data}`)}
+            onClick={() => handleFlightClick(flight)}
           >
             Embarques
           </button>
@@ -51,12 +63,6 @@ function EmployeeFlight({ flight }: EmployeeFlightProps) {
     } else {
       return (
         <>
-          <button
-            className="transition-colors px-4 py-2 bg-green-600 font-roboto text-white cursor-pointer hover:bg-green-700 rounded-lg"
-            onClick={handleRealizeClick}
-          >
-            Realizar Voo
-          </button>
           <button
             className="transition-colors px-4 py-2 bg-red-600 font-roboto text-white cursor-pointer hover:bg-red-700 rounded-lg"
             onClick={handleCancelClick}
@@ -93,7 +99,7 @@ function EmployeeFlight({ flight }: EmployeeFlightProps) {
         isOpen={isModalCancelOpen}
         onClose={() => setIsModalCancelOpen(false)}
       />
-      
+
       {/* Modal de Realização do Voo */}
       <RealizeFlightModal
         flight={flight}

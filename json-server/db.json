@@ -210,7 +210,7 @@
       "valor_passagem": 1231.24,
       "quantidade_poltronas_total": 900,
       "quantidade_poltronas_ocupadas": 0,
-      "estado": "CANCELADO",
+      "estado": "CONFIRMADO",
       "aeroporto_origem": {
         "codigo": "GRU",
         "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
