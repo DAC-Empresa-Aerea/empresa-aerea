@@ -6,8 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 
-import com.ms.employee.dto.EmployeeRequestDTO;
-import com.ms.employee.dto.EmployeeResponseDTO;
+import com.ms.employee.dto.employee.EmployeeRequestDTO;
+import com.ms.employee.dto.employee.EmployeeResponseDTO;
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
 

@@ -1,4 +1,4 @@
-package com.ms.employee.dto;
+package com.ms.employee.dto.employee;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
