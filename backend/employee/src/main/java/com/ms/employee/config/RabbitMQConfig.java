@@ -16,9 +16,9 @@ public class RabbitMQConfig {
     public static final String CREATE_EMPLOYEE_EXCHANGE = "create.employee.exchange";
     public static final String CREATE_EMPLOYEE_ROUTING_KEY = "create.employee.routing.key";
 
-    public static final String ROLLBACK_EMPLOYEE_QUEUE = "rollback.employee.queue";
-    public static final String ROLLBACK_EMPLOYEE_EXCHANGE = "rollback.employee.exchange";
-    public static final String ROLLBACK_EMPLOYEE_ROUTING_KEY = "rollback.employee.routing.key";
+    public static final String ROLLBACK_CREATE_EMPLOYEE_QUEUE = "rollback.create.employee.queue";
+    public static final String ROLLBACK_CREATE_EMPLOYEE_EXCHANGE = "rollback.create.employee.exchange";
+    public static final String ROLLBACK_CREATE_EMPLOYEE_ROUTING_KEY = "rollback.create.employee.routing.key";
 
     @Bean
     public Queue createEmployeeQueue() {
@@ -40,21 +40,21 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Queue rollbackEmployeeQueue() {
-        return new Queue(ROLLBACK_EMPLOYEE_QUEUE, true);
+    public Queue rollbackCreateEmployeeQueue() {
+        return new Queue(ROLLBACK_CREATE_EMPLOYEE_QUEUE, true);
     }
 
     @Bean
-    public Exchange rollbackEmployeeExchange() {
-        return new DirectExchange(ROLLBACK_EMPLOYEE_EXCHANGE, true, false);
+    public Exchange rollbackCreateEmployeeExchange() {
+        return new DirectExchange(ROLLBACK_CREATE_EMPLOYEE_EXCHANGE, true, false);
     }
 
     @Bean
-    public Binding rollbackEmployeeBinding(Queue rollbackEmployeeQueue, Exchange rollbackEmployeeExchange) {
+    public Binding rollbackCreateEmployeeBinding(Queue rollbackEmployeeQueue, Exchange rollbackEmployeeExchange) {
         return BindingBuilder
                 .bind(rollbackEmployeeQueue)
                 .to(rollbackEmployeeExchange)
-                .with(ROLLBACK_EMPLOYEE_ROUTING_KEY)
+                .with(ROLLBACK_CREATE_EMPLOYEE_ROUTING_KEY)
                 .noargs();
     }
 

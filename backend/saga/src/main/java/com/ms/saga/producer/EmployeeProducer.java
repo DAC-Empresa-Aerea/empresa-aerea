@@ -25,10 +25,10 @@ public class EmployeeProducer {
         );
     }
 
-    public void sendRollbackEmployee(Long employeeId) {
+    public void sendRollbackCreateEmployee(Long employeeId) {
         rabbitTemplate.convertAndSend(
-            RabbitMQConfig.ROLLBACK_EMPLOYEE_EXCHANGE,
-            RabbitMQConfig.ROLLBACK_EMPLOYEE_ROUTING_KEY,
+            RabbitMQConfig.ROLLBACK_CREATE_EMPLOYEE_EXCHANGE,
+            RabbitMQConfig.ROLLBACK_CREATE_EMPLOYEE_ROUTING_KEY,
             employeeId
         );
     }

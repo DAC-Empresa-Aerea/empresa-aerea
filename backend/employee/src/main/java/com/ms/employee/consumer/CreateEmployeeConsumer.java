@@ -33,7 +33,7 @@ public class CreateEmployeeConsumer {
         return new SagaResponse<>(true, employeeService.create(employee), null);
     }
 
-    @RabbitListener(queues = RabbitMQConfig.ROLLBACK_EMPLOYEE_QUEUE)
+    @RabbitListener(queues = RabbitMQConfig.ROLLBACK_CREATE_EMPLOYEE_QUEUE)
     public void receiveRollbackEmployee(@Payload Long employeeId) {
         employeeService.deleteById(employeeId);
     }
