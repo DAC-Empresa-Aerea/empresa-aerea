@@ -14,12 +14,60 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    const hasMinLength = password.length >= 4;
+    const hasNumber = /[0-9]/.test(password);
+
+    return {
+      isValid:
+        hasMinLength &&
+        hasNumber,
+      requirements: {
+        hasMinLength,
+        hasNumber,
+      },
+    };
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setEmailError("");
+    setPasswordError("");
+    setIsLoading(true);
+
+    if (!validateEmail(email)) {
+      setEmailError("Por favor, insira um email válido");
+      setIsLoading(false);
+      return;
+    }
+
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      const requirements = passwordValidation.requirements;
+      const missingRequirements = [];
+
+      if (!requirements.hasMinLength)
+        missingRequirements.push("4 caracteres");
+      if (!requirements.hasNumber) missingRequirements.push("um número");
+
+      setPasswordError(
+        `A senha deve conter: ${missingRequirements.join(", ")}`
+      );
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await login({ login: email, senha: password });
@@ -32,11 +80,22 @@ const Login = () => {
         navigate("/");
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "Login failed. Please check your credentials.";
+      let errorMessage =
+        "Falha no login. Por favor, verifique suas credenciais.";
+
+      if (err instanceof Error) {
+        if (err.message.includes("Usuário ou senha inválidos")) {
+          errorMessage =
+            "Email ou senha incorretos. Por favor, tente novamente.";
+        } else if (err.message.includes("Erro na requisição de login")) {
+          errorMessage =
+            "Erro ao conectar com o servidor. Por favor, tente novamente mais tarde.";
+        }
+      }
+
       setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -70,9 +129,17 @@ const Login = () => {
               type="email"
               value={email}
               placeholder="Email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError("");
+              }}
               required
+              classNameAdd={emailError ? "border-red-500" : ""}
+              disabled={isLoading}
             />
+            {emailError && (
+              <p className="text-red-500 text-sm mt-1">{emailError}</p>
+            )}
           </div>
 
           {/* Password field */}
@@ -81,14 +148,24 @@ const Login = () => {
               type="password"
               value={password}
               placeholder="Senha"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setPasswordError("");
+              }}
               required
+              classNameAdd={passwordError ? "border-red-500" : ""}
+              disabled={isLoading}
             />
+            {passwordError && (
+              <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+            )}
           </div>
 
-
           {/* Login button */}
-          <SubmitButton text="Entre" />
+          <SubmitButton
+            text={isLoading ? "Entrando..." : "Entrar"}
+            disabled={isLoading}
+          />
 
           {/* Registration link */}
           <p className="mt-4 text-center text-sm text-gray-600 cursor-default">
