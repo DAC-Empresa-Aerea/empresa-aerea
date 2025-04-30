@@ -20,25 +20,24 @@ function EmployeeHome({
 }: EmployeeHomeProps) {
   const [sortedFlights, setSortedFlights] = useState<Array<Flight>>([]);
 
+  const fetchFlights = async () => {
+    try {
+      const data = await getFlights();
+      const now = new Date();
+      const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+
+      const flightsNext48Hours = data.filter((flight: any) => {
+        const flightDate = new Date(flight.data);
+        return flightDate >= now && flightDate <= next48h;
+      });
+
+      setSortedFlights(sortFlightsByDate(flightsNext48Hours));
+    } catch (error) {
+      console.error("Erro ao buscar voos:", error);
+    }
+  };
+
   useEffect(() => {
-    const fetchFlights = async () => {
-      try {
-        const data = await getFlights();
-        const now = new Date();
-        const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
-
-        const flightsNext48Hours = data.filter((flight: any) => {
-          const flightDate = new Date(flight.data);
-          return flightDate >= now && flightDate <= next48h;
-        });
-
-        const flightsToSort = flightsNext48Hours;
-        setSortedFlights(sortFlightsByDate(flightsToSort));
-      } catch (error) {
-        console.error("Erro ao buscar voos:", error);
-      }
-    };
-
     fetchFlights();
   }, []);
 
@@ -47,8 +46,10 @@ function EmployeeHome({
       title={title}
       onViewMoreClick={onViewMoreClick}
       flights={sortedFlights}
+      onUpdate={fetchFlights}
     />
   );
 }
+
 
 export default EmployeeHome;

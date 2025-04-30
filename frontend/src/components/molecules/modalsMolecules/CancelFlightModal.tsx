@@ -9,7 +9,7 @@ interface CancelFlightModalProps {
   onClose: () => void;
 }
 
-function CancelFlightModal({ flight, isOpen, onClose }: CancelFlightModalProps) {
+function CancelFlightModal({ flight, isOpen, onClose  }: CancelFlightModalProps) {
   if (!isOpen) return null;
 
   const handleCancelFlight = async () => {

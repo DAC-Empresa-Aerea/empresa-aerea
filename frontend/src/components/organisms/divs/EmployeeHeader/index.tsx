@@ -1,9 +1,18 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import LinkButton from "../../../atoms/buttons/LinkButton";
 import { EmployeeRoutesEnum as Routes } from "../../../../routes/routes.enum";
+import { useAuth } from "../../../../contexts/loginContext";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const { isAuthenticated, logout } = useAuth();
+  const navigate = useNavigate();
+
+  const handleLogout = () => {
+    logout();
+    navigate("/login"); // redireciona após logout
+  };
 
   function logedIn() {
     const user = localStorage.getItem("user");
@@ -30,14 +39,19 @@ const Header = () => {
             </a>
           </div>
           <nav className="flex space-x-4">
-          <LinkButton href={Routes.HOME}>Home</LinkButton>
+            <LinkButton href={Routes.HOME}>Home</LinkButton>
             <LinkButton href={Routes.REGISTER_FLIGHTS}>Registrar Voos</LinkButton>
             <LinkButton href={Routes.CRUD}>Gerência</LinkButton>
           </nav>
-            {
+          {
             logedIn() ? (
               <div className="py-6">
-                <LinkButton href={"/customer/logout"}>Logout</LinkButton>
+                <button
+                  onClick={handleLogout}
+                  className="text-base font-semibold text-gray-900 hover:bg-gray-100 px-4 py-2 rounded-md"
+                >
+                  Logout
+                </button>
               </div>
             ) : (
               <div className="py-6">
@@ -70,9 +84,8 @@ const Header = () => {
               className="text-gray-600 focus:outline-none"
             >
               <i
-                className={`fas ${
-                  mobileMenuOpen ? "fa-times" : "fa-bars"
-                } text-xl`}
+                className={`fas ${mobileMenuOpen ? "fa-times" : "fa-bars"
+                  } text-xl`}
               ></i>
             </button>
           </div>
@@ -80,27 +93,27 @@ const Header = () => {
           {mobileMenuOpen && (
             <div className="mt-4 space-y-4">
               <nav className="flex space-x-4">
-              <LinkButton href={"/"}>Home</LinkButton>
-            <LinkButton href={"/"} className="font-bold">Reservas</LinkButton>
-            <LinkButton href={"/"}>Registrar Voos</LinkButton>
-            <LinkButton href={"/"}>Gerência</LinkButton>
+                <LinkButton href={"/"}>Home</LinkButton>
+                <LinkButton href={"/"} className="font-bold">Reservas</LinkButton>
+                <LinkButton href={"/"}>Registrar Voos</LinkButton>
+                <LinkButton href={"/"}>Gerência</LinkButton>
               </nav>
               {
-              logedIn() ? (
-                <div className="py-6">
-                  <LinkButton href={"/customer/logout"}>Logout</LinkButton>
-                </div>
-              ) : (
-                <div className="py-6">
-                  <a
-                    href="/login"
-                    className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                  >
-                    Log in
-                  </a>
-                </div>
-              )
-            }
+                logedIn() ? (
+                  <div className="py-6">
+                    <LinkButton href={"/customer/logout"}>Logout</LinkButton>
+                  </div>
+                ) : (
+                  <div className="py-6">
+                    <a
+                      href="/login"
+                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
+                    >
+                      Log in
+                    </a>
+                  </div>
+                )
+              }
             </div>
           )}
         </div>

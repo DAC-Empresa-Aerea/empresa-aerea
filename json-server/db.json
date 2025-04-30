@@ -54,9 +54,238 @@
     }
   ],
   "Flights": [
+    {
+      "id": "d90b",
+      "codigo": "DWAD1234",
+      "data": "2025-05-14T16:32:00.000Z",
+      "valor_passagem": 1000,
+      "quantidade_poltronas_total": 0,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "id": "307a",
+      "codigo": "DWAD1312",
+      "data": "2025-04-30T21:31:00.000Z",
+      "valor_passagem": 476.47,
+      "quantidade_poltronas_total": 900,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CANCELADO",
+      "aeroporto_origem": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      },
+      "aeroporto_destino": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      }
+    },
+    {
+      "id": "b07b",
+      "codigo": "WDAD1312",
+      "data": "2025-04-30T19:35:00.000Z",
+      "valor_passagem": 120,
+      "quantidade_poltronas_total": 120,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "REALIZADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "id": "711c",
+      "codigo": "WDAW1232",
+      "data": "2025-04-30T16:02:00.000Z",
+      "valor_passagem": 13123.12,
+      "quantidade_poltronas_total": 0,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GIG",
+        "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+        "cidade": "Rio de Janeiro",
+        "uf": "RJ"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "id": "140e",
+      "codigo": "WEWE1234",
+      "data": "2025-04-30T22:06:00.000Z",
+      "valor_passagem": 133.23,
+      "quantidade_poltronas_total": 0,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "REALIZADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "id": "214b",
+      "codigo": "WDAW2131",
+      "data": "2025-04-30T21:17:00.000Z",
+      "valor_passagem": 444.44,
+      "quantidade_poltronas_total": 122,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "REALIZADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "id": "d0ce",
+      "codigo": "DWAD1313",
+      "data": "2025-04-30T21:31:00.000Z",
+      "valor_passagem": 476.47,
+      "quantidade_poltronas_total": 900,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CANCELADO",
+      "aeroporto_origem": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      },
+      "aeroporto_destino": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      }
+    },
+    {
+      "id": "bc4e",
+      "codigo": "FSGE6692",
+      "data": "2025-04-30T18:09:19.135Z",
+      "valor_passagem": 400,
+      "quantidade_poltronas_total": 0,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GIG",
+        "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+        "cidade": "Rio de Janeiro",
+        "uf": "RJ"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "id": "692a",
+      "codigo": "BCDC3057",
+      "data": "2025-04-30T18:14:34.106Z",
+      "valor_passagem": 500,
+      "quantidade_poltronas_total": 0,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GIG",
+        "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+        "cidade": "Rio de Janeiro",
+        "uf": "RJ"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "id": "8519",
+      "codigo": "LJDK1913",
+      "data": "2025-04-30T18:16:56.800Z",
+      "valor_passagem": 500,
+      "quantidade_poltronas_total": 24,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GIG",
+        "nome": "Aeroporto Internacional do Rio de Janeiro/Galeão",
+        "cidade": "Rio de Janeiro",
+        "uf": "RJ"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    },
+    {
+      "id": "42cc",
+      "codigo": "YELU3974",
+      "data": "2025-04-30T18:20:21.659Z",
+      "valor_passagem": 7654786578.56,
+      "quantidade_poltronas_total": 0,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CONFIRMADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
+    }
   ],
-  "Reserve": [
-  ],
-  "Miles": [
-  ]
+  "Reserve": [],
+  "Miles": []
 }

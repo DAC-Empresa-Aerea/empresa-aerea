@@ -110,13 +110,7 @@ const EmployeeLandingPage = () => {
 
       {/* Ações Rápidas */}
       <h2 className="text-xl font-semibold mb-4">Ações Rápidas</h2>
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 mb-8">
-        <ActionCard
-          title="Gerenciar Voos"
-          description="Gerenciar voos nas próximas 48 horas"
-          icon="users"
-          onClick={() => handleCardClick(`/${EmployeeRoutesEnum.BASE}/home`)}
-        />
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-6 mb-8">
         <ActionCard
           title="Cadastrar Voos"
           description="Cadastro dos voos"

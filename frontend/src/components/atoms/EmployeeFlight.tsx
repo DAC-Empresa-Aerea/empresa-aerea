@@ -3,13 +3,13 @@ import Flight from "../../types/Flight";
 import { useNavigate } from "react-router-dom";
 import CancelFlightModal from "../molecules/modalsMolecules/CancelFlightModal";
 import RealizeFlightModal from "../molecules/modalsMolecules/RealizeFlightModal";
-import { EmployeeRoutesEnum as Routes } from "../../routes/routes.enum";
 
 interface EmployeeFlightProps {
   flight: Flight;
+  refreshFlights: () => void;
 }
 
-function EmployeeFlight({ flight }: EmployeeFlightProps) {
+function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
   const [isModalCancelOpen, setIsModalCancelOpen] = useState(false);
   const [isModalRealizeOpen, setIsModalRealizeOpen] = useState(false);
   const navigate = useNavigate();
@@ -26,7 +26,6 @@ function EmployeeFlight({ flight }: EmployeeFlightProps) {
     navigate("/employee/confirm", { state: { flight } });
   };
 
-  // Função para verificar o status e renderizar botões de acordo
   const renderButtons = () => {
     if (flight.estado === "CONFIRMADO") {
       return (
@@ -75,7 +74,7 @@ function EmployeeFlight({ flight }: EmployeeFlightProps) {
   };
 
   return (
-    <li className="border border-gray-light p-4 flex justify-between items-center hover:bg-gray-light rounded-2xl">
+    <li className="bg-white border border-gray-light p-4 flex justify-between items-center hover:bg-gray-light rounded-2xl">
       <article className="font-roboto">
         <h3 className="font-semibold">Voo {flight.codigo}</h3>
         <p>
@@ -97,14 +96,19 @@ function EmployeeFlight({ flight }: EmployeeFlightProps) {
       <CancelFlightModal
         flight={flight}
         isOpen={isModalCancelOpen}
-        onClose={() => setIsModalCancelOpen(false)}
+        onClose={() => {
+          setIsModalCancelOpen(false);
+          refreshFlights();
+        }}
       />
 
-      {/* Modal de Realização do Voo */}
       <RealizeFlightModal
         flight={flight}
         isOpen={isModalRealizeOpen}
-        onClose={() => setIsModalRealizeOpen(false)}  // Fecha o modal de realizar voo
+        onClose={() => {
+          setIsModalRealizeOpen(false);
+          refreshFlights();
+        }}
       />
     </li>
   );
