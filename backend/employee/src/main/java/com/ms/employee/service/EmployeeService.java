@@ -3,23 +3,23 @@ package com.ms.employee.service;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.beans.BeanUtils;
 
 import com.ms.employee.dto.employee.EmployeeRequestDTO;
 import com.ms.employee.dto.employee.EmployeeResponseDTO;
+import com.ms.employee.exception.BusinessException;
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
 
 import jakarta.persistence.EntityNotFoundException;
-import jakarta.transaction.Transactional;
 
 @Service
 public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
-
 
     //#region Método para criar um funcionário
     /**
@@ -30,16 +30,22 @@ public class EmployeeService {
      * @return O objeto EmployeeResponseDTO representando o funcionário recém-criado após ser salvo no repositório.
      * @throws IllegalArgumentException se qualquer campo obrigatório (CPF, email, nome ou telefone) for nulo ou vazio.
      */
-    @Transactional
     public EmployeeResponseDTO create(EmployeeRequestDTO employee) {
         if (employee.getCpf() == null || employee.getCpf().isEmpty() ||
             employee.getEmail() == null || employee.getEmail().isEmpty() ||
             employee.getName() == null || employee.getName().isEmpty() ||
-            employee.getTelefone() == null || employee.getTelefone().isEmpty()) {
+            employee.getPhoneNumber() == null || employee.getPhoneNumber().isEmpty()) {
             throw new IllegalArgumentException("CPF, email, nome e telefone são obrigatórios e não podem ser nulos ou vazios.");
         }
 
-        System.out.println("Criando funcionário: " + employee.getName());
+        if(employeeRepository.existsByEmail(employee.getEmail())) {
+            throw new BusinessException("EMAIL_ALREADY_EXISTS", "Email já existe.", HttpStatus.BAD_REQUEST.value());
+        }
+
+        if(employeeRepository.existsByCpf(employee.getCpf())) {
+            throw new BusinessException("CPF_ALREADY_EXISTS", "CPF já existe.", HttpStatus.BAD_REQUEST.value());
+        }
+
         Employee employeeEntity = new Employee();
         BeanUtils.copyProperties(employee, employeeEntity);
 
@@ -90,15 +96,14 @@ public class EmployeeService {
      * @return O objeto Employee atualizado após ser salvo no repositório.
      * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
      */
-    @Transactional
     public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employee) {
         Employee existingEmployee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
 
         existingEmployee.setCpf(employee.getCpf());
         existingEmployee.setEmail(employee.getEmail());
-        existingEmployee.setNome(employee.getName());
-        existingEmployee.setTelefone(employee.getTelefone());
+        existingEmployee.setName(employee.getName());
+        existingEmployee.setPhoneNumber(employee.getPhoneNumber());
 
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
 
@@ -125,8 +130,8 @@ public class EmployeeService {
         dto.setId(employee.getId());
         dto.setCpf(employee.getCpf());
         dto.setEmail(employee.getEmail());
-        dto.setNome(employee.getNome());
-        dto.setTelefone(employee.getTelefone());
+        dto.setName(employee.getName());
+        dto.setPhoneNumber(employee.getPhoneNumber());
         return dto;
     }
 

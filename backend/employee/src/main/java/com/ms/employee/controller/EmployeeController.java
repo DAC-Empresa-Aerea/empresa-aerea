@@ -6,7 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -36,8 +35,8 @@ public class EmployeeController {
                     dto.setId(employee.getId());
                     dto.setCpf(employee.getCpf());
                     dto.setEmail(employee.getEmail());
-                    dto.setNome(employee.getNome());
-                    dto.setTelefone(employee.getTelefone());
+                    dto.setName(employee.getName());
+                    dto.setPhoneNumber(employee.getPhoneNumber());
                     return dto;
                 }) 
                 .toList();
@@ -51,12 +50,6 @@ public class EmployeeController {
     public ResponseEntity<EmployeeResponseDTO> getEmployee(@PathVariable Long id) {
         EmployeeResponseDTO dto = employeeService.findById(id);
         return ResponseEntity.ok(dto);
-    }
-
-    @PostMapping
-    public ResponseEntity<EmployeeResponseDTO> create(@RequestBody EmployeeRequestDTO dto) {
-        EmployeeResponseDTO responseDTO = employeeService.create(dto);
-        return ResponseEntity.status(201).body(responseDTO); 
     }
 
     @PutMapping ("/{id}")

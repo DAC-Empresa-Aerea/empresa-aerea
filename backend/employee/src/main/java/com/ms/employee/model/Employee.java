@@ -18,17 +18,19 @@ import lombok.NoArgsConstructor;
 @Table(name = "funcionarios")
 public class Employee {
 
-    //#region Atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false, unique = true)
+
+    @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
-    @Column(nullable = false, unique = true)
+
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
-    @Column(nullable = false)
-    private String nome;
-    @Column(nullable = true, unique = true)
-    private String telefone;
-    //#endregion
+
+    @Column(name = "nome", nullable = false)
+    private String name;
+
+    @Column(name = "telefone", nullable = true, unique = true)
+    private String phoneNumber;
 }

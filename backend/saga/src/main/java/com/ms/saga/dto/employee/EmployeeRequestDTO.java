@@ -1,5 +1,7 @@
 package com.ms.saga.dto.employee;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.Getter;
@@ -13,12 +15,16 @@ import lombok.Setter;
 @Setter
 public class EmployeeRequestDTO {
 
+    @JsonProperty("cpf")
     private String cpf;
 
+    @JsonProperty("email")
     private String email;
 
-    private String nome;
+    @JsonProperty("nome")
+    private String name;
     
-    private String telefone;
+    @JsonProperty("telefone")
+    private String phoneNumber;
 
 }

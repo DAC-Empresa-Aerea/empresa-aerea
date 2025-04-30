@@ -18,12 +18,16 @@ public class EmployeeResponseDTO {
     @JsonProperty("codigo")
     private Long id;
 
+    @JsonProperty("cpf")
     private String cpf;
 
+    @JsonProperty("email")
     private String email;
 
-    private String nome;
+    @JsonProperty("nome")
+    private String name;
     
-    private String telefone;
+    @JsonProperty("telefone")
+    private String phoneNumber;
 
 }
