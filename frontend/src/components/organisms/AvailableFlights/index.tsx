@@ -1,13 +1,11 @@
 import { Flight } from "../../atoms/FlightBasicInfo";
-import FlightList from "../../molecules/FlightList";
+import FlightList from "../../molecules/flight/FlightList";
 
 interface AvailableFlightsProps {
   flights: Array<Flight>;
 }
 
-function AvailableFlights({
-  flights
-}: AvailableFlightsProps) {
+function AvailableFlights({ flights }: AvailableFlightsProps) {
   return (
     <FlightList
       title="Voos Disponíveis"

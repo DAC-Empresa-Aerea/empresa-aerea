@@ -21,8 +21,10 @@ exports.listCustomerReservations = async customerId => {
 
 exports.getReservationWithFlight = async codigo => {
   const { data: reserva } = await axios.get(`${RESERVATION}/reservas/${codigo}`);
-  const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.voo.codigo}`);
-  return { ...reserva, voo };
+  const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.voo_codigo}`);
+  reserva.voo = voo;
+  delete reserva.voo_codigo;
+  return reserva;
 };
 
 exports.getLoginWithCustomer = async (email, password) => {

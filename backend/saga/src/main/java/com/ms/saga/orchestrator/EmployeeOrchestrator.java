@@ -10,7 +10,7 @@ import com.ms.saga.dto.employee.EmployeeRequestDTO;
 import com.ms.saga.dto.employee.EmployeeResponseDTO;
 import com.ms.saga.dto.error.ErrorDTO;
 import com.ms.saga.dto.error.SagaResponse;
-import com.ms.saga.exception.ResourceConflictException;
+import com.ms.saga.exception.GlobalExceptionHandler;
 import com.ms.saga.producer.AuthProducer;
 import com.ms.saga.producer.EmployeeProducer;
 
@@ -29,7 +29,7 @@ public class EmployeeOrchestrator {
 
         if (!employeeResponse.isSuccess()) {
             ErrorDTO error = employeeResponse.getError();
-            throw new ResourceConflictException(error.getCode(), error.getMessage());   
+            throw new RuntimeException(error.getCode() + ": " + error.getMessage());  //temporario
         }
 
         SagaResponse<CreateAuthResponseDTO> authResponse = authProducer.sendCreateAuth(
@@ -40,7 +40,7 @@ public class EmployeeOrchestrator {
             employeeProducer.sendRollbackEmployee(employeeResponse.getData().getId());
 
             ErrorDTO error = authResponse.getError();
-            throw new ResourceConflictException(error.getCode(), error.getMessage());
+            throw new RuntimeException(error.getCode() + ": " + error.getMessage()); //temporario
         }
 
         return employeeResponse.getData();

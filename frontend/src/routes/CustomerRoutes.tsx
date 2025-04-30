@@ -1,9 +1,10 @@
 import { lazy } from "react";
 import Loadable from "../components/organisms/loadable";
 import { CustomerRoutesEnum as Routes } from "./routes.enum";
+import ProtectedRoute from "../routes/ProtectedRoute";
 
 const CartLayout = Loadable(lazy(() => import("../layouts/Cart")));
-const DashboardLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
+const EmployeeLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
 
 const Cart = Loadable(lazy(() => import("../pages/customer/Cart")));
 const CustomerHomePage = Loadable(
@@ -26,10 +27,11 @@ const ConsultStatement = Loadable(
 
 const CustomerRoutes = {
   path: Routes.BASE,
+  element: <ProtectedRoute allowedTypes={["CLIENTE"]} />,
   children: [
     {
       path: Routes.HOME,
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [
         {
           index: true,
@@ -59,22 +61,22 @@ const CustomerRoutes = {
     },
     {
       path: Routes.SEARCH_FLIGHTS,
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [{ index: true, element: <SearchFlights /> }],
     },
     {
       path: Routes.CHECK_IN,
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [{ index: true, element: <CheckIn /> }],
     },
     {
       path: Routes.BUY_MILES,
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [{ index: true, element: <BuyMiles /> }],
     },
     {
       path: "consultStatement",
-      element: <DashboardLayout />,
+      element: <EmployeeLayout />,
       children: [{ index: true, element: <ConsultStatement /> }],
     },
   ],

@@ -23,11 +23,11 @@ public class CreateEmployeeConsumer {
     @RabbitListener(queues = RabbitMQConfig.CREATE_EMPLOYEE_QUEUE)
     public SagaResponse<EmployeeResponseDTO> receiveCreateEmployee (@Payload @Valid EmployeeRequestDTO employee) {
         if (employeeService.emailExists(employee.getEmail())) {
-            return new SagaResponse<>(false, null, new ErrorDTO("EMAIL_ALREADY_EXISTS", "Email já existe."));
+            return new SagaResponse<>(false, null, new ErrorDTO("EMAIL_ALREADY_EXISTS", "Email já existe.", null));
         }
 
         if (employeeService.cpfExists(employee.getCpf())) {
-            return new SagaResponse<>(false, null, new ErrorDTO("CPF_ALREADY_EXISTS", "CPF já existe."));
+            return new SagaResponse<>(false, null, new ErrorDTO("CPF_ALREADY_EXISTS", "CPF já existe.", null));
         }
 
         return new SagaResponse<>(true, employeeService.create(employee), null);

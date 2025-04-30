@@ -1,7 +1,24 @@
 const express = require('express');
-const proxyService = require('../services/proxyService');
-const { FLIGHT } = require('../config/services');
+const flightController = require('../controllers/flightController');
 
-const router = express.Router();
-router.use('/', proxyService(FLIGHT, '/voos'));
-module.exports = router;
+const airportRoutes = express.Router();
+airportRoutes.use('/', flightController.proxyToAirports);
+
+const flightRoutes = express.Router();
+
+flightRoutes.patch('/:id/estado', (req, res, next) => {
+    const urlDestino = `/voos/${req.params.id}/status`;
+    flightController.proxyToSagasComId(urlDestino, req, res, next);
+});
+
+flightRoutes.get('/:id', (req, res, next) => {
+    const urlDestino = `/voos/${req.params.id}`;
+    flightController.proxyToFlightComId(urlDestino, req, res, next);
+});
+
+flightRoutes.use('/', flightController.proxyToFlight);
+
+module.exports = {
+    airportRoutes,
+    flightRoutes,
+};

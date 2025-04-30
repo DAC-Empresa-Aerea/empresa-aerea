@@ -24,13 +24,13 @@ function EmployeeListItem({
       </article>
       <div className="flex flex-col gap-2">
         <button
-          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition"
+          className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-900 transition"
           onClick={() => editEmployee(employee)}
         >
           Editar
         </button>
         <button
-          className="px-4 py-2 bg-red-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition"
+          className="px-4 py-2 bg-red-600 text-white font-medium rounded-md shadow-md hover:bg-red-950 transition"
           onClick={() => deleteEmployee(employee)}
         >
           Deletar

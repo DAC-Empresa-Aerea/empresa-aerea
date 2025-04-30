@@ -20,6 +20,10 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
     public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.customer.routing.key";
 
+    public static final String DEBIT_SEAT_QUEUE = "debit.seat.queue";
+    public static final String DEBIT_SEAT_EXCHANGE = "debit.seat.exchange";
+    public static final String DEBIT_SEAT_ROUTING_KEY = "debit.seat.routing.key";
+
     @Bean
     public Queue createCustomerQueue() {
         return new Queue(CREATE_CUSTOMER_QUEUE, true);
@@ -54,6 +58,24 @@ public class RabbitMQConfig {
                 .bind(rollbackCustomerQueue)
                 .to(rollbackCustomerExchange)
                 .with(ROLLBACK_CUSTOMER_ROUTING_KEY)
+                .noargs();
+    }
+
+    @Bean
+    public Queue debitSeatQueue() {
+        return new Queue(DEBIT_SEAT_QUEUE, true);
+    }
+
+    @Bean
+    public Exchange debitSeatExchange() {
+        return new DirectExchange(DEBIT_SEAT_EXCHANGE, true, false);
+    }
+
+    @Bean Binding debitSeatBinding(Queue debitSeatQueue, Exchange debitSeatExchange) {
+        return BindingBuilder
+                .bind(debitSeatQueue)
+                .to(debitSeatExchange)
+                .with(DEBIT_SEAT_ROUTING_KEY)
                 .noargs();
     }
 

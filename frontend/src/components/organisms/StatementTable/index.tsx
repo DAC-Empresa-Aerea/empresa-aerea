@@ -1,12 +1,12 @@
-import { Statement } from "../../atoms/StatementListItem";
+import { MilesTransaction } from "../../../types/Miles";
 import StatementList from "../../molecules/StatementList";
 
-const statementDataExample: Array<Statement> = [
+const statementDataExample: Array<MilesTransaction> = [
 ];
 
 // Não deixe como opcional, apenas leve a constante acima para o componente pai
 interface StatementTableProps {
-statements: Array<Statement>;
+statements: Array<MilesTransaction>;
 }
 
 function StatementTable({

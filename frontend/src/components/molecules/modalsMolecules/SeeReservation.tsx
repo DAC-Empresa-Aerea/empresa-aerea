@@ -1,4 +1,4 @@
-import { Reserve } from "../../atoms/TableItem";
+import Reserve from "../../../types/Reserve";
 
 interface SeeReservationProps {
   moreInfoisOpen: boolean;

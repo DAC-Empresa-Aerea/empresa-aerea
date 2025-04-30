@@ -9,5 +9,12 @@ import com.ms.reserve.dto.error.ErrorDTO;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    
+
+    @ExceptionHandler(BusinessException.class)
+    public ResponseEntity<ErrorDTO> handleBusinessException(BusinessException ex) {
+        ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), ex.getStatus());
+        return new ResponseEntity<>(error, HttpStatus.valueOf(ex.getStatus()));
+    }
+
 }
+

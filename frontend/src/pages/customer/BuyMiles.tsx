@@ -1,5 +1,8 @@
 import React, { useEffect, useState } from "react";
-import { User } from "../../types/flightTypes";
+import { useAuth } from "../../contexts/loginContext";
+import { updateCustomerMiles, createMilesTransaction } from "../../services/milesService";
+import { getCustomerByCpf } from "../../services/customerService";
+
 import MilesPurchaseHeader from "../../components/organisms/milesOrganisms/MilesPurchaseHeader";
 import BalanceDisplay from "../../components/molecules/milesMolecules/BalanceDisplay";
 import MilesOptionsSelector from "../../components/molecules/milesMolecules/MilesOptionsSelector";
@@ -7,86 +10,65 @@ import MilesSlider from "../../components/molecules/milesMolecules/MilesSlider";
 import PriceSummary from "../../components/molecules/milesMolecules/PriceSummary";
 import TransactionConfirmation from "../../components/organisms/milesOrganisms/TransactionConfirmation";
 
-// Dados simulados de usuário
-const mockUser: User = {
-  id: "user123",
-  name: "João Silva",
-  milesBalance: 5000, // saldo de milhas
-};
-
-interface MilesTransaction {
-  id: string;
-  userId: string;
-  date: Date;
-  amountInReais: number;
-  milesAmount: number;
-  description: string;
-}
-
 const BuyMiles: React.FC = () => {
-  const [user, setUser] = useState<User>(mockUser);
+  const { user, setUser } = useAuth();
   const [milesAmount, setMilesAmount] = useState<number>(1000);
   const [priceInReais, setPriceInReais] = useState<number>(0);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
-  const [transaction, setTransaction] = useState<MilesTransaction | null>(null);
+  const [transaction, setTransaction] = useState<any | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
 
-  // Proporção fixa: 1 milha = R$ 5,00
   const MILES_PRICE_RATIO = 5.0;
 
-  // Atualizar preço quando a quantidade de milhas muda
   useEffect(() => {
     setPriceInReais(milesAmount * MILES_PRICE_RATIO);
   }, [milesAmount]);
 
-  // Opções pré-definidas de milhas para compra
   const milesOptions = [25, 50, 100, 200, 500];
-
-  // Valores para o slider
   const sliderMin = 10;
   const sliderMax = 1000;
   const sliderStep = 10;
   const sliderMarkers = [10, 250, 500, 750, 1000];
 
-  // Processar a compra
-  const handlePurchase = (e: React.FormEvent) => {
+  const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
+    if (!user || !("codigo" in user)) return;
+
     setIsProcessing(true);
 
-    setTimeout(() => {
-      // Atualizar o saldo de milhas do usuário
-      const updatedUser = {
-        ...user,
-        milesBalance: user.milesBalance + milesAmount,
-      };
+    try {
+      const result = await updateCustomerMiles(user.codigo, milesAmount);
 
-      // Criar registro da transação
-      const newTransaction: MilesTransaction = {
-        id: Math.random().toString(36).substring(2, 15),
-        userId: updatedUser.id,
-        date: new Date(),
-        amountInReais: priceInReais,
-        milesAmount: milesAmount,
-        description: "COMPRA DE MILHAS",
-      };
+      const newTransaction = await createMilesTransaction({
+        codigo_cliente: user.codigo.toString(),
+        valor_reais: priceInReais,
+        quantidade_milhas: milesAmount,
+        descricao: "COMPRA DE MILHAS",
+      });
 
-      // Atualizar o estado
-      setUser(updatedUser);
       setTransaction(newTransaction);
       setShowConfirmation(true);
+    } catch (err) {
+      alert("Erro ao processar a compra de milhas.");
+    } finally {
       setIsProcessing(false);
 
-      console.log("Transação realizada:", newTransaction);
-    }, 2000);
+      try {
+        const response = await getCustomerByCpf(user.cpf);
+        const updatedUser = response;
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+      } catch (error) {
+        console.error("Erro ao atualizar os dados do usuário:", error);
+      }
+    }
   };
 
-  // Iniciar nova compra
   const handleNewPurchase = () => {
     setShowConfirmation(false);
     setMilesAmount(1000);
   };
 
-  // Formatar valores monetários
   const formatCurrency = (value: number): string => {
     return value.toLocaleString("pt-BR", {
       style: "currency",
@@ -94,22 +76,23 @@ const BuyMiles: React.FC = () => {
     });
   };
 
-  // Atualizar valor das milhas com o slider
   const handleMilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMilesAmount(parseInt(e.target.value));
   };
 
+  if (!user || !("saldo_milhas" in user)) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-gray-50 py-12">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
-        {/* Cabeçalho */}
         <MilesPurchaseHeader
           title="Comprar Milhas"
           subtitle="Aumente seu saldo de milhas e aproveite descontos em passagens"
         />
 
         {showConfirmation ? (
-          // Tela de confirmação após compra
           <TransactionConfirmation
             transaction={transaction}
             user={user}
@@ -117,25 +100,21 @@ const BuyMiles: React.FC = () => {
             onNewPurchase={handleNewPurchase}
           />
         ) : (
-          // Tela de compra
           <div className="bg-white rounded-lg shadow-lg overflow-hidden">
             <div className="px-6 py-8">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold text-gray-800">
                   Selecione a quantidade de milhas
                 </h2>
-                <BalanceDisplay balance={user.milesBalance} />
+                <BalanceDisplay balance={user.saldo_milhas} />
               </div>
 
               <form onSubmit={handlePurchase}>
-                {/* Opções pré-definidas */}
                 <MilesOptionsSelector
                   options={milesOptions}
                   selectedValue={milesAmount}
                   onChange={setMilesAmount}
                 />
-
-                {/* Slider personalizado */}
                 <MilesSlider
                   value={milesAmount}
                   onChange={handleMilesChange}
@@ -144,8 +123,6 @@ const BuyMiles: React.FC = () => {
                   step={sliderStep}
                   markers={sliderMarkers}
                 />
-
-                {/* Preço e botão de compra */}
                 <PriceSummary
                   milesAmount={milesAmount}
                   priceInReais={priceInReais}

@@ -30,7 +30,7 @@ function SearchAvailables({
     }
 
     return (
-        <div className="mx-auto flex flex-row justify-center items-center w-full pl-7 h-[75dvh] mb-7">  
+        <div className="mx-auto flex flex-row justify-center items-center w-full pl-7 h-[75dvh] mb-7 mt-7">  
             <SearchInput handleSearch={handleSearch} handleCancelSearch={handleCancelSearch}/>
             <AvailableFlights flights={flights}/>
         </div>
