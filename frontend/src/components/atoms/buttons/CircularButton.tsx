@@ -1,7 +1,7 @@
 import React from 'react';
 
 type CircularButtonProps = {
-  onClick?: (any: any) => void;
+  onClick: () => void;
   icon?: React.ReactNode;
   ariaLabel?: string;
 };
@@ -13,7 +13,7 @@ const CircularButton: React.FC<CircularButtonProps> = ({
 }) => {
   return (
     <button
-      onClick={onClick}
+      onClick={() => onClick()}
       aria-label={ariaLabel}
       className="
         flex items-center justify-center 

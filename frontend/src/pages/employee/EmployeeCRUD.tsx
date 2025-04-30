@@ -18,7 +18,10 @@ function EmployeeCRUD() {
 
   const [openModal, setOpenModal] = useState<CloseOptions>({
     isOpen: false,
-    onClose: () => setOpenModal((prev) => ({ ...prev, isOpen: false })),
+    onClose: () => {
+      setOpenModal((prev) => ({ ...prev, isOpen: false }));
+      setSelectedEmployee(null);
+    },
     text: "Fechar",
   });
 
@@ -29,11 +32,23 @@ function EmployeeCRUD() {
     .catch((err) => console.error("Erro ao buscar funcionarios:", err));
   }, []);
 
-  const handleDeleteEmployee = (employee: Employee | null) => {
+  const handleDeleteEmployee = async (employee: Employee | null) => {
     if (employee) {
       if (!window.confirm("Deseja realmente deletar este funcionário?")) return;
 
-      fetch(`${API_URL}/${employee.codigo}`, {
+      let id = null;
+      if (employee.codigo) {
+        id = fetch(`${API_URL}?codigo=${employee.codigo}`)
+        .then((res) => res.json())
+        .then((data) => {
+          if (data.length > 0) {
+            return data[0].id;
+          }
+          throw new Error('Código não encontrado');
+        })
+      }
+
+      fetch(`${API_URL}/${await id}`, {
         method: "DELETE",
       })
       .then(() => {
@@ -44,16 +59,33 @@ function EmployeeCRUD() {
     }
   };
 
-  const handleOpenModal = (employee: Employee | null) => {
-    if (!employee) {
+  const handleOpenModal = (employee?: Employee | null) => {
+    if(employee) {
       setSelectedEmployee(employee);
     }
+
     setOpenModal((prev) => ({ ...prev, isOpen: true }));
   };
 
-  const onConfirmEdit = (employee: Employee) => {
+  const onConfirmEdit = async (employee: Employee) => {
+    // Gambiarra para pegar o "id" do funcionario que foi editado. DEVE SER REMOVIDO POSTERIORMENTE  
+    let id = null;
+    if (employee.codigo) {
+      id = fetch(`${API_URL}?codigo=${employee.codigo}`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.length > 0) {
+          return data[0].id;
+        }
+        throw new Error('Código não encontrado');
+      })
+    } else {
+      employee.codigo = Math.floor(Math.random() * 1000);
+    }
+
     const method = employee.codigo ? "PUT" : "POST";
-    const url = employee.codigo ? `${API_URL}/${employee.codigo}` : API_URL;
+    const url = employee.codigo ? `${API_URL}/${await id}` : API_URL;
+    
     fetch(url, {
       method,
       headers: {
@@ -63,22 +95,19 @@ function EmployeeCRUD() {
     })
     .then((res) => res.json())
     .then((data) => {
-    if (employee.codigo) {
-      setEmployees((prev) =>
-        prev.map((emp) => (emp.codigo === employee.codigo ? employee : emp))
-      );
-    } else {
-      setEmployees((prev) => [
-        ...prev, 
-        data
-      ]);
-    }
-  })
-  .catch((err) => console.error("Erro ao atualizar ou criar funcionario:", err));
-  
-    setOpenModal((prev) => ({ ...prev, isOpen: false }));
-    setSelectedEmployee(null);
-  };
+      if (employee.codigo) {
+        setEmployees((prev) =>
+          prev.map((emp) => (emp.codigo === employee.codigo ? data : emp))
+        );
+      } else {
+        setEmployees((prev) => [...prev, data]);
+      }
+      setSelectedEmployee(null);
+    })
+    .catch((err) => console.error("Erro ao atualizar ou criar funcionario:", err));
+      setOpenModal((prev) => ({ ...prev, isOpen: false }));
+      setSelectedEmployee(null);
+    };
 
   return (
     <div>
@@ -86,11 +115,10 @@ function EmployeeCRUD() {
         employees={employees}
         editEmployee={handleOpenModal}
         deleteEmployee={handleDeleteEmployee}
-        onViewMoreClick={() => alert("Ver mais funcionários não implementado")}
       />
 
-      <div className="fixed bottom-20 right-4">
-        <CircularButton onClick={handleOpenModal} />
+      <div className="fixed bottom-16 right-16">
+        <CircularButton onClick={() => handleOpenModal()} />
       </div>
 
       <BasicModal open={openModal}>

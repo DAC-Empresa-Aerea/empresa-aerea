@@ -9,6 +9,7 @@ interface EmployeeInputsProps {
 }
 
 function EmployeeInputs({ employee, setEmployee, isNew }: EmployeeInputsProps) {
+
   return (
     <div>
       <BasicInput
