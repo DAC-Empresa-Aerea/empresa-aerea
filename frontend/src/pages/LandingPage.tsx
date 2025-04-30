@@ -1,8 +1,15 @@
 import React from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CustomerRoutesEnum, Routes } from "../routes/routes.enum";
+import { useAuth } from "../contexts/loginContext";
 
 const LandingPage: React.FC = () => {
+
+  const { isAuthenticated, logout } = useAuth();
+  useEffect(() => {
+    logout();
+  }, []);
 
   const singles = [
     "John F. Kennedy International (JFK)",

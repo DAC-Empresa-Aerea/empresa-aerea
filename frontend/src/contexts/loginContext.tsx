@@ -3,7 +3,6 @@ import { loginService } from "../services/loginService";
 import Customer from "../types/Customer";
 import Employee from "../types/Employee";
 
-// União dos dois tipos possíveis de usuário
 type User = Customer | Employee;
 
 interface AuthContextType {
