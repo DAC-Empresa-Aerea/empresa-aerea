@@ -63,7 +63,6 @@ function FlightBasicInfo({
                 Destino: {flight.aeroporto_destino?.cidade} ({flight.aeroporto_destino?.codigo})
               </p>
             </p>
-            <p className="text-gray-500">Data: 2025-05-10</p>
           </div>
         </div>
 

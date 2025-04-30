@@ -30,12 +30,6 @@ function FlightList({
           />
         ))}
       </ul>
-      <button
-        className="transition-colors font-roboto font-bold text-gray-dark border border-gray-light rounded-lg py-2 cursor-pointer hover:bg-gray-light"
-        onClick={onViewMoreClick}
-      >
-        Ver mais voos
-      </button>
     </section>
   );
 }

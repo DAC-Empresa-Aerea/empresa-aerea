@@ -17,16 +17,19 @@ function SearchInput({
     const [selectedSecondValue, setSelectedSecondValue] = useState("");
     const [airports, setAirports] = useState([]);
 
-  useEffect(() => {
-    getAirports()
-      .then((data) => {
-        const airportCodes = data.map((airport: any) => airport.codigo); 
-        setAirports(airportCodes);
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar voos:", error);
-      });
-  }, []);
+    const availableAirportsForFirst = airports.filter(airport => airport !== selectedSecondValue);
+    const availableAirportsForSecond = airports.filter(airport => airport !== selectedFirstValue);
+
+    useEffect(() => {
+        getAirports()
+            .then((data) => {
+                const airportCodes = data.map((airport: any) => airport.codigo);
+                setAirports(airportCodes);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar voos:", error);
+            });
+    }, []);
 
     function handleResetValues() {
         setSelectedFirstValue("");
@@ -42,9 +45,9 @@ function SearchInput({
                 <h2 className="font-roboto text-lg font-semibold text-alien">
                     Origem
                 </h2>
-                <DropdownInput options={airports} setSelectedValue={setSelectedFirstValue} value={selectedFirstValue} />
+                <DropdownInput options={availableAirportsForFirst} setSelectedValue={setSelectedFirstValue} value={selectedFirstValue} />
                 <h3 className="font-roboto text-lg font-semibold text-alien"> Chegada</h3>
-                <DropdownInput options={airports} setSelectedValue={setSelectedSecondValue} value={selectedSecondValue} />
+                <DropdownInput options={availableAirportsForSecond} setSelectedValue={setSelectedSecondValue} value={selectedSecondValue} />
                 <button
                     onClick={() => { handleCancelSearch(); handleResetValues(); }}
                     className="flex items-center justify-center rounded-md bg-blue-600 px-6 py-1 text-white hover:bg-blue-700 cursor-pointer self-end"

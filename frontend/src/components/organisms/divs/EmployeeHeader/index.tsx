@@ -40,7 +40,6 @@ const Header = () => {
           </div>
           <nav className="flex space-x-4">
             <LinkButton href={Routes.HOME}>Home</LinkButton>
-            <LinkButton href={Routes.REGISTER_FLIGHTS}>Registrar Voos</LinkButton>
             <LinkButton href={Routes.CRUD}>Gerência</LinkButton>
           </nav>
           {

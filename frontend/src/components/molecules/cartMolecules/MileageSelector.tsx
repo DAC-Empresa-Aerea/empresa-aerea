@@ -13,6 +13,7 @@ const MileageSelector: React.FC<MileageSelectorProps> = ({
   requiredMilesForFullPayment,
   onMilesChange
 }) => {
+  console.log(userMilesBalance, requiredMilesForFullPayment);
   const maxUsableMiles = Math.min(userMilesBalance, requiredMilesForFullPayment);
   
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -23,7 +24,7 @@ const MileageSelector: React.FC<MileageSelectorProps> = ({
   return (
     <div className="mb-6">
       <label htmlFor="milesToUse" className="block text-sm text-gray-600 mb-1">
-        Utilizar milhas (máx: {maxUsableMiles.toLocaleString()})
+        Utilizar milhas (máx: {maxUsableMiles})
       </label>
       <input
         id="milesToUse"
