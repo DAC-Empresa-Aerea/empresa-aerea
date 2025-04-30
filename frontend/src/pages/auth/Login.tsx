@@ -49,7 +49,7 @@ const Login = () => {
           FlyHigh
         </h1>
         <div className="flex justify-center items-center cursor-default">
-          <h2 className="text-gray-800">Welcome to Fly</h2>
+          <h2 className="text-gray-800">Bem vindo ao Fly</h2>
           <h2 className="font-bold text-gray-800">High</h2>
         </div>
         <h2 className="mb-4 text-center text-2xl text-gray-800 cursor-default">
@@ -80,33 +80,21 @@ const Login = () => {
             <BasicInput
               type="password"
               value={password}
-              placeholder="Password"
+              placeholder="Senha"
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          {/* Options */}
-          <div className="mb-4 flex items-center justify-between">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300"
-              />
-              <span className="ml-2 text-sm text-gray-600">
-                Keep me signed in
-              </span>
-            </label>
-          </div>
 
           {/* Login button */}
-          <SubmitButton text="Login" />
+          <SubmitButton text="Entre" />
 
           {/* Registration link */}
           <p className="mt-4 text-center text-sm text-gray-600 cursor-default">
-            Don't have an account?{" "}
+            Não tem uma conta?{" "}
             <a href="/register" className="text-blue-500 hover:underline">
-              Register
+              Registre-se
             </a>
           </p>
         </form>
