@@ -59,18 +59,7 @@ function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
           Voo Cancelado
         </button>
       );
-    } else {
-      return (
-        <>
-          <button
-            className="transition-colors px-4 py-2 bg-red-600 font-roboto text-white cursor-pointer hover:bg-red-700 rounded-lg"
-            onClick={handleCancelClick}
-          >
-            Cancelar
-          </button>
-        </>
-      );
-    }
+    } 
   };
 
   return (

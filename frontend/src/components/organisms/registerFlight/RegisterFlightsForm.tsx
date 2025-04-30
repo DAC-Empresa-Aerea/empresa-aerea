@@ -22,6 +22,7 @@ function generateFlightCode() {
   return `${letterPart}${numberPart}`;
 }
 
+
 function RegisterFlightsForm() {
   const [flight, setFlight] = useState<Flight>({
     codigo: "",
@@ -46,7 +47,7 @@ function RegisterFlightsForm() {
   const [airports, setAirports] = useState([]);
   const [flightDate, setFlightDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [flightTime, setFlightTime] = useState("00:00");
-  const [isModalOpen, setIsModalOpen] = useState(false); // Controle do modal
+  const [isModalOpen, setIsModalOpen] = useState(false); 
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -71,19 +72,22 @@ function RegisterFlightsForm() {
     setIsModalOpen(true);
   };
 
-  const handleCreateFlight = async () => {
-    try {
-      console.log("Enviando dados do voo:", flight);
-      await createFlight(flight);
-      alert("Voo cadastrado com sucesso!");
-      navigate("/employee/home");
-      setIsModalOpen(false); 
-    } catch (error) {
-      console.error("Erro ao cadastrar voo:", error);
-      alert("Erro ao cadastrar voo. Tente novamente.");
-      setIsModalOpen(false); 
-    }
-  };
+const handleCreateFlight = async () => {
+  try {
+    const combinedDateTime = new Date(`${flightDate}T${flightTime}:00`);
+
+    await createFlight({
+      ...flight,
+      data: combinedDateTime,
+    });
+
+    navigate("/employee/home");
+    setIsModalOpen(false);
+  } catch (error) {
+    console.error("Erro ao criar voo:", error);
+    setIsModalOpen(false);
+  }
+};
 
   return (
     <div className="flex min-h-dvh items-center justify-center font-roboto">
@@ -145,7 +149,10 @@ function RegisterFlightsForm() {
 
       {/* Modal de confirmação */}
       <ConfirmCreateFlightModal
-        flight={flight}
+          flight={{
+            ...flight,
+            data: new Date(`${flightDate}T${flightTime}:00`),
+          }}
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
       />

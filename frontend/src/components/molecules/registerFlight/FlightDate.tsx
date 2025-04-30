@@ -17,8 +17,9 @@ const FlightDate = ({ date, setDate, time, setTime }: FlightDateProps) => (
         onChange={(e) => {
           const inputDate = e.target.value;
           const yearPart = inputDate.split("-")[0];
-      
+          
           if (/^\d{4}$/.test(yearPart)) {
+            console.log("Ano válido:", inputDate);
             setDate(inputDate);
           }
         }}
