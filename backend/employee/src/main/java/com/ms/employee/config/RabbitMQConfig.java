@@ -50,10 +50,10 @@ public class RabbitMQConfig {
     }
 
     @Bean
-    public Binding rollbackCreateEmployeeBinding(Queue rollbackEmployeeQueue, Exchange rollbackEmployeeExchange) {
+    public Binding rollbackCreateEmployeeBinding(Queue rollbackCreateEmployeeQueue, Exchange rollbackCreateEmployeeExchange) {
         return BindingBuilder
-                .bind(rollbackEmployeeQueue)
-                .to(rollbackEmployeeExchange)
+                .bind(rollbackCreateEmployeeQueue)
+                .to(rollbackCreateEmployeeExchange)
                 .with(ROLLBACK_CREATE_EMPLOYEE_ROUTING_KEY)
                 .noargs();
     }
