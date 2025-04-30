@@ -130,4 +130,16 @@ public class EmployeeService {
         return dto;
     }
 
+    public void deleteById(Long id) {
+        employeeRepository.deleteById(id);
+    }
+
+    public boolean emailExists(String email) {
+        return employeeRepository.existsByEmail(email);
+    }
+
+    public boolean cpfExists(String cpf) {
+        return employeeRepository.existsByCpf(cpf);
+    }
+
 }
