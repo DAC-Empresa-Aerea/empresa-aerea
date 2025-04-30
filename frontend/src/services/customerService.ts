@@ -29,7 +29,7 @@ export const registerCustomer = async (rawData: {
 }) => {
     const customer: Omit<Customer, "codigo" | "saldo_milhas"> & {
         codigo: number;
-        saldoMilhas: number;
+        saldo_milhas: number;
         senha: string; 
     } = {
         codigo: generate4DigitCode(),
@@ -37,7 +37,7 @@ export const registerCustomer = async (rawData: {
         email: rawData.email,
         nome: rawData.nome.trim(),
         senha: generatePassword(), 
-        saldoMilhas: 0,
+        saldo_milhas: 0,
         endereco: {
             cep: rawData.endereco.cep.replace("-", "").trim(),
             uf: rawData.endereco.uf.trim(),
