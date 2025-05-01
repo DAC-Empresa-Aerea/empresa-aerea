@@ -1,5 +1,6 @@
 package com.ms.saga.config;
 
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -46,10 +47,35 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_CREATE_EMPLOYEE_EXCHANGE = "rollback.create.employee.exchange";
     public static final String ROLLBACK_CREATE_EMPLOYEE_ROUTING_KEY = "rollback.create.employee.routing.key";
 
+    public static final String UPDATE_EMPLOYEE_EXCHANGE = "update.employee.exchange";
+    public static final String UPDATE_EMPLOYEE_ROUTING_KEY = "update.employee.routing.key";
+
+    public static final String DELETE_EMPLOYEE_EXCHANGE = "delete.employee.exchange";
+    public static final String DELETE_EMPLOYEE_ROUTING_KEY = "delete.employee.routing.key";
+
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
         return converter;
     }
-    
+
+    @Bean
+    public DirectExchange createEmployeeExchange() {
+        return new DirectExchange(CREATE_EMPLOYEE_EXCHANGE);
+    }
+
+    @Bean
+    public DirectExchange rollbackCreateEmployeeExchange() {
+        return new DirectExchange(ROLLBACK_CREATE_EMPLOYEE_EXCHANGE);
+    }
+
+    @Bean
+    public DirectExchange updateEmployeeExchange() {
+        return new DirectExchange(UPDATE_EMPLOYEE_EXCHANGE);
+    }
+
+    @Bean
+    public DirectExchange deleteEmployeeExchange() {
+        return new DirectExchange(DELETE_EMPLOYEE_EXCHANGE);
+    }
 }

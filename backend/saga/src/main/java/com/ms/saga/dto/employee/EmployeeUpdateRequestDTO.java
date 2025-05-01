@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EmployeeRequestDTO {
+public class EmployeeUpdateRequestDTO {
 
     @JsonProperty("cpf")
     private String cpf;

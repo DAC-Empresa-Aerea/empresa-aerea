@@ -8,6 +8,7 @@ import com.ms.saga.dto.auth.create.CreateAuthRequestDTO;
 import com.ms.saga.dto.auth.create.CreateAuthResponseDTO;
 import com.ms.saga.dto.employee.EmployeeRequestDTO;
 import com.ms.saga.dto.employee.EmployeeResponseDTO;
+import com.ms.saga.dto.employee.EmployeeUpdateRequestDTO;
 import com.ms.saga.dto.error.ErrorDTO;
 import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.exception.BusinessException;
@@ -24,7 +25,7 @@ public class EmployeeOrchestrator {
     private EmployeeProducer employeeProducer;
 
 
-    public EmployeeResponseDTO processRegisterEmployee (EmployeeRequestDTO employeeRequest) {
+    public EmployeeResponseDTO processRegisterEmployee(EmployeeRequestDTO employeeRequest) {
         SagaResponse<EmployeeResponseDTO> employeeResponse = employeeProducer.sendCreateEmployee(employeeRequest);
 
         if (!employeeResponse.isSuccess()) {
@@ -44,5 +45,26 @@ public class EmployeeOrchestrator {
         }
 
         return employeeResponse.getData();
+    }
+    
+    public EmployeeResponseDTO processUpdateEmployee(Long employeeId, EmployeeUpdateRequestDTO employeeRequest) {
+        SagaResponse<EmployeeResponseDTO> employeeResponse = employeeProducer.sendUpdateEmployee(employeeId, employeeRequest);
+        
+        if (!employeeResponse.isSuccess()) {
+            ErrorDTO error = employeeResponse.getError();
+            throw new BusinessException(error);
+        }
+        
+        return employeeResponse.getData();
+    }
+    
+    public void processDeleteEmployee(Long employeeId) {
+        SagaResponse<Void> employeeResponse = employeeProducer.sendDeleteEmployee(employeeId);
+        
+        if (!employeeResponse.isSuccess()) {
+            ErrorDTO error = employeeResponse.getError();
+            throw new BusinessException(error);
+        }
+        
     }
 }
