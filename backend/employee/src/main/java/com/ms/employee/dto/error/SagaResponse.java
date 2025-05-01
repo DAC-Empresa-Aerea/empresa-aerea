@@ -10,7 +10,8 @@ import lombok.Setter;
 @Getter
 @Setter
 public class SagaResponse<T> {
-        private boolean success;
+
+    private boolean success;
     private T data;
     private ErrorDTO error;
 
@@ -26,4 +27,5 @@ public class SagaResponse<T> {
         return new SagaResponse<>(false, null, new ErrorDTO(code, message, status));
     }
 }
+
 

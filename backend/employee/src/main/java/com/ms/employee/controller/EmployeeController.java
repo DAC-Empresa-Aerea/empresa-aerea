@@ -2,20 +2,21 @@ package com.ms.employee.controller;
 
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.ms.employee.dto.EmployeeResponseDTO;
-import com.ms.employee.model.Employee;
-import com.ms.employee.dto.EmployeeRequestDTO;
+import com.ms.employee.dto.employee.EmployeeRequestDTO;
+import com.ms.employee.dto.employee.EmployeeResponseDTO;
 import com.ms.employee.service.EmployeeService;
 
 @RestController
+@RequestMapping("/funcionarios")
 public class EmployeeController {
 
     //#region Injeção de Dependencia
@@ -26,28 +27,40 @@ public class EmployeeController {
     }
     //#endregion
 
-    @GetMapping ("/funcionarios")
-    public List<EmployeeResponseDTO> getAllEmployees() {
-        List<Employee> employees = employeeService.getAllEmployees();
-        return employees.stream()
-                .map(employee -> new EmployeeResponseDTO(employee.getId(), employee.getCpf(), employee.getEmail(), employee.getNome(), employee.getTelefone()))
+    @GetMapping 
+    public ResponseEntity<List<EmployeeResponseDTO>> getAllEmployees() {
+        List<EmployeeResponseDTO> employees = employeeService.getAllEmployees().stream()
+                .map(employee -> {
+                    EmployeeResponseDTO dto = new EmployeeResponseDTO();
+                    dto.setId(employee.getId());
+                    dto.setCpf(employee.getCpf());
+                    dto.setEmail(employee.getEmail());
+                    dto.setName(employee.getName());
+                    dto.setPhoneNumber(employee.getPhoneNumber());
+                    return dto;
+                }) 
                 .toList();
+                if(employees.isEmpty()) {
+                    return ResponseEntity.noContent().build();
+                }
+                return ResponseEntity.ok(employees);
     }
 
-    @PostMapping ("/funcionarios")
-    public EmployeeResponseDTO createEmployee(@RequestBody EmployeeRequestDTO dto) {
-        Employee employee = employeeService.createEmployee(dto);
-        return new EmployeeResponseDTO(employee.getId(), employee.getCpf(), employee.getEmail(), employee.getNome(), employee.getTelefone());
+    @GetMapping  ("/{id}")
+    public ResponseEntity<EmployeeResponseDTO> getEmployee(@PathVariable Long id) {
+        EmployeeResponseDTO dto = employeeService.findById(id);
+        return ResponseEntity.ok(dto);
     }
 
-    @PutMapping ("/funcionarios/{id}")
-    public EmployeeResponseDTO updateEmployee(@PathVariable Long id, @RequestBody EmployeeRequestDTO dto) {
-        Employee employee = employeeService.updateEmployee(id, dto);
-        return new EmployeeResponseDTO(employee.getId(), employee.getCpf(), employee.getEmail(), employee.getNome(), employee.getTelefone());
+    @PutMapping ("/{id}")
+    public ResponseEntity<EmployeeResponseDTO> updateEmployee(@PathVariable Long id, @RequestBody EmployeeRequestDTO dto) {
+        EmployeeResponseDTO responseDTO = employeeService.updateEmployee(id, dto);
+        return ResponseEntity.ok(responseDTO);
     }
 
-    @DeleteMapping ("/funcionarios/{id}")
-    public void deleteEmployee(@PathVariable Long id) {
+    @DeleteMapping ("/{id}")
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         employeeService.deleteEmployee(id);
+        return ResponseEntity.noContent().build();
     }
 }
