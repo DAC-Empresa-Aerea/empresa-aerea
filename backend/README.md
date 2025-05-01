@@ -5,22 +5,22 @@
 - Docker Compose (opcional)
 
 ### Subindo a aplicação
-Defina os valores em .env (ou copie o .env.example) em /backend/
+Defina os valores em .env (ou copie do .env.example) em /backend
 Execute na raiz do projeto (/backend):
 
+PARA DESENVOLVIMENTO:
 ```bash
 docker compose --env-file .env up --build -d
 ```
 
-Caso utilize o Docker Compose clássico:
-
+PARA PRODUÇÃO
 ```bash
-docker-compose --env-file .env up --build -d
+docker compose -f docker-compose.yml --env-file .env up --build -d
 ```
 
 ---
 
-### Reset do banco de dados PostgreSQL
+### Reset do banco de dados PostgreSQL, MongoDB e RabbitMQ
 
 Se houver erros relacionados ao banco ou alterações no `init.sql`, execute:
 

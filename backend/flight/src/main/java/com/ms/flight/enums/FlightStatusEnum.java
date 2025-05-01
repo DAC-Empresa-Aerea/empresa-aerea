@@ -1,11 +1,13 @@
 package com.ms.flight.enums;
 
-
 import java.util.Arrays;
 import java.util.Map;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
+import lombok.Getter;
+
+@Getter
 public enum FlightStatusEnum {
 
     CONFIRMADO("CONFIRMADO", "CON", "Voo confirmado"),
@@ -22,27 +24,14 @@ public enum FlightStatusEnum {
         this.descricao = descricao;
     }
 
-    public String getCodigo() {
-        return codigo;
-    }
-
-    public String getSigla() {
-        return sigla;
-    }
-
-    public String getDescricao() {
-        return descricao;
-    }
-
-    // Lookup por código
-    private static final Map<String, FlightStatusEnum> LOOKUP_BY_CODIGO =
+    private static final Map<String, FlightStatusEnum> LOOKUP_BY_CODE =
         Arrays.stream(values()).collect(Collectors.toUnmodifiableMap(
             FlightStatusEnum::getCodigo,
             Function.identity()
         ));
 
-    public static FlightStatusEnum fromCodigo(String codigo) {
-        return LOOKUP_BY_CODIGO.get(codigo);
+    public static FlightStatusEnum fromCode(String code) {
+        return LOOKUP_BY_CODE.get(code);
     }
 
 }

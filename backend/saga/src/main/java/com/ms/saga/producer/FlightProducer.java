@@ -7,9 +7,10 @@ import org.springframework.stereotype.Component;
 
 import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.error.SagaResponse;
-import com.ms.saga.dto.flight.FlightRequestDTO;
+import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
+import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
+import com.ms.saga.dto.flight.updateSeats.rollback.RollbackReserveSeatsDTO;
 import com.ms.saga.dto.flight.FlightResponseDTO;
-import com.ms.saga.dto.flight.FlightStatusRequestDTO;
 import com.ms.saga.dto.flight.FlightStatusDTO;
 
 @Component
@@ -18,12 +19,21 @@ public class FlightProducer {
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
-    public SagaResponse<FlightResponseDTO> sendCreateFlightCommand(FlightRequestDTO flightDTO) {
+    public SagaResponse<UpdateSeatsResponseDTO> sendReserveSeats(UpdateSeatsRequestDTO request) {
+
         return rabbitTemplate.convertSendAndReceiveAsType(
-            RabbitMQConfig.CREATE_CUSTOMER_EXCHANGE,
-            RabbitMQConfig.CREATE_CUSTOMER_ROUTING_KEY,
-            flightDTO,
-            new ParameterizedTypeReference<SagaResponse<FlightResponseDTO>>() {}
+            RabbitMQConfig.RESERVE_SEAT_EXCHANGE,
+            RabbitMQConfig.RESERVE_SEAT_ROUTING_KEY,
+            request,
+            new ParameterizedTypeReference<SagaResponse<UpdateSeatsResponseDTO>>() {}
+        );
+    }
+
+    public void sendRollbackReserveSeats(RollbackReserveSeatsDTO dto) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConfig.ROLLBACK_RESERVE_SEAT_EXCHANGE,
+            RabbitMQConfig.ROLLBACK_RESERVE_SEAT_ROUTING_KEY,
+            dto
         );
     }
 
@@ -35,4 +45,5 @@ public class FlightProducer {
             new ParameterizedTypeReference<SagaResponse<FlightResponseDTO>>() {}
         );
     }
+
 }

@@ -1,0 +1,337 @@
+version: '3.8'
+
+services:
+  # Bancos de dados
+  mongodb:
+    image: mongo:latest
+    env_file:
+      - .env
+    container_name: mongodb
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: ${MONGO_USERNAME}
+      MONGO_INITDB_ROOT_PASSWORD: ${MONGO_PASSWORD}
+    ports:
+      - "${MONGO_PORT}:${MONGO_PORT}"
+    volumes:
+      - mongodb_data:/data/db
+    networks:
+      - microservice-network
+    healthcheck:
+      test: echo 'db.runCommand("ping").ok' | mongosh localhost:${MONGO_PORT}/test --quiet
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  postgres:
+    image: postgres:alpine
+    env_file:
+      - .env
+    container_name: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: ${PG_USERNAME}
+      POSTGRES_PASSWORD: ${PG_PASSWORD}
+      POSTGRES_DB: postgres
+    ports:
+      - "${PG_PORT}:${PG_PORT}"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+    networks:
+      - microservice-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${PG_USERNAME} -d postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 10s
+      
+  rabbitmq:
+    image: rabbitmq:3-management
+    env_file:
+      - .env
+    container_name: rabbitmq
+    restart: always
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USERNAME}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "${RABBITMQ_PORT}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT}:15672"
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+    networks:
+      - microservice-network
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 40s
+
+  api-gateway: 
+    build:
+      context: ./api_gateway
+      dockerfile: Dockerfile.dev
+    ports:
+      - "8080:8080"
+    env_file:
+      - .env
+    container_name: api-gateway
+    networks:
+      - microservice-network
+    environment:
+      SECRET: ${JWT_SECRET}
+      PORT: ${API_GATEWAY_PORT}
+      MS_AUTH_PORT: ${MS_AUTH_PORT}
+      MS_CUSTOMER_PORT: ${MS_CUSTOMER_PORT}
+      MS_EMPLOYEE_PORT: ${MS_EMPLOYEE_PORT}
+      MS_FLIGHT_PORT: ${MS_FLIGHT_PORT}	
+      MS_RESERVE_PORT: ${MS_RESERVE_PORT}
+      SAGA_PORT: ${MS_SAGA_PORT}
+      NODE_ENV: development
+  
+  # Microserviços
+  ms-auth:
+    build:
+      context: ./auth
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    container_name: ms-auth
+    volumes:
+      - ./auth:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      mongodb:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "${MS_AUTH_PORT}:${MS_AUTH_PORT}"
+    networks:
+      - microservice-network
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: ${MS_AUTH_PORT}
+      
+      MONGO_HOST: ${MONGO_HOST}
+      MONGO_PORT: ${MONGO_PORT}
+      MONGO_DB_NAME: ${MONGO_DB_NAME}
+      MONGO_USER: ${MONGO_USERNAME}
+      MONGO_PASSWORD: ${MONGO_PASSWORD}
+
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+
+  ms-customer:
+    build:
+      context: ./customer
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    container_name: ms-customer
+    volumes:
+      - ./customer:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      ms-auth:
+        condition: service_started
+    ports:
+      - "${MS_CUSTOMER_PORT}:${MS_CUSTOMER_PORT}"
+    networks:
+      - microservice-network
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: ${MS_CUSTOMER_PORT}
+
+      DB_HOST: ${PG_HOST}
+      DB_PORT: ${PG_PORT}
+      DB_NAME: ms_customer
+      DB_USERNAME: ${PG_USERNAME}
+      DB_PASSWORD: ${PG_PASSWORD}
+      
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+
+  ms-employee:
+    build:
+      context: ./employee
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    container_name: ms-employee
+    volumes:
+      - ./employee:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      ms-auth:
+        condition: service_started
+    ports:
+      - "${MS_EMPLOYEE_PORT}:${MS_EMPLOYEE_PORT}"
+    networks:
+      - microservice-network
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: ${MS_EMPLOYEE_PORT}
+      
+      DB_HOST: ${PG_HOST}
+      DB_PORT: ${PG_PORT}
+      DB_NAME: ms_employee
+      DB_USERNAME: ${PG_USERNAME}
+      DB_PASSWORD: ${PG_PASSWORD}
+      
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+
+  ms-flight:
+    build:
+      context: ./flight
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    container_name: ms-flight
+    volumes:
+      - ./flight:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "${MS_FLIGHT_PORT}:${MS_FLIGHT_PORT}"
+    networks:
+      - microservice-network
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: ${MS_FLIGHT_PORT}
+
+      DB_HOST: ${PG_HOST}
+      DB_PORT: ${PG_PORT}
+      DB_NAME: ms_flight
+      DB_USERNAME: ${PG_USERNAME}
+      DB_PASSWORD: ${PG_PASSWORD}
+      
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+
+  ms-reserve:
+    build:
+      context: ./reserve
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    container_name: ms-reserve
+    volumes:
+      - ./reserve:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      ms-customer:
+        condition: service_started
+      ms-flight:
+        condition: service_started
+    ports:
+      - "${MS_RESERVE_PORT}:${MS_RESERVE_PORT}"
+    networks:
+      - microservice-network
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: ${MS_RESERVE_PORT}
+
+      DB_HOST: ${PG_HOST}
+      DB_PORT: ${PG_PORT}
+      DB_WRITE_NAME: ms_reserve_cud
+      DB_READ_NAME: ms_reserve_r
+      DB_USERNAME: ${PG_USERNAME}
+      DB_PASSWORD: ${PG_PASSWORD}
+      
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+
+  ms-saga:
+    build:
+      context: ./saga
+      dockerfile: Dockerfile.dev
+    env_file:
+      - .env
+    container_name: ms-saga
+    volumes:
+      - ./saga:/app
+      - ~/.m2:/root/.m2
+    depends_on:
+      rabbitmq:
+        condition: service_healthy
+      ms-auth:
+        condition: service_started
+      ms-customer:
+        condition: service_started
+      ms-employee:
+        condition: service_started
+      ms-flight:
+        condition: service_started
+      ms-reserve:
+        condition: service_started
+    ports:
+      - "${MS_SAGA_PORT}:${MS_SAGA_PORT}"
+    networks:
+      - microservice-network
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      SERVER_PORT: ${MS_SAGA_PORT}
+      
+      RABBITMQ_HOST: ${RABBITMQ_HOST}
+      RABBITMQ_PORT: ${RABBITMQ_PORT}
+      RABBITMQ_USERNAME: ${RABBITMQ_USERNAME}
+      RABBITMQ_PASSWORD: ${RABBITMQ_PASSWORD}
+
+      JWT_SECRET: ${JWT_SECRET}
+      JWT_EXPIRATION: ${JWT_EXPIRATION}
+
+networks:
+  microservice-network:
+    driver: bridge
+
+volumes:
+  mongodb_data:
+  postgres_data:
+  rabbitmq_data:

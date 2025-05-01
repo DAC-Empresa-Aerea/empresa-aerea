@@ -1,14 +1,14 @@
 package com.ms.flight.config;
 
+import org.springframework.amqp.core.Binding;
+import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.Exchange;
+import org.springframework.amqp.core.Queue;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import org.springframework.amqp.core.Binding;
-import org.springframework.amqp.core.BindingBuilder;
-import org.springframework.amqp.core.DirectExchange;
-import org.springframework.amqp.core.Exchange;
-import org.springframework.amqp.core.Queue;
 
 @Configuration
 public class RabbitMQConfig {
@@ -21,29 +21,51 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_FLIGHT_EXCHANGE = "rollback.flight.exchange";
     public static final String ROLLBACK_FLIGHT_ROUTING_KEY = "rollback.flight.routing.key";
 
+    public static final String RESERVE_SEAT_QUEUE = "reserve.seat.queue";
+    public static final String RESERVE_SEAT_EXCHANGE = "reserve.seat.exchange";
+    public static final String RESERVE_SEAT_ROUTING_KEY = "reserve.seat.routing.key";
+
+    public static final String ROLLBACK_RESERVE_SEAT_QUEUE = "rollback.reserve.seat.queue";
+    public static final String ROLLBACK_RESERVE_SEAT_EXCHANGE = "rollback.reserve.seat.exchange";
+    public static final String ROLLBACK_RESERVE_SEAT_ROUTING_KEY = "rollback.reserve.seat.routing.key";
+
+
     @Bean
-    public Jackson2JsonMessageConverter messageConverter() {
-        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
-        return converter;
+    public Queue reserveSeatQueue() {
+        return new Queue(RESERVE_SEAT_QUEUE, true);
     }
 
+    @Bean
+    public Exchange reserveSeatExchange() {
+        return new DirectExchange(RESERVE_SEAT_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding reserveSeatBinding(Queue reserveSeatQueue, Exchange reserveSeatExchange) {
+        return BindingBuilder
+                .bind(reserveSeatQueue)
+                .to(reserveSeatExchange)
+                .with(RESERVE_SEAT_ROUTING_KEY)
+                .noargs();
+    }
+    
     @Bean
     public Queue updateFlightQueue() {
         return new Queue(UPDATE_FLIGHT_QUEUE, true);
     }
-
+    
     @Bean
     public Exchange updateFlightExchange() {
         return new DirectExchange(UPDATE_FLIGHT_EXCHANGE, true, false);
     }
-
+    
     @Bean
     public Binding updateFlightBinding(Queue updateFlightQueue, Exchange updateFlightExchange) {
         return BindingBuilder
-                .bind(updateFlightQueue)
-                .to(updateFlightExchange)
-                .with(UPDATE_FLIGHT_ROUTING_KEY)
-                .noargs();
+        .bind(updateFlightQueue)
+        .to(updateFlightExchange)
+        .with(UPDATE_FLIGHT_ROUTING_KEY)
+        .noargs();
     }
 
     @Bean
@@ -64,5 +86,29 @@ public class RabbitMQConfig {
                 .with(ROLLBACK_FLIGHT_ROUTING_KEY)
                 .noargs();
     }
+
+    @Bean
+    public Queue rollbackReserveSeatQueue() {
+        return new Queue(ROLLBACK_RESERVE_SEAT_QUEUE, true);
+    }
+
+    @Bean Exchange rollbackReserveSeatExchange() {
+        return new DirectExchange(ROLLBACK_RESERVE_SEAT_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding rollbackReserveSeatBinding(Queue rollbackReserveSeatQueue, Exchange rollbackReserveSeatExchange) {
+        return BindingBuilder
+                .bind(rollbackReserveSeatQueue)
+                .to(rollbackReserveSeatExchange)
+                .with(ROLLBACK_RESERVE_SEAT_ROUTING_KEY)
+                .noargs();
+    }
     
+    @Bean
+    public Jackson2JsonMessageConverter messageConverter() {
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
+        return converter;
+    }
+
 }

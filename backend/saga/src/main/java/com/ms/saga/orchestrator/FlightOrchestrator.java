@@ -7,6 +7,7 @@ import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightResponseDTO;
 import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.flight.FlightStatusRequestDTO;
+import com.ms.saga.exception.BusinessException;
 import com.ms.saga.producer.FlightProducer;
 import com.ms.saga.producer.ReserveProducer;
 
@@ -27,7 +28,7 @@ public class FlightOrchestrator {
         SagaResponse<FlightResponseDTO> flightResponse = flightProducer.sendUpdateFlightCommand(flightStatusDTO);
 
         if(!flightResponse.isSuccess()) {
-            throw new RuntimeException("Failed to update flight status: " + flightResponse.getError().getMessage());
+            throw new BusinessException(flightResponse.getError());
         }
 
         reserveProducer.updateStatusReserve(flightStatusDTO);

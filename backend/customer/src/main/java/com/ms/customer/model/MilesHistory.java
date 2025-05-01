@@ -24,24 +24,25 @@ public class MilesHistory {
 
     @ManyToOne
     @JoinColumn(name = "codigo", nullable = false)
-    private Customer cliente;
+    private Customer customer;
 
     @Id
     @Column(name = "data", nullable = false)
-    private LocalDateTime data;
+    private LocalDateTime date;
 
     @Column(name = "valor_reais", nullable = false)
-    private BigDecimal valorReais;
+    private BigDecimal amountInReais;
 
     @Column(name = "quantidade_milhas", nullable = false)
-    private Integer quantidadeMilhas;
+    private Integer milesQuantity;
 
     @Column(name = "descricao", nullable = false)
-    private String descricao;
+    private String description;
 
     @Column(name = "codigo_reserva", nullable = true, length = 8)
-    private String codigoReserva;
+    private String reserveCode;
 
     @Column(name = "tipo", nullable = false)
-    private String tipo;
+    private String type;
+    
 }

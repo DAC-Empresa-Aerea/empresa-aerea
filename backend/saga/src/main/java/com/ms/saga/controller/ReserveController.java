@@ -4,8 +4,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
-import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
-import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.saga.dto.reserve.reserveFlight.ReserveFlightRequestDTO;
+import com.ms.saga.dto.reserve.reserveFlight.ReserveFlightResponseDTO;
 import com.ms.saga.orchestrator.ReserveOrchestrator;
 
 import jakarta.validation.Valid;
@@ -25,7 +25,7 @@ public class ReserveController {
     private ReserveOrchestrator saga;
 
     @PostMapping("/{id}")
-    public ResponseEntity<RegisterReserveResponseDTO> registerReserve(@PathVariable @Valid String id, @RequestBody @Valid RegisterReserveRequestDTO reserveRequest) {
+    public ResponseEntity<ReserveFlightResponseDTO> registerReserve(@PathVariable @Valid String id, @RequestBody @Valid ReserveFlightRequestDTO reserveRequest) {
           
         return ResponseEntity.ok(saga.processRegisterReserve(reserveRequest));
     }

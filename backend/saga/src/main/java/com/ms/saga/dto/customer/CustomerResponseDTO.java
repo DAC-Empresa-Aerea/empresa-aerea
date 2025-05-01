@@ -12,13 +12,23 @@ import lombok.Setter;
 @Getter
 @Setter
 public class CustomerResponseDTO {
-    private Long codigo;
+
+    @JsonProperty("codigo")
+    private Long code;
+
+    @JsonProperty("cpf")
     private String cpf;
+
+    @JsonProperty("email")
     private String email;
-    private String nome;
+
+    @JsonProperty("nome")
+    private String name;
 
     @JsonProperty("saldo_milhas")
-    private Integer saldoMilhas;
+    private Integer milesBalance;
 
-    private AddressDTO endereco;
+    @JsonProperty("endereco")
+    private AddressDTO address;
+    
 }
