@@ -12,8 +12,9 @@ import com.ms.employee.dto.employee.EmployeeResponseDTO;
 import com.ms.employee.dto.error.SagaResponse;
 import com.ms.employee.exception.BusinessException;
 import com.ms.employee.service.EmployeeService;
+import com.ms.employee.util.ValidationUtil;
 
-import jakarta.validation.Valid;
+import jakarta.validation.ConstraintViolationException;
 
 @Component
 public class CreateEmployeeConsumer {
@@ -22,9 +23,12 @@ public class CreateEmployeeConsumer {
     private EmployeeService employeeService;
     
     @RabbitListener(queues = RabbitMQConfig.CREATE_EMPLOYEE_QUEUE)
-    public SagaResponse<EmployeeResponseDTO> receiveCreateEmployee (@Payload @Valid EmployeeRequestDTO employee) {
+    public SagaResponse<EmployeeResponseDTO> receiveCreateEmployee (@Payload EmployeeRequestDTO employee) {
         try {
             return SagaResponse.success(employeeService.create(employee));
+        } catch (ConstraintViolationException e) {
+            String errors = ValidationUtil.extractMessages(e);
+            return SagaResponse.error("VALIDATION_ERROR", errors, HttpStatus.BAD_REQUEST.value());
         } catch (BusinessException e) {
             return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
         } catch (Exception e) {

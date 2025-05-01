@@ -31,6 +31,6 @@ public class Employee {
     @Column(name = "nome", nullable = false)
     private String name;
 
-    @Column(name = "telefone", nullable = true, unique = true)
+    @Column(name = "telefone", nullable = true)
     private String phoneNumber;
 }

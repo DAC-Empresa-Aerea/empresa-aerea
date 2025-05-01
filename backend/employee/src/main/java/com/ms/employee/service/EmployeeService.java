@@ -1,6 +1,9 @@
 package com.ms.employee.service;
 
 import java.util.List;
+import java.util.Set;
+
+import jakarta.validation.Validator;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -14,12 +17,17 @@ import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
 
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 
 @Service
 public class EmployeeService {
 
     @Autowired
     private EmployeeRepository employeeRepository;
+
+    @Autowired
+    private Validator validator;
 
     //#region Método para criar um funcionário
     /**
@@ -31,19 +39,18 @@ public class EmployeeService {
      * @throws IllegalArgumentException se qualquer campo obrigatório (CPF, email, nome ou telefone) for nulo ou vazio.
      */
     public EmployeeResponseDTO create(EmployeeRequestDTO employee) {
-        if (employee.getCpf() == null || employee.getCpf().isEmpty() ||
-            employee.getEmail() == null || employee.getEmail().isEmpty() ||
-            employee.getName() == null || employee.getName().isEmpty() ||
-            employee.getPhoneNumber() == null || employee.getPhoneNumber().isEmpty()) {
-            throw new IllegalArgumentException("CPF, email, nome e telefone são obrigatórios e não podem ser nulos ou vazios.");
+        Set<ConstraintViolation<EmployeeRequestDTO>> violations = validator.validate(employee);
+
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
         }
 
         if(employeeRepository.existsByEmail(employee.getEmail())) {
-            throw new BusinessException("EMAIL_ALREADY_EXISTS", "Email já existe.", HttpStatus.BAD_REQUEST.value());
+            throw new BusinessException("EMAIL_ALREADY_EXISTS", "Email já existe.", HttpStatus.CONFLICT.value());
         }
 
         if(employeeRepository.existsByCpf(employee.getCpf())) {
-            throw new BusinessException("CPF_ALREADY_EXISTS", "CPF já existe.", HttpStatus.BAD_REQUEST.value());
+            throw new BusinessException("CPF_ALREADY_EXISTS", "CPF já existe.", HttpStatus.CONFLICT.value());
         }
 
         Employee employeeEntity = new Employee();
