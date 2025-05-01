@@ -102,7 +102,10 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding deleteReserveBinding(Queue deleteReserveQueue, TopicExchange deleteReserveExchange) {
-        return BindingBuilder.bind(deleteReserveQueue).to(deleteReserveExchange).with(DELETE_RESERVE_ROUTING_KEY);
+        return BindingBuilder
+                .bind(deleteReserveQueue)
+                .to(deleteReserveExchange)
+                .with(DELETE_RESERVE_ROUTING_KEY);
     }
     
 }

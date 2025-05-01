@@ -86,6 +86,24 @@ public class RabbitMQConfig {
                 .with(ROLLBACK_FLIGHT_ROUTING_KEY)
                 .noargs();
     }
+
+    @Bean
+    public Queue rollbackReserveSeatQueue() {
+        return new Queue(ROLLBACK_RESERVE_SEAT_QUEUE, true);
+    }
+
+    @Bean Exchange rollbackReserveSeatExchange() {
+        return new DirectExchange(ROLLBACK_RESERVE_SEAT_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding rollbackReserveSeatBinding(Queue rollbackReserveSeatQueue, Exchange rollbackReserveSeatExchange) {
+        return BindingBuilder
+                .bind(rollbackReserveSeatQueue)
+                .to(rollbackReserveSeatExchange)
+                .with(ROLLBACK_RESERVE_SEAT_ROUTING_KEY)
+                .noargs();
+    }
     
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
