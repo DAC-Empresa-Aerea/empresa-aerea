@@ -16,18 +16,22 @@ import lombok.Setter;
 @Setter
 public class TransitionDTO {
 
-    private LocalDateTime data;
+    @JsonProperty("data")
+    private LocalDateTime date;
 
     @JsonProperty("valor_reais")
-    private BigDecimal valorReais;
+    private BigDecimal amountInReais;
 
     @JsonProperty("quantidade_milhas")
-    private Integer quantidadeMilhas;
+    private Integer milesQuantity;
 
-    private String descricao;
+    @JsonProperty("descricao")
+    private String description;
 
     @JsonProperty("codigo_reserva")
-    private String codigoReserva;
+    private String reserveCode;
 
-    private String tipo;
+    @JsonProperty("tipo")
+    private String type;
+
 }
