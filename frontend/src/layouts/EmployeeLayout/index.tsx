@@ -1,6 +1,6 @@
 import { Outlet } from "react-router-dom";
 import Header from "../../components/organisms/divs/EmployeeHeader";
-import Footer from "../../components/organisms/divs/EmployeeFooter";
+import Footer from "../../components/organisms/divs/Footer";
 
 function EmployeeLayout() {
   return (

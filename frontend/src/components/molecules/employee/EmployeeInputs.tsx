@@ -9,7 +9,6 @@ interface EmployeeInputsProps {
 }
 
 function EmployeeInputs({ employee, setEmployee, isNew }: EmployeeInputsProps) {
-
   return (
     <div>
       <BasicInput
@@ -46,19 +45,17 @@ function EmployeeInputs({ employee, setEmployee, isNew }: EmployeeInputsProps) {
         width="w-full"
       />
 
-      {isNew && (
-        <MaskedInput
-          mask="000.000.000-00"
-          type="text"
-          disabled={false}
-          required={true}
-          classNameAdd="w-full"
-          placeholder="Digite o CPF do funcionário"
-          value={employee.cpf || ""}
-          onChange={(e) => setEmployee({ ...employee, cpf: e.target.value })}
-          width="w-full"
-        />
-      )}
+      <MaskedInput
+        mask="000.000.000-00"
+        type="text"
+        disabled={!isNew}
+        required={true}
+        classNameAdd="w-full"
+        placeholder="Digite o CPF do funcionário"
+        value={employee.cpf || ""}
+        onChange={(e) => setEmployee({ ...employee, cpf: e.target.value })}
+        width="w-full"
+      />
     </div>
   );
 }

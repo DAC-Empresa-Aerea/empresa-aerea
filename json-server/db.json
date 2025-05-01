@@ -28,24 +28,6 @@
         "numero": "342",
         "complemento": ""
       }
-    },
-    {
-      "id": "363c",
-      "codigo": 5478,
-      "cpf": "07008135947",
-      "email": "joaopedroguerios@gmail.com",
-      "nome": "Joao P C Guerios",
-      "senha": "8019",
-      "saldo_milhas": 350,
-      "endereco": {
-        "cep": "81270321",
-        "uf": "PR",
-        "cidade": "Curitiba",
-        "bairro": "",
-        "rua": "Rua Rodolfo Boeira da Fonseca",
-        "numero": "140",
-        "complemento": "w1321321"
-      }
     }
   ],
   "Airports": [
