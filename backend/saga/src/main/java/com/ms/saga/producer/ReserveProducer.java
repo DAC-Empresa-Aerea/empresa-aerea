@@ -34,13 +34,14 @@ public class ReserveProducer {
         );
     }
 
-    //Isso sera para atualizar caso o voo tenha mudado estado
-    public void updateStatusReserve(FlightStatusDTO dto) {
-        rabbitTemplate.convertAndSend(
-            RabbitMQConfig.UPDATE_RESERVE_EXCHANGE,
-            RabbitMQConfig.UPDATE_RESERVE_ROUTING_KEY,
-            dto
-        );
+    public SagaResponse<Void> updateStatusReserve(FlightStatusDTO dto) {
+        Object reply = rabbitTemplate
+            .convertSendAndReceive(
+                RabbitMQConfig.UPDATE_RESERVE_EXCHANGE,
+                RabbitMQConfig.UPDATE_RESERVE_ROUTING_KEY,
+                dto
+            );
+        return (SagaResponse<Void>) reply;
     }
 
 }

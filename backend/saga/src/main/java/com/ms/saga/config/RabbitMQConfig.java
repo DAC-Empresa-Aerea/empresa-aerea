@@ -28,6 +28,9 @@ public class RabbitMQConfig {
     public static final String UPDATE_RESERVE_EXCHANGE = "update.reserve.exchange";
     public static final String UPDATE_RESERVE_ROUTING_KEY = "update.reserve.routing.key";
 
+    public static final String ROLLBACK_UPDATE_FLIGHT_EXCHANGE = "rollback.update.flight.exchange";
+    public static final String ROLLBACK_UPDATE_FLIGHT_ROUTING_KEY= "rollback.update.flight.routing.key";
+
     public static final String REGISTER_RESERVE_EXCHANGE = "register.reserve.exchange";
     public static final String REGISTER_RESERVE_ROUTING_KEY = "register.reserve.routing.key";
 

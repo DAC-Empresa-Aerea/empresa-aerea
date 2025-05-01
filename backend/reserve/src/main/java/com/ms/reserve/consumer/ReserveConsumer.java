@@ -8,6 +8,7 @@ import com.ms.reserve.config.RabbitMQConfig;
 import com.ms.reserve.dto.error.SagaResponse;
 import com.ms.reserve.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.reserve.dto.status.FlightStatusDTO;
 import com.ms.reserve.exception.BusinessException;
 import com.ms.reserve.service.ReserveService;
 
@@ -36,6 +37,19 @@ public class ReserveConsumer {
             throw new RuntimeException(e.getMessage(), e);
         } catch (Exception e) {
             throw new RuntimeException("ROLLBACK_REGISTER_RESERVE_ERROR", e);
+        }
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.RESERVE_STATUS_UPDATED_QUEUE)
+    public SagaResponse<String> updateStatus(FlightStatusDTO dto) {
+        try {
+            reserveService.updateStatusReserveWithFlightCode(dto);
+            return SagaResponse.success("UPDATE_RESERVER_SUCESS");
+        }
+        catch (BusinessException e) {
+            return SagaResponse.error(e.getMessage(), e.getCode(), e.getStatus());
+        } catch (Exception e) {
+            return SagaResponse.error("UPDATE_RESERVE_ERROR", e.getMessage(), 500);
         }
     }
     

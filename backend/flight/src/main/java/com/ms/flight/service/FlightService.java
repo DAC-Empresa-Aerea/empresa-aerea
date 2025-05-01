@@ -194,8 +194,21 @@ public class FlightService {
 
         Flight flight = flightOptional.get();
 
-        if(flight.getEstado().getCodigo() != FlightStatusEnum.CONFIRMADO.getCodigo()) {
-            return SagaResponse.error("FLIGHT_RESERVE_NOT_ALLOWED", "O voo não pode ser reservado.", HttpStatus.BAD_REQUEST.value());
+        System.out.println(
+            "Flight: " + flight.getCodigo() +
+            ", Poltronas ocupadas: " + flight.getPoltronasOcupadas() +
+            ", Poltronas totais: " + flight.getPoltronasTotais() +
+            ", Data: " + flight.getData() +
+            ", Valor: " + flight.getValor() +
+            ", Estado: " + flight.getEstado().getCodigo() +
+            ", Enum: " + FlightStatusEnum.CONFIRMADO.getCodigo()
+        );
+        if (!FlightStatusEnum.CONFIRMADO.getCodigo().equals(flight.getEstado().getCodigo())) {
+            return SagaResponse.error(
+                "FLIGHT_RESERVE_NOT_ALLOWED",
+                "O voo não pode ser reservado.",
+                HttpStatus.BAD_REQUEST.value()
+            );
         }
 
         if(flight.getPoltronasOcupadas() + request.getSeatsQuantity() > flight.getPoltronasTotais()) {

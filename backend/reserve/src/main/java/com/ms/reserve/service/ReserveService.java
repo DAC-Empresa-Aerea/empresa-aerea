@@ -17,6 +17,7 @@ import com.ms.reserve.dto.cqrs.RegisteredReserveDTO;
 import com.ms.reserve.dto.reserve.ReserveResponseDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.reserve.dto.status.FlightStatusDTO;
 import com.ms.reserve.enums.StatusEnum;
 import com.ms.reserve.producer.CQRSProducer;
 import com.ms.reserve.query.model.ReserveQuery;
@@ -129,5 +130,71 @@ public class ReserveService {
 
         return reserveResponseDTO;
     }
-    
+
+    public void updateStatusReserveWithFlightCode(FlightStatusDTO dto) {
+        List<ReserveQuery> reserves = reserveQueryRepository.findByFlightCode(dto.getFlightCode());
+
+        if(reserves.isEmpty()) {
+            return;
+        }
+
+        if(dto.getStatusCode() == "CANCELADA_VOO") {
+            String flightCanceledCode = StatusEnum.FLIGHT_CANCELED.getCode();
+            ReserveStatusCommand statusCanceled = statusCommandRepository.findById(flightCanceledCode)
+                .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Status FLIGHT_CANCELED não cadastrado"));
+
+            for (ReserveQuery rq : reserves) {
+                StatusEnum current = StatusEnum.fromCode(rq.getStatusCode());
+
+                if (StatusEnum.canTransfer(current, StatusEnum.FLIGHT_CANCELED)) {
+                    rq.setStatusCode(statusCanceled.getCode());
+                    rq.setStatusAbbreviation(statusCanceled.getAbbreviation());
+                    rq.setStatusDescription(statusCanceled.getDescription());
+
+                    reserveQueryRepository.save(rq);
+                    ReserveCommand reserveCommand = new ReserveCommand();
+                    BeanUtils.copyProperties(rq, reserveCommand);
+                    reserveCommand.setStatus(statusCanceled);
+                    reserveCommandRepository.save(reserveCommand);
+                    cqrsProducer.sendStatusUpdate(rq.getCode(), statusCanceled.getCode());
+                } else if (current.equals(StatusEnum.FLIGHT_CANCELED)) {
+                    continue;
+                } else {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                        "Não é possível transferir do status " + current.getCode() + " para " + flightCanceledCode);
+                }
+            }
+        }
+
+        if(dto.getStatusCode() == "REALIZADA") {
+            String flightFinishedCode = StatusEnum.FINISHED.getCode();
+            ReserveStatusCommand statusFinished = statusCommandRepository.findById(flightFinishedCode)
+                .orElseThrow(() -> new ResponseStatusException(
+                    HttpStatus.INTERNAL_SERVER_ERROR, "Status FINISHED não cadastrado"));
+            
+            for(ReserveQuery rq: reserves) {
+                StatusEnum current = StatusEnum.fromCode(rq.getStatusCode());
+
+                if (StatusEnum.canTransfer(current, StatusEnum.FINISHED)) {
+                    rq.setStatusCode(statusFinished.getCode());
+                    rq.setStatusAbbreviation(statusFinished.getAbbreviation());
+                    rq.setStatusDescription(statusFinished.getDescription());
+
+                    reserveQueryRepository.save(rq);
+                    ReserveCommand reserveCommand = new ReserveCommand();
+                    BeanUtils.copyProperties(rq, reserveCommand);
+                    reserveCommand.setStatus(statusFinished);
+                    reserveCommandRepository.save(reserveCommand);
+                    cqrsProducer.sendStatusUpdate(rq.getCode(), statusFinished.getCode());
+                } else if (current.equals(StatusEnum.FINISHED)) {
+                    continue;
+                } else {
+                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
+                        "Não é possível transferir do status " + current.getCode() + " para " + flightFinishedCode);
+                }
+            }
+        }
+        
+    }
 }
