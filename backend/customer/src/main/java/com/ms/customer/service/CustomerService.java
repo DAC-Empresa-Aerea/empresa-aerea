@@ -145,6 +145,7 @@ public class CustomerService {
         return dto;
     }
 
+    @Transactional
     public DebitSeatResponseDTO debitSeat(DebitSeatRequestDTO debitSeat) {
         Optional<Customer> customerOptional = customerRepository.findById(debitSeat.getCustomerCode());
 
@@ -161,16 +162,16 @@ public class CustomerService {
         customer.setMilesBalance(customer.getMilesBalance() - debitSeat.getMilesUsed());
 
         MilesHistory transaction = new MilesHistory();
+        transaction.setCustomer(customer);
         transaction.setDate(LocalDateTime.now());
         transaction.setAmountInReais(debitSeat.getValue());
         transaction.setReserveCode(debitSeat.getReserveCode());
         transaction.setMilesQuantity(debitSeat.getMilesUsed());
         transaction.setDescription(debitSeat.getOriginAirportCode() + "->" + debitSeat.getDestinyAirportCode() + " - " + debitSeat.getSeatsQuantity() + " poltronas");
-        transaction.setReserveCode(debitSeat.getCustomerCode().toString());
         transaction.setType("SAIDA");
 
-        customerRepository.save(customer);
         milesHistoryRepository.save(transaction);
+        customerRepository.save(customer);
 
         DebitSeatResponseDTO debitResponse = new DebitSeatResponseDTO(
                 customer.getCode(),

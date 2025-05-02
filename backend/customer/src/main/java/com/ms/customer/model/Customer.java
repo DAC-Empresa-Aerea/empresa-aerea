@@ -26,7 +26,7 @@ public class Customer {
     @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 11)
+    @Column(nullable = false)
     private String name;
 
     @Column(name = "saldo_milhas", nullable = false)

@@ -69,6 +69,7 @@ public class ReserveService {
         response.setValue(reserveCommand.getValue());
         response.setMilesUsed(reserveCommand.getMilesUsed());
         response.setStatus(StatusEnum.CREATED.getCode());
+        response.setSeatsQuantity(reserveCommand.getSeatsQuantity());
 
         return response;
     }

@@ -1,7 +1,5 @@
 package com.ms.saga.orchestrator;
 
-import java.net.http.HttpResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;

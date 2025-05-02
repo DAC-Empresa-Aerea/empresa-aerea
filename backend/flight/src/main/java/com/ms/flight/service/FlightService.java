@@ -114,6 +114,8 @@ public class FlightService {
                 flightResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
                 flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
                 flightResponse.setEstado(flight.getEstado().getCodigo());
+                flightResponse.setAeroportoOrigem(new AirportResponseDTO(flight.getOrigem().getCodigo(), flight.getOrigem().getNome(), flight.getOrigem().getCidade(), flight.getOrigem().getUF()));
+                flightResponse.setAeroportoDestino(new AirportResponseDTO(flight.getDestino().getCodigo(), flight.getDestino().getNome(), flight.getDestino().getCidade(), flight.getDestino().getUF()));
                 return flightResponse;
             })
             .toList();
@@ -194,15 +196,6 @@ public class FlightService {
 
         Flight flight = flightOptional.get();
 
-        System.out.println(
-            "Flight: " + flight.getCodigo() +
-            ", Poltronas ocupadas: " + flight.getPoltronasOcupadas() +
-            ", Poltronas totais: " + flight.getPoltronasTotais() +
-            ", Data: " + flight.getData() +
-            ", Valor: " + flight.getValor() +
-            ", Estado: " + flight.getEstado().getCodigo() +
-            ", Enum: " + FlightStatusEnum.CONFIRMADO.getCodigo()
-        );
         if (!FlightStatusEnum.CONFIRMADO.getCodigo().equals(flight.getEstado().getCodigo())) {
             return SagaResponse.error(
                 "FLIGHT_RESERVE_NOT_ALLOWED",
@@ -224,7 +217,7 @@ public class FlightService {
 
         UpdateSeatsResponseDTO response = new UpdateSeatsResponseDTO();
         response.setFlightCode(flight.getCodigo());
-        response.setSeatsQuantity(flight.getPoltronasOcupadas());
+        response.setSeatsQuantity(request.getSeatsQuantity());
         response.setOriginAirportCode(flight.getOrigem().getCodigo());
         response.setDestinyAirportCode(flight.getDestino().getCodigo());
         response.setValue(flight.getValor());
