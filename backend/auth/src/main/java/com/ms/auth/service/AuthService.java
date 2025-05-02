@@ -59,9 +59,7 @@ public class AuthService {
             throw new RuntimeException("User not found"); 
         }
 
-        String hashedPassword = HashUtil.hashPassword(authRequest.getSenha(), auth.getSalt());
-
-        if (!hashedPassword.equals(auth.getSenha())) {
+        if (!HashUtil.validatePassword(authRequest.getSenha(), auth.getSalt(), auth.getSenha())) {
             throw new RuntimeException("Invalid password");
         }
 

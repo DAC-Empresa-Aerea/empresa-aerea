@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
-
 @RestController
 public class AuthController {
 
@@ -20,7 +19,7 @@ public class AuthController {
     private AuthService authService;
 
     @PostMapping("/login")
-    public LoginAuthResponseDTO postMethodName(@RequestBody @Valid LoginAuthRequestDTO entity) {
+    public LoginAuthResponseDTO login(@RequestBody @Valid LoginAuthRequestDTO entity) {
 
         LoginAuthResponseDTO response = authService.login(entity);
         
