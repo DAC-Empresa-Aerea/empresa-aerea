@@ -30,7 +30,7 @@ const SelfRegistration = () => {
     setError("");
     setSuccess("");
     setLoading(true);
-  
+
     try {
       await registerCustomer({
         cpf,
@@ -45,13 +45,13 @@ const SelfRegistration = () => {
           complemento: complement,
         }
       });
-  
+
       setSuccess("Cadastro realizado com sucesso! Uma senha será enviada por e-mail.");
-  
+
       setTimeout(() => {
         navigate("/login");
       }, 2000);
-  
+
     } catch (err: any) {
       const errorMessage =
         err?.response?.data?.message ||
@@ -84,11 +84,11 @@ const SelfRegistration = () => {
           FlyHigh
         </h1>
         <div className="flex justify-center items-center cursor-default">
-          <h2 className="text-gray-800">Welcome to Fly</h2>
+          <h2 className="text-gray-800">Bem-vindo ao Fly</h2>
           <h2 className="font-bold text-gray-800">High</h2>
         </div>
         <h2 className="mb-4 text-center text-2xl text-gray-800 cursor-default">
-          Self Registration
+          Auto cadastro
         </h2>
 
         {error && (
@@ -108,7 +108,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={name}
-              placeholder="Name"
+              placeholder="Nome"
               onChange={(e) => setName(e.target.value)}
               required
             />
@@ -150,7 +150,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={state}
-              placeholder="State"
+              placeholder="Estado"
               onChange={(e) => setState(e.target.value)}
               required
               disabled
@@ -159,7 +159,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={city}
-              placeholder="City"
+              placeholder="Cidade"
               onChange={(e) => setCity(e.target.value)}
               required
               disabled
@@ -171,7 +171,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={street}
-              placeholder="Street"
+              placeholder="Rua"
               onChange={(e) => setStreet(e.target.value)}
               required
               disabled
@@ -181,7 +181,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={number}
-              placeholder="Number"
+              placeholder="Número"
               onChange={(e) => setNumber(e.target.value)}
               required
               width="w-3/10"
@@ -192,19 +192,19 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={complement}
-              placeholder="Complement"
+              placeholder="Complemento"
               onChange={(e) => setComplement(e.target.value)}
             />
           </div>
 
-          <SubmitButton text={loading ? "Registering..." : "Register"} />
+          <SubmitButton text={loading ? "Registrando..." : "Enviar"} />
 
           <p className="mt-4 text-center text-sm text-gray-800 cursor-default">
-            Your password will be sent to your email.
+            Sua senha será enviada para o seu e-mail.
           </p>
 
           <p className="mt-2 text-center text-sm text-gray-600 cursor-default">
-            Already have an account?{" "}
+            Já tem uma conta?{" "}
             <a href="/login" className="text-blue-500 hover:underline">
               Login
             </a>

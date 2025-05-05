@@ -30,7 +30,7 @@ function EmployeeCRUD() {
 
   const handleDeleteEmployee = (employee?: Employee | null) => {
     if (employee) {
-    setConfirmDelete(employee);
+      setConfirmDelete(employee);
     }
   };
 
@@ -99,13 +99,18 @@ function EmployeeCRUD() {
           open={{
             isOpen: true,
             onClose: () => setConfirmDelete(null),
-            text: "Cancelar",
+            text: "Fechar",
           }}
         >
           <p>Tem certeza que deseja excluir o funcionário <strong>{confirmDelete.nome}</strong>?</p>
-          <div className="flex justify-end mt-4 gap-2">
-            <button className="btn" onClick={() => setConfirmDelete(null)}>Cancelar</button>
-            <button className="btn btn-danger" onClick={confirmDeleteEmployee}>Confirmar</button>
+          <div className="flex justify-end mt-4 gap-2 w-full">
+            <button
+              onClick={confirmDeleteEmployee}
+              className="bg-green-500 w-full p-4 rounded-lg text-gray-100 cursor-pointer shadow-md shadow-black/50"
+            >
+              Confirmar Deleção
+            </button>
+
           </div>
         </BasicModal>
       )}

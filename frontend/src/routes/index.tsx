@@ -17,7 +17,6 @@ const Teste = Loadable(lazy(() => import("../pages/LandingPage")));
 const router = createBrowserRouter([
   {
     path: Routes.HOME,
-    element: <EmployeeLayout />,
     children: [
       {
         index: true,

@@ -8,6 +8,15 @@
       "nome": "Funcionário Silva",
       "telefone": "41988887777",
       "id": "0712"
+    },
+    {
+      "id": "6210",
+      "nome": "treste",
+      "telefone": "41991999999",
+      "email": "teste@gmail.com",
+      "cpf": "123.456.789-12",
+      "codigo": 687339,
+      "senha": "gup709"
     }
   ],
   "Customer": [
@@ -18,7 +27,7 @@
       "email": "voidalzk@gmail.com",
       "nome": "Gabriel Voidaleski",
       "senha": "1234",
-      "saldo_milhas": 21848,
+      "saldo_milhas": 22948,
       "endereco": {
         "cep": "82410312",
         "uf": "PR",
@@ -221,6 +230,27 @@
         "cidade": "Curitiba",
         "uf": "PR"
       }
+    },
+    {
+      "id": "dcae",
+      "codigo": "YEZN6843",
+      "data": "2025-05-05T02:00:00.000Z",
+      "valor_passagem": 5000,
+      "quantidade_poltronas_total": 0,
+      "quantidade_poltronas_ocupadas": 0,
+      "estado": "CANCELADO",
+      "aeroporto_origem": {
+        "codigo": "GRU",
+        "nome": "Aeroporto Internacional de São Paulo/Guarulhos",
+        "cidade": "Guarulhos",
+        "uf": "SP"
+      },
+      "aeroporto_destino": {
+        "codigo": "CWB",
+        "nome": "Aeroporto Internacional de Curitiba",
+        "cidade": "Curitiba",
+        "uf": "PR"
+      }
     }
   ],
   "Reserve": [
@@ -231,8 +261,8 @@
       "valor": 0,
       "milhas_utilizadas": 100,
       "quantidade_poltronas": 1,
-      "codigo_cliente": 5478,
-      "estado": "EMBARCADO",
+      "codigo_cliente": 2026,
+      "estado": "CANCELADA",
       "voo": {
         "id": "fadd",
         "codigo": "NLMS2658",
@@ -262,8 +292,8 @@
       "valor": 0,
       "milhas_utilizadas": 100,
       "quantidade_poltronas": 1,
-      "codigo_cliente": 5478,
-      "estado": "CRIADA",
+      "codigo_cliente": 2026,
+      "estado": "CANCELADA",
       "voo": {
         "id": "fadd",
         "codigo": "NLMS2658",
@@ -327,6 +357,36 @@
       "descricao": "GRU->CWB",
       "codigo_reserva": "WVW368",
       "tipo": "SAIDA"
+    },
+    {
+      "id": "c800",
+      "codigo_cliente": "2026",
+      "data": "2025-05-04T23:36:55.331Z",
+      "valor_reais": 5000,
+      "quantidade_milhas": 1000,
+      "descricao": "COMPRA DE MILHAS",
+      "codigo_reserva": "",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "a23d",
+      "codigo_cliente": "2026",
+      "data": "2025-05-04T23:49:49.166Z",
+      "valor_reais": 0,
+      "quantidade_milhas": 100,
+      "descricao": "Reserva HAK176 cancelada",
+      "codigo_reserva": "HAK176",
+      "tipo": "ENTRADA"
+    },
+    {
+      "id": "4cf3",
+      "codigo_cliente": "2026",
+      "data": "2025-05-04T23:49:49.167Z",
+      "valor_reais": 0,
+      "quantidade_milhas": 100,
+      "descricao": "Reserva WVW368 cancelada",
+      "codigo_reserva": "WVW368",
+      "tipo": "ENTRADA"
     }
   ]
 }

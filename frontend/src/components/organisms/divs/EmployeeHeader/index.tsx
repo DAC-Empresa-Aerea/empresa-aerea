@@ -16,7 +16,6 @@ const Header = () => {
 
   function logedIn() {
     const user = localStorage.getItem("user");
-    console.log(user);
     const userType = localStorage.getItem("userType");
     return user && userType;
   }
@@ -27,7 +26,7 @@ const Header = () => {
         {/* DESKTOP */}
         <div className="hidden md:flex justify-between items-center">
           <div className="flex items-center">
-            <a href="/" className="flex items-center">
+            <a className="flex items-center">
               <img
                 src="/icon/favicon/favicon.ico"
                 alt="Logo"
@@ -40,6 +39,8 @@ const Header = () => {
           </div>
           <nav className="flex space-x-4">
             <LinkButton href={Routes.HOME}>Home</LinkButton>
+            <LinkButton href={Routes.REGISTER_FLIGHTS}>Cadastrar Voo</LinkButton>
+            <LinkButton href={Routes.CONFIRM_BOARDING}>Confirmar Embarque</LinkButton>
             <LinkButton href={Routes.CRUD}>Gerência</LinkButton>
           </nav>
           {
@@ -65,7 +66,7 @@ const Header = () => {
           }
         </div>
 
-        {/* MOBILE para responsividade*/}
+        {/* MOBILE */}
         <div className="md:hidden">
           <div className="flex justify-between items-center py-4">
             <div className="flex items-center">
@@ -83,34 +84,32 @@ const Header = () => {
               className="text-gray-600 focus:outline-none"
             >
               <i
-                className={`fas ${mobileMenuOpen ? "fa-times" : "fa-bars"
-                  } text-xl`}
+                className={`fas ${mobileMenuOpen ? "fa-times" : "fa-bars"} text-xl`}
               ></i>
             </button>
           </div>
 
           {mobileMenuOpen && (
-            <div className="mt-4 space-y-4">
-              <nav className="flex space-x-4">
-                <LinkButton href={"/"}>Home</LinkButton>
-                <LinkButton href={"/"} className="font-bold">Reservas</LinkButton>
-                <LinkButton href={"/"}>Registrar Voos</LinkButton>
-                <LinkButton href={"/"}>Gerência</LinkButton>
-              </nav>
+            <div className="mt-4 space-y-4 flex flex-col">
+              <LinkButton href={Routes.HOME}>Home</LinkButton>
+              <LinkButton href={Routes.REGISTER_FLIGHTS}>Cadastrar Voo</LinkButton>
+              <LinkButton href={Routes.CONFIRM_BOARDING}>Confirmar Embarque</LinkButton>
+              <LinkButton href={Routes.CRUD}>Gerência</LinkButton>
               {
                 logedIn() ? (
-                  <div className="py-6">
-                    <LinkButton href={"/customer/logout"}>Logout</LinkButton>
-                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="text-base font-semibold text-gray-900 hover:bg-gray-100 px-4 py-2 rounded-md text-left"
+                  >
+                    Logout
+                  </button>
                 ) : (
-                  <div className="py-6">
-                    <a
-                      href="/login"
-                      className="-mx-3 block rounded-lg px-3 py-2.5 text-base/7 font-semibold text-gray-900 hover:bg-gray-50"
-                    >
-                      Log in
-                    </a>
-                  </div>
+                  <a
+                    href="/login"
+                    className="block rounded-lg px-4 py-2 text-base font-semibold text-gray-900 hover:bg-gray-50"
+                  >
+                    Log in
+                  </a>
                 )
               }
             </div>

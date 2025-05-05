@@ -118,8 +118,8 @@ const EmployeeLandingPage = () => {
           onClick={() => handleCardClick(`/${EmployeeRoutesEnum.BASE}/register-flights`)}
         />
         <ActionCard
-          title="Visualizar Reservas"
-          description="Ver e gerenciar reservas de passageiros"
+          title="Confirmar Reservas"
+          description="Gerenciar reservas de passageiros"
           icon="ticket"
           onClick={() => handleCardClick(`/${EmployeeRoutesEnum.BASE}/confirm`)}
         />

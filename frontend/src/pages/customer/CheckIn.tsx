@@ -54,7 +54,15 @@ function CheckIn() {
     };
   };
 
-  return <CheckInTable reserves={reserves} onCheckInClick={handleCheckIn} />;
+  return (
+    <div>
+      {reserves.length > 0 ? (
+        <CheckInTable reserves={reserves} onCheckInClick={handleCheckIn} />
+      ) : (
+        <p className="text-xl font-bold mb-4 text-center">Nenhuma reserva disponível para check-in.</p>
+      )}
+    </div>
+  );
 }
 
 export default CheckIn;
