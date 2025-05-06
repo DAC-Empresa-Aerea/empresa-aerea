@@ -19,11 +19,7 @@ const CustomerHomePage = () => {
       try {
         const response = await getReservesByCustomerCode(user.codigo.toString());
 
-        const reservasFiltradas = response.filter(
-          (reserva: Reserve) => reserva.estado === "CRIADA"
-        );
-
-        setReserves(reservasFiltradas);
+        setReserves(response);
       } catch (err) {
         setError("Erro ao buscar reservas do cliente.");
         console.error(err);
