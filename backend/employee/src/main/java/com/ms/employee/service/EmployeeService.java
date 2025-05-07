@@ -142,6 +142,16 @@ public class EmployeeService {
         return dto;
     }
 
+    public EmployeeResponseDTO findByEmail(String email) {
+        Employee employee = employeeRepository.findByEmail(email);
+
+        if (employee == null) {
+            throw new EntityNotFoundException("Funcionário com email " + email + " não encontrado.");
+        }
+
+        return convertToEmployeeResponseDTO(employee);
+    }
+
     public void deleteById(Long id) {
         employeeRepository.deleteById(id);
     }

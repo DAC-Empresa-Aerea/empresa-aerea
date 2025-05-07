@@ -1,6 +1,8 @@
 package com.ms.customer.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -85,7 +87,7 @@ public class CustomerService {
         CheckMileResponseDTO response = new CheckMileResponseDTO();
 
         if(transactions.isEmpty()) {
-            response.setTransactions(null);
+            response.setTransactions(Collections.emptyList());
         }
         else {
             List<TransitionDTO> transactionDTOs = transactions.stream()
@@ -115,6 +117,21 @@ public class CustomerService {
         customer.setMilesBalance(newBalance);
 
         customerRepository.save(customer);
+
+        MilesHistory milesHistory = new MilesHistory();
+        BigDecimal amountInReais =
+        BigDecimal.valueOf(requestDTO.getQuantity())
+                .multiply(BigDecimal.valueOf(5));
+
+        milesHistory.setAmountInReais(amountInReais);
+        milesHistory.setCustomer(customer);
+        milesHistory.setDate(LocalDateTime.now());
+        milesHistory.setDescription("COMPRA DE MILHAS");
+        milesHistory.setMilesQuantity(requestDTO.getQuantity());
+        milesHistory.setReserveCode("");
+        milesHistory.setType("ENTRADA");
+
+        milesHistoryRepository.save(milesHistory);
 
         UpdateMilesResponseDTO response = new UpdateMilesResponseDTO();
         response.setCode(customer.getCode());
@@ -185,6 +202,7 @@ public class CustomerService {
 
         return debitResponse;
     }
+
 
     public void deleteById(Long id) {
         customerRepository.deleteById(id);

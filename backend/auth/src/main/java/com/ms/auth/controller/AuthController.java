@@ -4,13 +4,17 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.auth.dto.LoginAuthRequestDTO;
 import com.ms.auth.dto.LoginAuthResponseDTO;
+import com.ms.auth.dto.LogoutAuthDTO;
 import com.ms.auth.service.AuthService;
 
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 public class AuthController {
@@ -24,6 +28,14 @@ public class AuthController {
         LoginAuthResponseDTO response = authService.login(entity);
         
         return response;
+    }
+
+    @PostMapping("/logout")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public LogoutAuthDTO logout(@RequestBody LogoutAuthDTO dto, @RequestHeader("Authorization") String authHeader) {
+        dto.setToken(authHeader.replace("Bearer ", ""));
+        authService.logout(dto);
+        return dto;
     }
     
 }

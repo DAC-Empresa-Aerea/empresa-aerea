@@ -8,4 +8,5 @@ import com.ms.reserve.query.model.ReserveQuery;
 
 public interface ReserveQueryRepository extends JpaRepository<ReserveQuery, String> {
     public List<ReserveQuery> findByFlightCode(String flightCode);
+    public List<ReserveQuery> findByCustomerCode(Long customerCode);
 }

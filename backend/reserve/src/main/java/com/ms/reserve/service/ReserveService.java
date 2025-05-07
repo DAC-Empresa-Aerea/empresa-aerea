@@ -2,6 +2,7 @@ package com.ms.reserve.service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,6 +24,8 @@ import com.ms.reserve.producer.CQRSProducer;
 import com.ms.reserve.query.model.ReserveQuery;
 import com.ms.reserve.query.repository.ReserveQueryRepository;
 import com.ms.reserve.utils.GenerateReserveCodeUtil;
+
+import jakarta.validation.Valid;
 
 @Service
 public class ReserveService {
@@ -197,5 +200,21 @@ public class ReserveService {
             }
         }
         
+    }
+
+    public List<ReserveResponseDTO> getReservesByCustomerId(Long clienteId) {
+        List<ReserveQuery> entities = reserveQueryRepository.findByCustomerCode(clienteId);
+        
+        if (entities.isEmpty()) {
+            return List.of();
+        }
+
+        return entities.stream()
+            .map(entity -> {
+                ReserveResponseDTO dto = new ReserveResponseDTO();
+                BeanUtils.copyProperties(entity, dto);
+                return dto;
+            })
+            .collect(Collectors.toList());
     }
 }
