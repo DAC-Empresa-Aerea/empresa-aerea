@@ -16,7 +16,7 @@ public class AuthInitializer {
     public ApplicationRunner initAuths(AuthRepository repository) {
         return args -> {
             List<Auth> predefinedAuths = List.of(
-                new Auth(null, "func_pre@gmail.com", "8ZcVXvA1SikCz0As2ELgGIrvpaUB4zuXDD6wyGw9BN0=", "FUNCIONARIO", "C1BqkjUcsogVhsgcemhwHw==")
+                new Auth(null, "func_pre@gmail.com", "8ZcVXvA1SikCz0As2ELgGIrvpaUB4zuXDD6wyGw9BN0=", "FUNCIONARIO", "C1BqkjUcsogVhsgcemhwHw==") // SENHA = TADS
             );
 
             for (Auth auth : predefinedAuths) {

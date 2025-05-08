@@ -25,8 +25,6 @@ import com.ms.reserve.query.model.ReserveQuery;
 import com.ms.reserve.query.repository.ReserveQueryRepository;
 import com.ms.reserve.utils.GenerateReserveCodeUtil;
 
-import jakarta.validation.Valid;
-
 @Service
 public class ReserveService {
 
@@ -52,6 +50,7 @@ public class ReserveService {
         reserveCommand.setCode(GenerateReserveCodeUtil.generate());
         reserveCommand.setStatus(status);
         reserveCommand.setDate(LocalDateTime.now());
+        
         reserveCommandRepository.save(reserveCommand);
         
         RegisteredReserveDTO registeredReserve = new RegisteredReserveDTO();
@@ -62,6 +61,7 @@ public class ReserveService {
         registeredReserve.setValue(reserveCommand.getValue());
         registeredReserve.setMilesUsed(reserveCommand.getMilesUsed());
         registeredReserve.setStatus(StatusEnum.CREATED.getCode());
+        registeredReserve.setSeatsQuantity(reserveCommand.getSeatsQuantity());
 
         cqrsProducer.sendReserveCreated(registeredReserve);
     
@@ -87,10 +87,12 @@ public class ReserveService {
     }
     
     public ReserveResponseDTO getReserveById(String id) {
+        System.out.println("ID: " + id);
         ReserveQuery reserve = reserveQueryRepository.findById(id).orElseThrow(() -> new RuntimeException("Reserva não encontrada"));
         
         ReserveResponseDTO reserveResponseDTO = new ReserveResponseDTO();
         BeanUtils.copyProperties(reserve, reserveResponseDTO);
+        reserveResponseDTO.setStatus(reserve.getStatusCode());
         
         return reserveResponseDTO;
     }
