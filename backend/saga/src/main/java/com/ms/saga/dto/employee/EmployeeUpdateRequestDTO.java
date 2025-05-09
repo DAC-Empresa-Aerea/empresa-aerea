@@ -15,6 +15,9 @@ import lombok.Setter;
 @Setter
 public class EmployeeUpdateRequestDTO {
 
+    @JsonProperty("codigo")
+    private Long id;
+
     @JsonProperty("cpf")
     private String cpf;
 
@@ -26,4 +29,5 @@ public class EmployeeUpdateRequestDTO {
     
     @JsonProperty("telefone")
     private String phoneNumber;
+
 }

@@ -1,6 +1,5 @@
 package com.ms.saga.producer;
 
-import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -17,18 +16,6 @@ public class EmployeeProducer {
 
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private DirectExchange createEmployeeExchange;
-
-    @Autowired
-    private DirectExchange rollbackCreateEmployeeExchange;
-
-    @Autowired
-    private DirectExchange updateEmployeeExchange;
-
-    @Autowired
-    private DirectExchange deleteEmployeeExchange;
 
     public SagaResponse<EmployeeResponseDTO> sendCreateEmployee(EmployeeRequestDTO employee) {
         return rabbitTemplate.convertSendAndReceiveAsType(
@@ -47,13 +34,13 @@ public class EmployeeProducer {
         );
     }
 
-    public SagaResponse<EmployeeResponseDTO> sendUpdateEmployee(Long employeeId, EmployeeUpdateRequestDTO employee) {
-        EmployeeUpdateWrapper wrapper = new EmployeeUpdateWrapper(employeeId, employee);
-        
+    public SagaResponse<EmployeeResponseDTO> sendUpdateEmployee(Long id, EmployeeUpdateRequestDTO employee) {
+        employee.setId(id);
+
         return rabbitTemplate.convertSendAndReceiveAsType(
             RabbitMQConfig.UPDATE_EMPLOYEE_EXCHANGE,
             RabbitMQConfig.UPDATE_EMPLOYEE_ROUTING_KEY,
-            wrapper,
+            employee,
             new ParameterizedTypeReference<SagaResponse<EmployeeResponseDTO>>() {}
         );
     }
@@ -67,31 +54,4 @@ public class EmployeeProducer {
         );
     }
 
-    public static class EmployeeUpdateWrapper {
-        private Long employeeId;
-        private EmployeeUpdateRequestDTO employee;
-
-        public EmployeeUpdateWrapper() {}
-
-        public EmployeeUpdateWrapper(Long employeeId, EmployeeUpdateRequestDTO employee) {
-            this.employeeId = employeeId;
-            this.employee = employee;
-        }
-
-        public Long getEmployeeId() {
-            return employeeId;
-        }
-
-        public void setEmployeeId(Long employeeId) {
-            this.employeeId = employeeId;
-        }
-
-        public EmployeeUpdateRequestDTO getEmployee() {
-            return employee;
-        }
-
-        public void setEmployee(EmployeeUpdateRequestDTO employee) {
-            this.employee = employee;
-        }
-    }
 }

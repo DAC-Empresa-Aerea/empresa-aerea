@@ -13,6 +13,7 @@ import org.springframework.beans.BeanUtils;
 
 import com.ms.employee.dto.employee.EmployeeRequestDTO;
 import com.ms.employee.dto.employee.EmployeeResponseDTO;
+import com.ms.employee.dto.employee.update.UpdateEmployeeRequestDTO;
 import com.ms.employee.exception.BusinessException;
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
@@ -67,18 +68,11 @@ public class EmployeeService {
         })
         .collect(Collectors.toList());
     }
-    
-    public EmployeeResponseDTO findById(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
-        return convertToEmployeeResponseDTO(employee);
-    }
 
-    public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employee) {
+    public EmployeeResponseDTO updateEmployee(Long id, UpdateEmployeeRequestDTO employee) {
         Employee existingEmployee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
 
-        existingEmployee.setCpf(employee.getCpf());
         existingEmployee.setEmail(employee.getEmail());
         existingEmployee.setName(employee.getName());
         existingEmployee.setPhoneNumber(employee.getPhoneNumber());

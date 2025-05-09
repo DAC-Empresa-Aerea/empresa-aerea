@@ -1,6 +1,5 @@
 package com.ms.saga.config;
 
-import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -62,23 +61,4 @@ public class RabbitMQConfig {
         return converter;
     }
 
-    @Bean
-    public DirectExchange createEmployeeExchange() {
-        return new DirectExchange(CREATE_EMPLOYEE_EXCHANGE);
-    }
-
-    @Bean
-    public DirectExchange rollbackCreateEmployeeExchange() {
-        return new DirectExchange(ROLLBACK_CREATE_EMPLOYEE_EXCHANGE);
-    }
-
-    @Bean
-    public DirectExchange updateEmployeeExchange() {
-        return new DirectExchange(UPDATE_EMPLOYEE_EXCHANGE);
-    }
-
-    @Bean
-    public DirectExchange deleteEmployeeExchange() {
-        return new DirectExchange(DELETE_EMPLOYEE_EXCHANGE);
-    }
 }

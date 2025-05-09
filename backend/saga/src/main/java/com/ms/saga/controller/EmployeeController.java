@@ -26,19 +26,19 @@ public class EmployeeController {
     @PostMapping()
     public ResponseEntity<EmployeeResponseDTO> createEmployee(@RequestBody EmployeeRequestDTO employee) {
 
-
         return ResponseEntity.status(HttpStatus.CREATED).body(saga.processRegisterEmployee(employee));
     }
     
     @PutMapping("/{id}")
     public ResponseEntity<EmployeeResponseDTO> updateEmployee(
-            @PathVariable("id") Long id,
+            @PathVariable Long id,
             @RequestBody EmployeeUpdateRequestDTO employee) {
+                
         return ResponseEntity.ok(saga.processUpdateEmployee(id, employee));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable("id") Long id) {
+    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
         saga.processDeleteEmployee(id);
         return ResponseEntity.noContent().build();
     }

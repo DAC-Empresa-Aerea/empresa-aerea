@@ -7,8 +7,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import com.ms.employee.config.RabbitMQConfig;
-import com.ms.employee.dto.employee.EmployeeRequestDTO;
 import com.ms.employee.dto.employee.EmployeeResponseDTO;
+import com.ms.employee.dto.employee.update.UpdateEmployeeRequestDTO;
 import com.ms.employee.dto.error.SagaResponse;
 import com.ms.employee.exception.BusinessException;
 import com.ms.employee.service.EmployeeService;
@@ -23,12 +23,9 @@ public class UpdateEmployeeConsumer {
     private EmployeeService employeeService;
     
     @RabbitListener(queues = RabbitMQConfig.UPDATE_EMPLOYEE_QUEUE)
-    public SagaResponse<EmployeeResponseDTO> receiveUpdateEmployee(@Payload UpdateEmployeeWrapper wrapper) {
+    public SagaResponse<EmployeeResponseDTO> receiveUpdateEmployee(@Payload UpdateEmployeeRequestDTO employee) {
         try {
-            Long employeeId = wrapper.getEmployeeId();
-            EmployeeRequestDTO employee = wrapper.getEmployee();
-            
-            return SagaResponse.success(employeeService.updateEmployee(employeeId, employee));
+            return SagaResponse.success(employeeService.updateEmployee(employee.getId(), employee));
         } catch (ConstraintViolationException e) {
             String errors = ValidationUtil.extractMessages(e);
             return SagaResponse.error("VALIDATION_ERROR", errors, HttpStatus.BAD_REQUEST.value());
@@ -39,26 +36,4 @@ public class UpdateEmployeeConsumer {
         }
     }
     
-    public static class UpdateEmployeeWrapper {
-        private Long employeeId;
-        private EmployeeRequestDTO employee;
-
-        public UpdateEmployeeWrapper() {}
-
-        public Long getEmployeeId() {
-            return employeeId;
-        }
-
-        public void setEmployeeId(Long employeeId) {
-            this.employeeId = employeeId;
-        }
-
-        public EmployeeRequestDTO getEmployee() {
-            return employee;
-        }
-
-        public void setEmployee(EmployeeRequestDTO employee) {
-            this.employee = employee;
-        }
-    }
 }
