@@ -35,4 +35,7 @@ public class Employee {
     @Column(name = "telefone", nullable = true)
     private String phoneNumber;
     
+    @Column(name = "ativo", nullable = false)
+    private Boolean active = true;
+    
 }

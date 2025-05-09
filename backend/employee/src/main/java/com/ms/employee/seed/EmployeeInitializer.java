@@ -16,7 +16,7 @@ public class EmployeeInitializer {
     public ApplicationRunner initEmployees(EmployeeRepository repository) {
         return args -> {
             List<Employee> predefinedEmployees = List.of(
-                new Employee(null, "90769281001", "func_pre@gmail.com", "Funcionario Pre", "11999999999")
+                new Employee(null, "90769281001", "func_pre@gmail.com", "Funcionario Pre", "11999999999", true)
             );
 
             for (Employee emp : predefinedEmployees) {
