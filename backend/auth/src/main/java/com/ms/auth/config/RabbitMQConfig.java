@@ -11,10 +11,14 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
+    
     public static final String CREATE_AUTH_QUEUE = "create.auth.queue";
     public static final String CREATE_AUTH_EXCHANGE = "create.auth.exchange";
     public static final String CREATE_AUTH_ROUTING_KEY = "create.auth.routing.key";
 
+    public static final String UPDATE_AUTH_QUEUE = "update.auth.queue";
+    public static final String UPDATE_AUTH_EXCHANGE = "update.auth.exchange";
+    public static final String UPDATE_AUTH_ROUTING_KEY = "update.auth.routing.key";
 
     @Bean
     public Queue createAuthQueue() {
@@ -32,8 +36,24 @@ public class RabbitMQConfig {
     }
 
     @Bean
+    public Queue updateAuthQueue() {
+        return new Queue(UPDATE_AUTH_QUEUE, true);
+    }
+
+    @Bean
+    public Exchange updateAuthExchange() {
+        return new DirectExchange(UPDATE_AUTH_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding updateAuthBinding(Queue updateAuthQueue, Exchange updateAuthExchange) {
+        return BindingBuilder.bind(updateAuthQueue).to(updateAuthExchange).with(UPDATE_AUTH_ROUTING_KEY).noargs();
+    }
+
+    @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
         return converter;
     }
+
 }

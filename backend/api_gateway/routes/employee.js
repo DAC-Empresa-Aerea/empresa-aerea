@@ -9,7 +9,7 @@ const AuthorizedRoles = ['FUNCIONARIO'];
 const router = express.Router();
 
 //Futuramente trocar para o SAGAS
-router.post('/', proxyService(EMPLOYEE, '/funcionarios'));
+router.post('/', proxyService(SAGAS, '/funcionarios'));
 
 router.get('/', 
     authenticateJWT,

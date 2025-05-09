@@ -34,4 +34,7 @@ public class RegisterReserveResponseDTO {
 	@JsonProperty("estado")
 	private String status;
 
+	@JsonProperty("quantidade_poltronas")
+	private Integer seatsQuantity;
+
 }

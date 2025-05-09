@@ -13,9 +13,10 @@ import lombok.Setter;
 @Setter
 public class UpdateMilesResponseDTO {
     
-    private Long codigo;
+    @JsonProperty("codigo")
+    private Long code;
     
     @JsonProperty("saldo_milhas")
-    private Integer saldoMilhas;
+    private Integer milesBalance;
     
 }

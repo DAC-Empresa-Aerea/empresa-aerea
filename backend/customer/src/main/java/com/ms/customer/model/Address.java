@@ -13,23 +13,24 @@ import lombok.Setter;
 @Getter
 @Setter
 public class Address {
-    @Column(nullable = false)
+    @Column(name = "cep", nullable = false)
     private String cep;
 
-    @Column(nullable = false)
+    @Column(name = "uf", nullable = false)
     private String uf;
 
-    @Column(nullable = false)
-    private String cidade;
+    @Column(name = "cidade", nullable = false)
+    private String city;
 
-    @Column(nullable = false)
-    private String bairro;
+    @Column(name = "bairro", nullable = false)
+    private String district;
 
-    @Column(nullable = false)
-    private String rua;
+    @Column(name = "rua", nullable = false)
+    private String street;
 
-    @Column(nullable = false)
-    private String numero;
+    @Column(name = "numero", nullable = false)
+    private String number;
     
-    private String complemento;
+    @Column(name = "complemento", nullable = true)
+    private String complement;
 }

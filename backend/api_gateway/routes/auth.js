@@ -7,7 +7,7 @@ const loginRouter = express.Router();
 loginRouter.post('/', authController.getLoginWithCustomer);
 
 const logoutRouter = express.Router();
-logoutRouter.post('/', proxyService(SAGAS, '/logout'));
+logoutRouter.post('/', proxyService(AUTH, '/logout'));
 
 module.exports = { 
     loginRouter, 

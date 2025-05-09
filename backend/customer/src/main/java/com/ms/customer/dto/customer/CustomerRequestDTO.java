@@ -22,21 +22,25 @@ import lombok.Setter;
 public class CustomerRequestDTO {
     @NotBlank(message = "CPF é obrigatório")
     @CPF(message = "CPF inválido")
+    @JsonProperty("cpf")
     private String cpf;
 
     @NotBlank(message = "Email é obrigatório")
     @Email(message = "Email inválido")
+    @JsonProperty("email")
     private String email;
 
     @NotBlank(message = "Nome é obrigatório")
-    private String nome;
+    @JsonProperty("nome")
+    private String name;
 
     @NotNull(message = "Saldo de milhas é obrigatório")
     @Min(value = 0, message = "Saldo de milhas não pode ser negativo")
     @JsonProperty("saldo_milhas")
-    private Integer saldoMilhas;
+    private Integer milesBalance;
 
     @NotNull(message = "Endereço é obrigatório")
     @Valid
-    private AddressDTO endereco;
+    @JsonProperty("endereco")
+    private AddressDTO address;
 }

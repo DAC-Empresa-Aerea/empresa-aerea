@@ -85,12 +85,12 @@ services:
     environment:
       SECRET: ${JWT_SECRET}
       PORT: ${API_GATEWAY_PORT}
-      MS_AUTH_PORT: ${MS_AUTH_PORT}
-      MS_CUSTOMER_PORT: ${MS_CUSTOMER_PORT}
-      MS_EMPLOYEE_PORT: ${MS_EMPLOYEE_PORT}
-      MS_FLIGHT_PORT: ${MS_FLIGHT_PORT}	
-      MS_RESERVE_PORT: ${MS_RESERVE_PORT}
-      SAGA_PORT: ${MS_SAGA_PORT}
+      MS_AUTH_URL: http://ms-auth:${MS_AUTH_PORT}
+      MS_CUSTOMER_URL: http://ms-customer:${MS_CUSTOMER_PORT}
+      MS_EMPLOYEE_URL: http://ms-employee:${MS_EMPLOYEE_PORT}
+      MS_FLIGHT_URL: http://ms-flight:${MS_FLIGHT_PORT}	
+      MS_RESERVE_URL: http://ms-reserve:${MS_RESERVE_PORT}
+      MS_SAGA_URL: http://ms-saga:${MS_SAGA_PORT}
       NODE_ENV: development
   
   # Microserviços

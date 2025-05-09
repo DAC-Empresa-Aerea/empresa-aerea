@@ -14,6 +14,7 @@ import lombok.Setter;
 @Getter
 @Setter
 public class UpdateSeatsRequestDTO {
+    
     @JsonProperty("codigo_voo")
     private String flightCode;
 

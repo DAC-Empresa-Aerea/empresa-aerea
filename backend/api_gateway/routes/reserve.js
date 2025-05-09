@@ -3,8 +3,10 @@ const reservationController = require('../controllers/reserveController');
 
 const router = express.Router();
 
-// proxy simples: GET /reservas/:codigo
-router.get('/:codigo', reservationController.proxyGetByCode);
+router.get('/:id', reservationController.getReservationWithFlight);
+router.patch('/:id/estado', reservationController.proxyGetByCode);
+
+router.post('/', reservationController.proxyToSagas);
 
 // composição: (se precisar)
 // router.get('/:codigo/detalhes', reservationController.getReservationWithFlight);

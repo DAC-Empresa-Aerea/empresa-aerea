@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 
 
 @RestController
-@RequestMapping("aeroportos")
+@RequestMapping("/aeroportos")
 public class AirportController {
 
     @Autowired
@@ -25,10 +25,11 @@ public class AirportController {
 
     @GetMapping()
     public List<AirportResponseDTO> getAirports() {
-        
-        return airportService.getAllAirports();
+        List<AirportResponseDTO> airports = airportService.getAllAirports();
+        return airports;
     }
 
+    // REMOVER
     @PostMapping()
     public ResponseEntity<AirportResponseDTO> postMethodName(@RequestBody AirportRequestDTO entity) {
         AirportResponseDTO airport = airportService.createAirport(entity);

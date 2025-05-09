@@ -16,9 +16,9 @@ public class RabbitMQConfig {
     public static final String CREATE_CUSTOMER_EXCHANGE = "create.customer.exchange";
     public static final String CREATE_CUSTOMER_ROUTING_KEY = "create.customer.routing.key";
 
-    public static final String ROLLBACK_CUSTOMER_QUEUE = "rollback.customer.queue";
-    public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
-    public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.customer.routing.key";
+    public static final String ROLLBACK_CUSTOMER_QUEUE = "rollback.create.customer.queue";
+    public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.create.customer.exchange";
+    public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.create.customer.routing.key";
 
     public static final String DEBIT_SEAT_QUEUE = "debit.seat.queue";
     public static final String DEBIT_SEAT_EXCHANGE = "debit.seat.exchange";

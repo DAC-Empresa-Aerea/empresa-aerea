@@ -26,5 +26,4 @@ public class EmployeeRequestDTO {
     
     @JsonProperty("telefone")
     private String phoneNumber;
-
 }

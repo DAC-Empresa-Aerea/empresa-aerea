@@ -24,8 +24,8 @@ public class ReserveController {
     @Autowired
     private ReserveOrchestrator saga;
 
-    @PostMapping("/{id}")
-    public ResponseEntity<ReserveFlightResponseDTO> registerReserve(@PathVariable @Valid String id, @RequestBody @Valid ReserveFlightRequestDTO reserveRequest) {
+    @PostMapping()
+    public ResponseEntity<ReserveFlightResponseDTO> registerReserve(@RequestBody @Valid ReserveFlightRequestDTO reserveRequest) {
           
         return ResponseEntity.ok(saga.processRegisterReserve(reserveRequest));
     }

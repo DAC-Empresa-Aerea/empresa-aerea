@@ -20,12 +20,17 @@ public class AirportService {
     private AirportRepository airportRepository;
 
     public List<AirportResponseDTO> getAllAirports() {
-        List<AirportResponseDTO> airportResponseDTOs = new ArrayList<>();
-
+        List<AirportResponseDTO> dtos = new ArrayList<>();
+    
         List<Airport> airports = airportRepository.findAll();
-        BeanUtils.copyProperties(airports, airportResponseDTOs, "id");
-
-        return airportResponseDTOs;
+        for (Airport airport : airports) {
+            AirportResponseDTO dto = new AirportResponseDTO();
+            BeanUtils.copyProperties(airport, dto);
+            dto.setUf(airport.getUF());
+            dtos.add(dto);
+        }
+    
+        return dtos;
     }
     
     public Airport getAirportByCode(String airportCode) {
@@ -38,12 +43,14 @@ public class AirportService {
         airport.setCodigo(airportRequest.getCodigo());
         airport.setNome(airportRequest.getNome());
         airport.setCidade(airportRequest.getCidade());
-        airport.setUF(airportRequest.getUF());
+        airport.setUF(airportRequest.getUF() != null ? airportRequest.getUF() : "SP");
 
+        System.out.println("Airport: " + airport.getUF());
         airportRepository.save(airport);
 
         AirportResponseDTO airportResponse = new AirportResponseDTO();
         BeanUtils.copyProperties(airport, airportResponse, "id");
+        airportResponse.setUf(airport.getUF());
 
         return airportResponse;
     }

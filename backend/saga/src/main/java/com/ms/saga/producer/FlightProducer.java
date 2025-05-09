@@ -46,4 +46,12 @@ public class FlightProducer {
         );
     }
 
+    public void rollbackFlightStatus(FlightStatusDTO dto) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConfig.ROLLBACK_UPDATE_FLIGHT_EXCHANGE,
+            RabbitMQConfig.ROLLBACK_UPDATE_FLIGHT_ROUTING_KEY,
+            dto
+        );
+    }
+
 }
