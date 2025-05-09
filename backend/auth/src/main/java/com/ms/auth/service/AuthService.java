@@ -1,18 +1,27 @@
 package com.ms.auth.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import java.util.Date;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import com.ms.auth.config.JwtProperties;
 import com.ms.auth.dto.CreateAuthRequestDTO;
 import com.ms.auth.dto.CreateAuthResponseDTO;
 import com.ms.auth.dto.LoginAuthRequestDTO;
 import com.ms.auth.dto.LoginAuthResponseDTO;
+import com.ms.auth.dto.LogoutAuthDTO;
 import com.ms.auth.factory.RoleFactory;
 import com.ms.auth.model.Auth;
 import com.ms.auth.repository.AuthRepository;
 import com.ms.auth.util.HashUtil;
 import com.ms.auth.util.JWTGeneratorUtil;
 import com.ms.auth.util.PasswordGeneratorUtil;
+
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
 
 @Service
 public class AuthService {
@@ -28,6 +37,12 @@ public class AuthService {
 
     @Autowired
     private JWTGeneratorUtil jwtGeneratorUtil;
+
+    @Autowired
+    private JwtProperties jwtProperties;
+
+    @Autowired
+    private BlacklistService blacklistService;
 
     public boolean emailExists(String email) {
         return authRepository.findByLogin(email) != null;
@@ -56,13 +71,11 @@ public class AuthService {
         Auth auth = authRepository.findByLogin(authRequest.getLogin());
 
         if (auth == null) {
-            throw new RuntimeException("User not found"); 
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "User not found"); 
         }
 
-        String hashedPassword = HashUtil.hashPassword(authRequest.getSenha(), auth.getSalt());
-
-        if (!hashedPassword.equals(auth.getSenha())) {
-            throw new RuntimeException("Invalid password");
+        if (!HashUtil.validatePassword(authRequest.getSenha(), auth.getSalt(), auth.getSenha())) {
+            throw new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Invalid password");
         }
 
         String token = jwtGeneratorUtil.generateToken(
@@ -77,6 +90,18 @@ public class AuthService {
         response.setUsuario(null);
 
         return response;
+    }
+
+    public void logout(LogoutAuthDTO dto) {
+        Claims claims = Jwts.parserBuilder()
+            .setSigningKey(jwtProperties.getSecret().getBytes())
+            .build()
+            .parseClaimsJws(dto.getToken())
+            .getBody();
+
+        String jti = claims.getId();
+        Date exp = claims.getExpiration();
+        blacklistService.blacklistToken(jti, exp);
     }
 
 }

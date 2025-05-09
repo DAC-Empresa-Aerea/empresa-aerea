@@ -15,10 +15,12 @@ import lombok.Setter;
 @Setter
 public class CheckMileResponseDTO {
 
-    private Long codigo;
+    @JsonProperty("codigo")
+    private Long code;
 
     @JsonProperty("saldo_milhas")
-    private Integer saldoMilhas;
+    private Integer milesBalance;
 
-    private List<TransitionDTO> transacoes;
+    @JsonProperty("transacoes")
+    private List<TransitionDTO> transactions;
 }

@@ -35,8 +35,8 @@ public class CustomerController {
         List<CustomerResponseDTO> customers = clienteRepository.findAll().stream()
                 .map(customer -> {
                     CustomerResponseDTO dto = new CustomerResponseDTO();
-                    dto.setCodigo(customer.getCodigo());
-                    dto.setNome(customer.getNome());
+                    dto.setCode(customer.getCode());
+                    dto.setName(customer.getName());
                     dto.setEmail(customer.getEmail());
                     return dto;
                 })

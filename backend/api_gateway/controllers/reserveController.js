@@ -1,13 +1,15 @@
 const proxyService = require('../services/proxyService');
 const compositionService = require('../services/compositionService');
-const { RESERVATION } = require('../config/services');
+const { RESERVATION, SAGAS } = require('../config/services');
 
-exports.proxyGetByCode = proxyService(RESERVATION, '/reservas/:codigo');
+exports.proxyGetByCode = proxyService(RESERVATION, '/reservas');
+
+exports.proxyToSagas = proxyService(SAGAS, '/reservas');
 
 exports.getReservationWithFlight = async (req, res, next) => {
   try {
-    const { codigo } = req.params;
-    const reserva = await compositionService.getReservationWithFlight(codigo);
+    const { id } = req.params;
+    const reserva = await compositionService.getReservationWithFlight(id);
     res.json(reserva);
   } catch (err) {
     next(err);
