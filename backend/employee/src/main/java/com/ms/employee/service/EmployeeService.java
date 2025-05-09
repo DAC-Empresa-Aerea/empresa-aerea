@@ -14,6 +14,7 @@ import org.springframework.beans.BeanUtils;
 import com.ms.employee.dto.employee.EmployeeRequestDTO;
 import com.ms.employee.dto.employee.EmployeeResponseDTO;
 import com.ms.employee.dto.employee.update.UpdateEmployeeRequestDTO;
+import com.ms.employee.dto.employee.update.UpdateEmployeeResponseDTO;
 import com.ms.employee.exception.BusinessException;
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
@@ -69,9 +70,11 @@ public class EmployeeService {
         .collect(Collectors.toList());
     }
 
-    public EmployeeResponseDTO updateEmployee(Long id, UpdateEmployeeRequestDTO employee) {
+    public UpdateEmployeeResponseDTO updateEmployee(Long id, UpdateEmployeeRequestDTO employee) {
         Employee existingEmployee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
+
+        String oldEmail = existingEmployee.getEmail();
 
         existingEmployee.setEmail(employee.getEmail());
         existingEmployee.setName(employee.getName());
@@ -79,23 +82,21 @@ public class EmployeeService {
 
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
 
-        return convertToEmployeeResponseDTO(updatedEmployee);
+        UpdateEmployeeResponseDTO updateEmployeeResponseDTO = new UpdateEmployeeResponseDTO();
+        updateEmployeeResponseDTO.setId(updatedEmployee.getId());
+        updateEmployeeResponseDTO.setCpf(updatedEmployee.getCpf());
+        updateEmployeeResponseDTO.setEmail(updatedEmployee.getEmail());
+        updateEmployeeResponseDTO.setName(updatedEmployee.getName());
+        updateEmployeeResponseDTO.setPhoneNumber(updatedEmployee.getPhoneNumber());
+        updateEmployeeResponseDTO.setOldEmail(oldEmail);
+
+        return updateEmployeeResponseDTO;
     }
     
     public void deleteEmployee(Long id) {
         Employee existingEmployee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
         employeeRepository.delete(existingEmployee);
-    }
-
-    private EmployeeResponseDTO convertToEmployeeResponseDTO(Employee employee) {
-        EmployeeResponseDTO dto = new EmployeeResponseDTO();
-        dto.setId(employee.getId());
-        dto.setCpf(employee.getCpf());
-        dto.setEmail(employee.getEmail());
-        dto.setName(employee.getName());
-        dto.setPhoneNumber(employee.getPhoneNumber());
-        return dto;
     }
 
     public void deleteById(Long id) {

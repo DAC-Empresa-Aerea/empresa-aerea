@@ -13,7 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.saga.dto.employee.EmployeeRequestDTO;
 import com.ms.saga.dto.employee.EmployeeResponseDTO;
-import com.ms.saga.dto.employee.EmployeeUpdateRequestDTO;
+import com.ms.saga.dto.employee.update.EmployeeUpdateRequestDTO;
 import com.ms.saga.orchestrator.EmployeeOrchestrator;
 
 @RestController

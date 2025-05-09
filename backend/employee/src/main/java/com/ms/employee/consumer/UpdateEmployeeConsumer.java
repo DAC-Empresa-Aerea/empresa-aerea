@@ -7,8 +7,8 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import com.ms.employee.config.RabbitMQConfig;
-import com.ms.employee.dto.employee.EmployeeResponseDTO;
 import com.ms.employee.dto.employee.update.UpdateEmployeeRequestDTO;
+import com.ms.employee.dto.employee.update.UpdateEmployeeResponseDTO;
 import com.ms.employee.dto.error.SagaResponse;
 import com.ms.employee.exception.BusinessException;
 import com.ms.employee.service.EmployeeService;
@@ -23,7 +23,7 @@ public class UpdateEmployeeConsumer {
     private EmployeeService employeeService;
     
     @RabbitListener(queues = RabbitMQConfig.UPDATE_EMPLOYEE_QUEUE)
-    public SagaResponse<EmployeeResponseDTO> receiveUpdateEmployee(@Payload UpdateEmployeeRequestDTO employee) {
+    public SagaResponse<UpdateEmployeeResponseDTO> receiveUpdateEmployee(@Payload UpdateEmployeeRequestDTO employee) {
         try {
             return SagaResponse.success(employeeService.updateEmployee(employee.getId(), employee));
         } catch (ConstraintViolationException e) {

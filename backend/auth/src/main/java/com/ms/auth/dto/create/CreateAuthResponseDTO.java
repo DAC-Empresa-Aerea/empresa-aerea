@@ -1,4 +1,4 @@
-package com.ms.auth.dto;
+package com.ms.auth.dto.create;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

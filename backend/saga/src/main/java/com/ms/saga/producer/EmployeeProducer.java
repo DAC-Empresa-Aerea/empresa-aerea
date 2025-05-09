@@ -8,7 +8,8 @@ import org.springframework.stereotype.Component;
 import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.employee.EmployeeRequestDTO;
 import com.ms.saga.dto.employee.EmployeeResponseDTO;
-import com.ms.saga.dto.employee.EmployeeUpdateRequestDTO;
+import com.ms.saga.dto.employee.update.EmployeeUpdateRequestDTO;
+import com.ms.saga.dto.employee.update.EmployeeUpdateResponseDTO;
 import com.ms.saga.dto.error.SagaResponse;
 
 @Component
@@ -34,14 +35,14 @@ public class EmployeeProducer {
         );
     }
 
-    public SagaResponse<EmployeeResponseDTO> sendUpdateEmployee(Long id, EmployeeUpdateRequestDTO employee) {
+    public SagaResponse<EmployeeUpdateResponseDTO> sendUpdateEmployee(Long id, EmployeeUpdateRequestDTO employee) {
         employee.setId(id);
 
         return rabbitTemplate.convertSendAndReceiveAsType(
             RabbitMQConfig.UPDATE_EMPLOYEE_EXCHANGE,
             RabbitMQConfig.UPDATE_EMPLOYEE_ROUTING_KEY,
             employee,
-            new ParameterizedTypeReference<SagaResponse<EmployeeResponseDTO>>() {}
+            new ParameterizedTypeReference<SagaResponse<EmployeeUpdateResponseDTO>>() {}
         );
     }
 

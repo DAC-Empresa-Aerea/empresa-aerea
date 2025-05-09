@@ -10,6 +10,9 @@ public class RabbitMQConfig {
     public static final String CREATE_AUTH_EXCHANGE = "create.auth.exchange";
     public static final String CREATE_AUTH_ROUTING_KEY = "create.auth.routing.key";
 
+    public static final String UPDATE_AUTH_EXCHANGE = "update.auth.exchange";
+    public static final String UPDATE_AUTH_ROUTING_KEY = "update.auth.routing.key";
+
     public static final String CREATE_CUSTOMER_EXCHANGE = "create.customer.exchange";
     public static final String CREATE_CUSTOMER_ROUTING_KEY = "create.customer.routing.key";
 
