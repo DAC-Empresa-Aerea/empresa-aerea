@@ -14,7 +14,7 @@ secured.use(authenticateJWT);
 secured.use(authorizeRoles('CLIENTE','FUNCIONARIO'));
 
 secured.get('/:id/reservas', customerController.getCustomerReservations);
-secured.get('/:id/milhas', proxyService(CUSTOMER, '/clientes/:id'));
+secured.get('/:id/milhas', proxyService(CUSTOMER, '/clientes'));
 secured.use('/', proxyService(CUSTOMER, '/clientes'));
 
 

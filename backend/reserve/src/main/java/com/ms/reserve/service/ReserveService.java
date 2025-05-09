@@ -93,7 +93,6 @@ public class ReserveService {
         ReserveResponseDTO reserveResponseDTO = new ReserveResponseDTO();
         BeanUtils.copyProperties(reserve, reserveResponseDTO);
         reserveResponseDTO.setStatus(reserve.getStatusCode());
-        
         return reserveResponseDTO;
     }
 
@@ -206,15 +205,12 @@ public class ReserveService {
 
     public List<ReserveResponseDTO> getReservesByCustomerId(Long clienteId) {
         List<ReserveQuery> entities = reserveQueryRepository.findByCustomerCode(clienteId);
-        
-        if (entities.isEmpty()) {
-            return List.of();
-        }
 
         return entities.stream()
             .map(entity -> {
                 ReserveResponseDTO dto = new ReserveResponseDTO();
-                BeanUtils.copyProperties(entity, dto);
+                BeanUtils.copyProperties(entity, dto, "status");
+                dto.setStatus(entity.getStatusCode());
                 return dto;
             })
             .collect(Collectors.toList());

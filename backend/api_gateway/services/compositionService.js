@@ -13,11 +13,13 @@ exports.listCustomerReservations = async customerId => {
     const withFlights = await Promise.all(
       reservas.map(async r => {
         const { data: voo } = await axios.get(
-          `${FLIGHT}/voos/${r.voo.codigo}`
+          `${FLIGHT}/voos/${r.codigo_voo}`
         );
+        console.log(voo);
         return { ...r, voo };
       })
     );
+    
     return withFlights;
   }
   catch (err) {
@@ -51,11 +53,13 @@ exports.getCustomerMilesWithTransitions = async customerId => {
 
 exports.getReservationWithFlight = async codigo => {
   const { data: reserva } = await axios.get(`${RESERVATION}/reservas/${codigo}`);
-  const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.voo_codigo}`);
+  console.log(reserva);
+  const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.codigo_voo}`);
   reserva.voo = voo;
-  delete reserva.voo_codigo;
+  delete reserva.codigo_voo;
   return reserva;
 };
+
 
 //-----------------------Auth-----------------------//
 
