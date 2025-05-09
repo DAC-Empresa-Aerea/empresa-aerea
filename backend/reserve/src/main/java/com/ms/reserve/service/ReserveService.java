@@ -44,7 +44,7 @@ public class ReserveService {
         ReserveCommand reserveCommand = new ReserveCommand();
         BeanUtils.copyProperties(dto, reserveCommand);
         
-        ReserveStatusCommand status = statusCommandRepository.findById(StatusEnum.CREATED.getCode())
+        ReserveStatusCommand status = statusCommandRepository.findById(StatusEnum.CONFIRMED.getCode())
             .orElseThrow(() -> new RuntimeException("Status não encontrado"));
         
         reserveCommand.setCode(GenerateReserveCodeUtil.generate());
@@ -60,7 +60,7 @@ public class ReserveService {
         registeredReserve.setDate(reserveCommand.getDate());
         registeredReserve.setValue(reserveCommand.getValue());
         registeredReserve.setMilesUsed(reserveCommand.getMilesUsed());
-        registeredReserve.setStatus(StatusEnum.CREATED.getCode());
+        registeredReserve.setStatus(StatusEnum.CONFIRMED.getCode());
         registeredReserve.setSeatsQuantity(reserveCommand.getSeatsQuantity());
 
         cqrsProducer.sendReserveCreated(registeredReserve);
@@ -71,7 +71,7 @@ public class ReserveService {
         response.setDate(reserveCommand.getDate());
         response.setValue(reserveCommand.getValue());
         response.setMilesUsed(reserveCommand.getMilesUsed());
-        response.setStatus(StatusEnum.CREATED.getCode());
+        response.setStatus(StatusEnum.CONFIRMED.getCode());
         response.setSeatsQuantity(reserveCommand.getSeatsQuantity());
 
         return response;
@@ -97,7 +97,7 @@ public class ReserveService {
     }
 
     public ReserveResponseDTO updateReserveStatusFromUser(String id, String status) {
-        List<StatusEnum> validStatuses = List.of(StatusEnum.CREATED, StatusEnum.CHECK_IN);
+        List<StatusEnum> validStatuses = List.of(StatusEnum.CONFIRMED, StatusEnum.CHECK_IN);
         StatusEnum newStatus = StatusEnum.fromCode(status);
 
         if (newStatus == null || !validStatuses.contains(newStatus)) {
