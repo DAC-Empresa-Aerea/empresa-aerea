@@ -2,19 +2,19 @@
 require('dotenv-safe').config();
 
 const {
-  MS_AUTH_PORT,
-  MS_CUSTOMER_PORT,
-  MS_EMPLOYEE_PORT,
-  MS_FLIGHT_PORT,
-  MS_RESERVE_PORT,
-  SAGA_PORT,
+  MS_AUTH_URL,
+  MS_CUSTOMER_URL,
+  MS_EMPLOYEE_URL,
+  MS_FLIGHT_URL,
+  MS_RESERVE_URL,
+  MS_SAGA_URL,
 } = process.env;
 
 module.exports = {
-  AUTH:        `http://localhost:${MS_AUTH_PORT || 8081}`,
-  CUSTOMER:    `http://localhost:${MS_CUSTOMER_PORT || 8082}`,
-  EMPLOYEE:    `http://localhost:${MS_EMPLOYEE_PORT || 8083}`,
-  FLIGHT:      `http://localhost:${MS_FLIGHT_PORT || 8084}`,
-  RESERVATION: `http://localhost:${MS_RESERVE_PORT || 8085}`,
-  SAGAS:       `http://localhost:${SAGA_PORT || 8087}`,
+  AUTH:        MS_AUTH_URL || `http://localhost:8081`,
+  CUSTOMER:    MS_CUSTOMER_URL || `http://localhost:8082`,
+  EMPLOYEE:    MS_EMPLOYEE_URL || `http://localhost:8083`,
+  FLIGHT:      MS_FLIGHT_URL || `http://localhost:8084`,
+  RESERVATION: MS_RESERVE_URL || `http://localhost:8085`,
+  SAGAS:       MS_SAGA_URL || `http://localhost:8086`,
 };
