@@ -41,7 +41,7 @@ public class EmailService {
                     <td style="padding: 30px;">
                     <h2 style="color:#333333; margin-bottom: 20px;">Seja bem-vindo ao FlyHigh!</h2>
                     <p style="color:#555555; font-size:16px; line-height:1.5;">
-                        Estamos felizes em ter você com a gente. Aqui está sua senha temporária para começar:
+                        Estamos felizes em ter você com a gente. Aqui está sua senha:
                     </p>
                     <table align="center" cellpadding="10" cellspacing="0" style="margin: 20px auto;">
                         <tr>
