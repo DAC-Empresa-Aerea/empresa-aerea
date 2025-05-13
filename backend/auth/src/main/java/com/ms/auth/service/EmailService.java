@@ -11,6 +11,11 @@ public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
 
+    /**
+     * Envia um email com a senha para o usuario
+     * @param email
+     * @param password
+     */
     public void sendPasswordEmail (String email, String password) {
         try{
         SimpleMailMessage message = new SimpleMailMessage();
@@ -20,7 +25,7 @@ public class EmailService {
         mailSender.send(message);
         System.out.println("Email enviado para " + email + " com a senha: " + password);
         }catch (Exception e){
-            System.out.println("Erro ao enviar email: " + e.getMessage());
+            System.out.println("Erro ao enviar email com senha: " + e.getMessage());
         }
 
     }
