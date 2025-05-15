@@ -19,6 +19,7 @@ import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatRequestDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatResponseDTO;
+import com.ms.customer.dto.refundMiles.RefundMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
 import com.ms.customer.exception.BusinessException;
@@ -206,6 +207,31 @@ public class CustomerService {
 
     public void deleteById(Long id) {
         customerRepository.deleteById(id);
+    }
+
+    public RefundMilesRequestDTO refundMiles(RefundMilesRequestDTO dto) {
+        Optional<Customer> customerOptional = customerRepository.findById(dto.getCustomerCode());
+
+        if (customerOptional.isEmpty()) {
+            throw new BusinessException("CUSTOMER_NOT_FOUND", "Cliente não encontrado.", HttpStatus.NOT_FOUND.value());
+        }
+
+        Customer customer = customerOptional.get();
+        customer.setMilesBalance(customer.getMilesBalance() + dto.getAmount());
+
+        MilesHistory transaction = new MilesHistory();
+        transaction.setCustomer(customer);
+        transaction.setDate(LocalDateTime.now());
+        transaction.setAmountInReais(BigDecimal.ZERO);
+        transaction.setReserveCode(dto.getReserverCode());
+        transaction.setMilesQuantity(dto.getAmount());
+        transaction.setDescription(dto.getResonRefund());
+        transaction.setType("ENTRADA");
+
+        milesHistoryRepository.save(transaction);
+        customerRepository.save(customer);
+
+        return dto;
     }
 
 }

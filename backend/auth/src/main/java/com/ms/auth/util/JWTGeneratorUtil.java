@@ -23,7 +23,7 @@ public class JWTGeneratorUtil {
     public String generateToken(String subject, String role) {
         String jti = UUID.randomUUID().toString();
         Date now = new Date();
-        Date exp = new Date(now.getTime() + jwtProperties.getExpiration());
+        Date exp = new Date(now.getTime() + 3600000);
 
         return Jwts.builder()
             .setId(jti)

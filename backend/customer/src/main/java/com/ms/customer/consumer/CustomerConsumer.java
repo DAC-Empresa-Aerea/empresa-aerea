@@ -12,6 +12,7 @@ import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatRequestDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatResponseDTO;
 import com.ms.customer.dto.error.SagaResponse;
+import com.ms.customer.dto.refundMiles.RefundMilesRequestDTO;
 import com.ms.customer.exception.BusinessException;
 import com.ms.customer.service.CustomerService;
 
@@ -49,4 +50,17 @@ public class CustomerConsumer {
     public void receiveRollbackCustomer(@Payload Long customerId) {
         customerService.deleteById(customerId);
     }
+
+    @RabbitListener(queues = RabbitMQConfig.REFUND_MILES_QUEUE)
+    public void receiveRefundMiles(@Payload @Valid RefundMilesRequestDTO dto) {
+        try {
+            customerService.refundMiles(dto);
+        }
+        catch (BusinessException e) {
+            throw new BusinessException(e.getCode(), e.getMessage(), e.getStatus());
+        } catch (Exception e) {
+            throw new BusinessException("REFUND_MILES_ERROR", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+    }
+    
 }
