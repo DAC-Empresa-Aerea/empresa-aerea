@@ -75,13 +75,12 @@ public class EmployeeOrchestrator {
         return employeeResponseDTO;
     }
     
-    public void processDeleteEmployee(Long employeeId) {
-        SagaResponse<Void> employeeResponse = employeeProducer.sendDeleteEmployee(employeeId);
-        
+    public EmployeeResponseDTO processDeleteEmployee(Long employeeId) {
+        SagaResponse<EmployeeResponseDTO> employeeResponse = employeeProducer.sendDeleteEmployee(employeeId);
         if (!employeeResponse.isSuccess()) {
             ErrorDTO error = employeeResponse.getError();
             throw new BusinessException(error);
         }
-        
+        return employeeResponse.getData();
     }
 }

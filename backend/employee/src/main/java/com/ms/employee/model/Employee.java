@@ -34,6 +34,6 @@ public class Employee {
     private String phoneNumber;
     
     @Column(name = "ativo", nullable = false)
-    private Boolean active = true;
+    private boolean active = true;
     
 }

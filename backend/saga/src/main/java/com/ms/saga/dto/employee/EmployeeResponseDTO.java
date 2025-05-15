@@ -29,5 +29,8 @@ public class EmployeeResponseDTO {
     
     @JsonProperty("telefone")
     private String phoneNumber;
+    
+    @JsonProperty("ativo")
+    private boolean active;
 
 }

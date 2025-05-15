@@ -38,8 +38,8 @@ public class EmployeeController {
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteEmployee(@PathVariable Long id) {
-        saga.processDeleteEmployee(id);
-        return ResponseEntity.noContent().build();
+    public ResponseEntity<EmployeeResponseDTO> deleteEmployee(@PathVariable("id") Long id) {
+        EmployeeResponseDTO deleted = saga.processDeleteEmployee(id);
+        return ResponseEntity.ok(deleted);
     }
 }

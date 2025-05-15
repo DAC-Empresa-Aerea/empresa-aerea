@@ -61,7 +61,7 @@ public class EmployeeService {
     
     public List<EmployeeResponseDTO> getAllActiveEmployees() {
         return employeeRepository.findAll().stream()
-        .filter(Employee::getActive)
+        .filter(employee -> employee.isActive())
         .map(employee -> {
             EmployeeResponseDTO dto = new EmployeeResponseDTO();
             BeanUtils.copyProperties(employee, dto);
@@ -93,6 +93,23 @@ public class EmployeeService {
         return updateEmployeeResponseDTO;
     }
     
+    public EmployeeResponseDTO deactivateEmployee(Long id) {
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
+        existingEmployee.setActive(false);
+        Employee updatedEmployee = employeeRepository.save(existingEmployee);
+        EmployeeResponseDTO dto = new EmployeeResponseDTO();
+        BeanUtils.copyProperties(updatedEmployee, dto);
+        return dto;
+    }
+
+    /**
+     * Deleta um funcionário existente com base no ID fornecido.
+     *
+     * @param id O ID do funcionário a ser deletado.
+     * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
+     */
+    @Deprecated
     public void deleteEmployee(Long id) {
         Employee existingEmployee = employeeRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));

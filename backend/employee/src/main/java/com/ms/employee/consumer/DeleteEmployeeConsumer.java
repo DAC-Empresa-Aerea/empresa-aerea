@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 
 import com.ms.employee.config.RabbitMQConfig;
 import com.ms.employee.dto.error.SagaResponse;
+import com.ms.employee.dto.employee.EmployeeResponseDTO;
 import com.ms.employee.exception.BusinessException;
 import com.ms.employee.service.EmployeeService;
 
@@ -18,10 +19,10 @@ public class DeleteEmployeeConsumer {
     private EmployeeService employeeService;
     
     @RabbitListener(queues = RabbitMQConfig.DELETE_EMPLOYEE_QUEUE)
-    public SagaResponse<Void> receiveDeleteEmployee(@Payload Long employeeId) {
+    public SagaResponse<EmployeeResponseDTO> receiveDeleteEmployee(@Payload Long employeeId) {
         try {
-            employeeService.deleteEmployee(employeeId);
-            return SagaResponse.success(null);
+            EmployeeResponseDTO employee = employeeService.deactivateEmployee(employeeId);
+            return SagaResponse.success(employee);
         } catch (BusinessException e) {
             return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
         } catch (Exception e) {
