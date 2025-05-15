@@ -1,6 +1,8 @@
 package com.ms.customer.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,6 +19,7 @@ import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatRequestDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatResponseDTO;
+import com.ms.customer.dto.refundMiles.RefundMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
 import com.ms.customer.exception.BusinessException;
@@ -49,8 +52,8 @@ public class CustomerService {
         BeanUtils.copyProperties(customer, customerEntity);
 
         Address address = new Address();
-        BeanUtils.copyProperties(customer.getEndereco(), address);
-        customerEntity.setEndereco(address);
+        BeanUtils.copyProperties(customer.getAddress(), address);
+        customerEntity.setAddress(address);
 
         Customer savedCustomer = customerRepository.save(customerEntity);
 
@@ -58,8 +61,8 @@ public class CustomerService {
         BeanUtils.copyProperties(savedCustomer, customerCreated);
 
         AddressDTO addressDTO = new AddressDTO();
-        BeanUtils.copyProperties(savedCustomer.getEndereco(), addressDTO);
-        customerCreated.setEndereco(addressDTO);
+        BeanUtils.copyProperties(savedCustomer.getAddress(), addressDTO);
+        customerCreated.setAddress(addressDTO);
         
         return customerCreated;
     }
@@ -85,23 +88,23 @@ public class CustomerService {
         CheckMileResponseDTO response = new CheckMileResponseDTO();
 
         if(transactions.isEmpty()) {
-            response.setTransacoes(null);
+            response.setTransactions(Collections.emptyList());
         }
         else {
             List<TransitionDTO> transactionDTOs = transactions.stream()
                     .map(transaction -> new TransitionDTO(
-                            transaction.getData(),
-                            transaction.getValorReais(),
-                            transaction.getQuantidadeMilhas(),
-                            transaction.getDescricao(),
-                            transaction.getCodigoReserva(),
-                            transaction.getTipo()))
+                            transaction.getDate(),
+                            transaction.getAmountInReais(),
+                            transaction.getMilesQuantity(),
+                            transaction.getDescription(),
+                            transaction.getReserveCode(),
+                            transaction.getType()))
                     .toList();
-            response.setTransacoes(transactionDTOs);
+            response.setTransactions(transactionDTOs);
         }
 
-        response.setCodigo(customer.getCodigo());
-        response.setSaldoMilhas(customer.getSaldoMilhas());
+        response.setCode(customer.getCode());
+        response.setMilesBalance(customer.getMilesBalance());
         
         return response;
     }
@@ -111,40 +114,56 @@ public class CustomerService {
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado para o ID: " + id));
 
-        Integer newBalance = customer.getSaldoMilhas() + requestDTO.getQuantidade();
-        customer.setSaldoMilhas(newBalance);
+        Integer newBalance = customer.getMilesBalance() + requestDTO.getQuantity();
+        customer.setMilesBalance(newBalance);
 
         customerRepository.save(customer);
 
+        MilesHistory milesHistory = new MilesHistory();
+        BigDecimal amountInReais =
+        BigDecimal.valueOf(requestDTO.getQuantity())
+                .multiply(BigDecimal.valueOf(5));
+
+        milesHistory.setAmountInReais(amountInReais);
+        milesHistory.setCustomer(customer);
+        milesHistory.setDate(LocalDateTime.now());
+        milesHistory.setDescription("COMPRA DE MILHAS");
+        milesHistory.setMilesQuantity(requestDTO.getQuantity());
+        milesHistory.setReserveCode("");
+        milesHistory.setType("ENTRADA");
+
+        milesHistoryRepository.save(milesHistory);
+
         UpdateMilesResponseDTO response = new UpdateMilesResponseDTO();
-        response.setCodigo(customer.getCodigo());
-        response.setSaldoMilhas(customer.getSaldoMilhas());
+        response.setCode(customer.getCode());
+        response.setMilesBalance(customer.getMilesBalance());
         return response;
     }
 
     private CustomerResponseDTO convertToCustomerResponseDTO(Customer customer) {
         CustomerResponseDTO dto = new CustomerResponseDTO();
-        dto.setCodigo(customer.getCodigo());
+        dto.setCode(customer.getCode());
         dto.setCpf(customer.getCpf());
         dto.setEmail(customer.getEmail());
-        dto.setNome(customer.getNome());
-        dto.setSaldoMilhas(customer.getSaldoMilhas());
+        dto.setName(customer.getName());
+        dto.setMilesBalance(customer.getMilesBalance());
         
-        if (customer.getEndereco() != null) {
+        if (customer.getAddress() != null) {
             AddressDTO address = new AddressDTO();
-            address.setCep(customer.getEndereco().getCep());
-            address.setUf(customer.getEndereco().getUf());
-            address.setCidade(customer.getEndereco().getCidade());
-            address.setBairro(customer.getEndereco().getBairro());
-            address.setRua(customer.getEndereco().getRua());
-            address.setNumero(customer.getEndereco().getNumero());
-            address.setComplemento(customer.getEndereco().getComplemento());
-            dto.setEndereco(address);
+            address.setCep(customer.getAddress().getCep());
+            address.setUf(customer.getAddress().getUf());
+            address.setCity(customer.getAddress().getCity());
+            address.setDistrict(customer.getAddress().getDistrict());
+            address.setStreet(customer.getAddress().getStreet());
+            address.setNumber(customer.getAddress().getNumber());
+            address.setComplement(customer.getAddress().getComplement());
+            dto.setAddress(address);
         }
 
         return dto;
     }
 
+    @Transactional
     public DebitSeatResponseDTO debitSeat(DebitSeatRequestDTO debitSeat) {
         Optional<Customer> customerOptional = customerRepository.findById(debitSeat.getCustomerCode());
 
@@ -154,26 +173,26 @@ public class CustomerService {
 
         Customer customer = customerOptional.get();
 
-        if (customer.getSaldoMilhas() < debitSeat.getMilesUsed()) {
+        if (customer.getMilesBalance() < debitSeat.getMilesUsed()) {
             throw new BusinessException("INSUFFICIENT_MILES", "Saldo de milhas insuficiente.", HttpStatus.BAD_REQUEST.value());
         }
 
-        customer.setSaldoMilhas(customer.getSaldoMilhas() - debitSeat.getMilesUsed());
+        customer.setMilesBalance(customer.getMilesBalance() - debitSeat.getMilesUsed());
 
         MilesHistory transaction = new MilesHistory();
-        transaction.setData(LocalDateTime.now());
-        transaction.setValorReais(debitSeat.getValue());
-        transaction.setCodigoReserva(debitSeat.getReserveCode());
-        transaction.setQuantidadeMilhas(debitSeat.getMilesUsed());
-        transaction.setDescricao(debitSeat.getOriginAirportCode() + "->" + debitSeat.getDestinyAirportCode() + " - " + debitSeat.getSeatsQuantity() + " poltronas");
-        transaction.setCodigoReserva(debitSeat.getCustomerCode().toString());
-        transaction.setTipo("SAIDA");
+        transaction.setCustomer(customer);
+        transaction.setDate(LocalDateTime.now());
+        transaction.setAmountInReais(debitSeat.getValue());
+        transaction.setReserveCode(debitSeat.getReserveCode());
+        transaction.setMilesQuantity(debitSeat.getMilesUsed());
+        transaction.setDescription(debitSeat.getOriginAirportCode() + "->" + debitSeat.getDestinyAirportCode() + " - " + debitSeat.getSeatsQuantity() + " poltronas");
+        transaction.setType("SAIDA");
 
-        customerRepository.save(customer);
         milesHistoryRepository.save(transaction);
+        customerRepository.save(customer);
 
         DebitSeatResponseDTO debitResponse = new DebitSeatResponseDTO(
-                customer.getCodigo(),
+                customer.getCode(),
                 debitSeat.getReserveCode(),
                 debitSeat.getMilesUsed(),
                 debitSeat.getValue(),
@@ -185,8 +204,34 @@ public class CustomerService {
         return debitResponse;
     }
 
+
     public void deleteById(Long id) {
         customerRepository.deleteById(id);
+    }
+
+    public RefundMilesRequestDTO refundMiles(RefundMilesRequestDTO dto) {
+        Optional<Customer> customerOptional = customerRepository.findById(dto.getCustomerCode());
+
+        if (customerOptional.isEmpty()) {
+            throw new BusinessException("CUSTOMER_NOT_FOUND", "Cliente não encontrado.", HttpStatus.NOT_FOUND.value());
+        }
+
+        Customer customer = customerOptional.get();
+        customer.setMilesBalance(customer.getMilesBalance() + dto.getAmount());
+
+        MilesHistory transaction = new MilesHistory();
+        transaction.setCustomer(customer);
+        transaction.setDate(LocalDateTime.now());
+        transaction.setAmountInReais(BigDecimal.ZERO);
+        transaction.setReserveCode(dto.getReserverCode());
+        transaction.setMilesQuantity(dto.getAmount());
+        transaction.setDescription(dto.getResonRefund());
+        transaction.setType("ENTRADA");
+
+        milesHistoryRepository.save(transaction);
+        customerRepository.save(customer);
+
+        return dto;
     }
 
 }

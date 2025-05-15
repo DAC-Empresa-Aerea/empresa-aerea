@@ -1,5 +1,7 @@
 package com.ms.reserve.consumer;
 
+import java.util.List;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -8,6 +10,7 @@ import com.ms.reserve.config.RabbitMQConfig;
 import com.ms.reserve.dto.error.SagaResponse;
 import com.ms.reserve.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.reserve.dto.status.FlightStatusDTO;
 import com.ms.reserve.exception.BusinessException;
 import com.ms.reserve.service.ReserveService;
 
@@ -36,6 +39,18 @@ public class ReserveConsumer {
             throw new RuntimeException(e.getMessage(), e);
         } catch (Exception e) {
             throw new RuntimeException("ROLLBACK_REGISTER_RESERVE_ERROR", e);
+        }
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.RESERVE_STATUS_UPDATE_QUEUE)
+    public SagaResponse<List<RegisterReserveResponseDTO>> updateStatus(FlightStatusDTO dto) {
+        try {
+            return SagaResponse.success(reserveService.updateStatusReserveWithFlightCode(dto));
+        }
+        catch (BusinessException e) {
+            return SagaResponse.error(e.getMessage(), e.getCode(), e.getStatus());
+        } catch (Exception e) {
+            return SagaResponse.error("UPDATE_RESERVE_ERROR", e.getMessage(), 500);
         }
     }
     

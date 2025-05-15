@@ -10,6 +10,7 @@ import com.ms.saga.dto.customer.CustomerRequestDTO;
 import com.ms.saga.dto.customer.CustomerResponseDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatRequestDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatResponseDTO;
+import com.ms.saga.dto.customer.refundMiles.RefundMilesRequestDTO;
 import com.ms.saga.dto.error.SagaResponse;
 
 @Component
@@ -47,6 +48,14 @@ public class CustomerProducer {
 
     public void sendRollbackSeatDebit() {
         
+    }
+
+    public void sendRefoudSeat(RefundMilesRequestDTO dto) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConfig.REFUND_MILES_EXCHANGE,
+            RabbitMQConfig.REFUND_MILES_ROUTING_KEY,
+            dto
+        );
     }
 
 }

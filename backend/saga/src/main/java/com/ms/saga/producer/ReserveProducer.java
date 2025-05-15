@@ -1,5 +1,7 @@
 package com.ms.saga.producer;
 
+import java.util.List;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -34,13 +36,14 @@ public class ReserveProducer {
         );
     }
 
-    //Isso sera para atualizar caso o voo tenha mudado estado
-    public void updateStatusReserve(FlightStatusDTO dto) {
-        rabbitTemplate.convertAndSend(
-            RabbitMQConfig.UPDATE_RESERVE_EXCHANGE,
-            RabbitMQConfig.UPDATE_RESERVE_ROUTING_KEY,
-            dto
-        );
+    public SagaResponse<List<RegisterReserveResponseDTO>> updateStatusReserve(FlightStatusDTO dto) {
+        return rabbitTemplate
+            .convertSendAndReceiveAsType(
+                RabbitMQConfig.RESERVE_STATUS_UPDATE_EXCHAGE,
+                RabbitMQConfig.RESERVE_STATUS_UPDATE_ROUTING_KEY,
+                dto,
+                new ParameterizedTypeReference<SagaResponse<List<RegisterReserveResponseDTO>>>() {}
+            );
     }
 
 }

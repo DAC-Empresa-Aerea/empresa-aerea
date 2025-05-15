@@ -10,6 +10,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
 @Builder
 @NoArgsConstructor
@@ -33,4 +34,5 @@ public class Employee {
 
     @Column(name = "telefone", nullable = true)
     private String phoneNumber;
+    
 }

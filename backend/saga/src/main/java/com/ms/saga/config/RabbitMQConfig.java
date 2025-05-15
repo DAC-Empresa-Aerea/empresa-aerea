@@ -13,8 +13,8 @@ public class RabbitMQConfig {
     public static final String CREATE_CUSTOMER_EXCHANGE = "create.customer.exchange";
     public static final String CREATE_CUSTOMER_ROUTING_KEY = "create.customer.routing.key";
 
-    public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
-    public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.customer.routing.key";
+    public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.create.customer.exchange";
+    public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.create.customer.routing.key";
 
     public static final String RESERVE_SEAT_EXCHANGE = "reserve.seat.exchange";
     public static final String RESERVE_SEAT_ROUTING_KEY = "reserve.seat.routing.key";
@@ -27,6 +27,12 @@ public class RabbitMQConfig {
 
     public static final String UPDATE_RESERVE_EXCHANGE = "update.reserve.exchange";
     public static final String UPDATE_RESERVE_ROUTING_KEY = "update.reserve.routing.key";
+
+    public static final String RESERVE_STATUS_UPDATE_EXCHAGE = "reserve.status.update.exchange";
+    public static final String RESERVE_STATUS_UPDATE_ROUTING_KEY = "reserve.status.update.routing.key";
+
+    public static final String ROLLBACK_UPDATE_FLIGHT_EXCHANGE = "rollback.update.flight.exchange";
+    public static final String ROLLBACK_UPDATE_FLIGHT_ROUTING_KEY= "rollback.update.flight.routing.key";
 
     public static final String REGISTER_RESERVE_EXCHANGE = "register.reserve.exchange";
     public static final String REGISTER_RESERVE_ROUTING_KEY = "register.reserve.routing.key";
@@ -45,6 +51,9 @@ public class RabbitMQConfig {
 
     public static final String ROLLBACK_CREATE_EMPLOYEE_EXCHANGE = "rollback.create.employee.exchange";
     public static final String ROLLBACK_CREATE_EMPLOYEE_ROUTING_KEY = "rollback.create.employee.routing.key";
+
+    public static final String REFUND_MILES_EXCHANGE = "refund.miles.exchange";
+    public static final String REFUND_MILES_ROUTING_KEY = "refund.miles.routing.key";
 
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
