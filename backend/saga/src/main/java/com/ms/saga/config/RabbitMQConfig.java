@@ -58,6 +58,9 @@ public class RabbitMQConfig {
     public static final String DELETE_EMPLOYEE_EXCHANGE = "delete.employee.exchange";
     public static final String DELETE_EMPLOYEE_ROUTING_KEY = "delete.employee.routing.key";
 
+    public static final String DELETE_AUTH_EXCHANGE = "delete.auth.exchange";
+    public static final String DELETE_AUTH_ROUTING_KEY = "delete.auth.routing.key";
+
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();

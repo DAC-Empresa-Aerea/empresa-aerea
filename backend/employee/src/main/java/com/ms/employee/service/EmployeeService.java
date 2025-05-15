@@ -103,19 +103,6 @@ public class EmployeeService {
         return dto;
     }
 
-    /**
-     * Deleta um funcionário existente com base no ID fornecido.
-     *
-     * @param id O ID do funcionário a ser deletado.
-     * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
-     */
-    @Deprecated
-    public void deleteEmployee(Long id) {
-        Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
-        employeeRepository.delete(existingEmployee);
-    }
-
     public void deleteById(Long id) {
         employeeRepository.deleteById(id);
     }

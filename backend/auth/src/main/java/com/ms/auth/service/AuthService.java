@@ -13,6 +13,7 @@ import com.ms.auth.dto.LoginAuthResponseDTO;
 import com.ms.auth.dto.LogoutAuthDTO;
 import com.ms.auth.dto.create.CreateAuthRequestDTO;
 import com.ms.auth.dto.create.CreateAuthResponseDTO;
+import com.ms.auth.dto.delete.DeleteAuthRequestDTO;
 import com.ms.auth.dto.update.UpdateAuthDTO;
 import com.ms.auth.exception.BusinessException;
 import com.ms.auth.factory.RoleFactory;
@@ -113,6 +114,12 @@ public class AuthService {
         response.setUser(null);
 
         return response;
+    }
+
+    public void deleteAuth(DeleteAuthRequestDTO dto) {
+        Auth auth = authRepository.findByLoginAndRole(dto.getEmail(), dto.getRole());
+
+        authRepository.delete(auth);
     }
 
     public void logout(LogoutAuthDTO dto) {

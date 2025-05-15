@@ -8,6 +8,7 @@ import org.springframework.stereotype.Component;
 import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.auth.create.CreateAuthRequestDTO;
 import com.ms.saga.dto.auth.create.CreateAuthResponseDTO;
+import com.ms.saga.dto.auth.delete.DeleteAuthRequestDTO;
 import com.ms.saga.dto.auth.update.UpdateAuthDTO;
 import com.ms.saga.dto.error.SagaResponse;
 
@@ -32,6 +33,14 @@ public class AuthProducer {
             RabbitMQConfig.UPDATE_AUTH_ROUTING_KEY,
             dto,
             new ParameterizedTypeReference<SagaResponse<UpdateAuthDTO>>() {}
+        );
+    }
+
+    public void sendDeleteAuth(DeleteAuthRequestDTO dto) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConfig.DELETE_AUTH_EXCHANGE,
+            RabbitMQConfig.DELETE_AUTH_ROUTING_KEY,
+            dto
         );
     }
 

@@ -7,6 +7,7 @@ import org.springframework.stereotype.Component;
 import com.ms.saga.dto.Roles;
 import com.ms.saga.dto.auth.create.CreateAuthRequestDTO;
 import com.ms.saga.dto.auth.create.CreateAuthResponseDTO;
+import com.ms.saga.dto.auth.delete.DeleteAuthRequestDTO;
 import com.ms.saga.dto.auth.update.UpdateAuthDTO;
 import com.ms.saga.dto.employee.EmployeeRequestDTO;
 import com.ms.saga.dto.employee.EmployeeResponseDTO;
@@ -77,10 +78,16 @@ public class EmployeeOrchestrator {
     
     public EmployeeResponseDTO processDeleteEmployee(Long employeeId) {
         SagaResponse<EmployeeResponseDTO> employeeResponse = employeeProducer.sendDeleteEmployee(employeeId);
+
         if (!employeeResponse.isSuccess()) {
             ErrorDTO error = employeeResponse.getError();
             throw new BusinessException(error);
         }
+
+        authProducer.sendDeleteAuth(
+            new DeleteAuthRequestDTO(employeeResponse.getData().getEmail(), Roles.EMPLOYEE)
+        );
+
         return employeeResponse.getData();
     }
 }

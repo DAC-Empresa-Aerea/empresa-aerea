@@ -4,9 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -24,12 +22,6 @@ public class EmployeeController {
     public ResponseEntity<List<EmployeeResponseDTO>> getAllEmployees() {
 
         return ResponseEntity.ok(employeeService.getAllActiveEmployees());
-    }
-
-    @DeleteMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDTO> deactivateEmployee(@PathVariable Long id) {
-        EmployeeResponseDTO responseDTO = employeeService.deactivateEmployee(id);
-        return ResponseEntity.ok(responseDTO);
     }
 
 }
