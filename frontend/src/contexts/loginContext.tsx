@@ -1,4 +1,10 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
+import React, {
+  createContext,
+  useContext,
+  useState,
+  ReactNode,
+  useEffect,
+} from "react";
 import { loginService } from "../services/loginService";
 import Customer from "../types/Customer";
 import Employee from "../types/Employee";
@@ -11,7 +17,15 @@ interface AuthContextType {
   setUser: (user: User | null) => void;
   userType: string | null;
   loading: boolean;
-  login: (credentials: { login: string; senha: string }) => Promise<any>;
+  login: (credentials: {
+    login: string;
+    senha: string;
+  }) => Promise<{
+    tipo: string;
+    usuario: User;
+    access_token: string;
+    token_type: "bearer";
+  }>;
   logout: () => void;
 }
 
@@ -59,6 +73,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
       localStorage.setItem("user", JSON.stringify(response.usuario));
       localStorage.setItem("userType", response.tipo);
+      if (response.access_token) {
+        localStorage.setItem("access_token", response.access_token);
+      }
 
       setLoading(false);
       return response;
@@ -79,7 +96,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, setUser, userType, loading, login, logout }}
+      value={{
+        isAuthenticated,
+        user,
+        setUser,
+        userType,
+        loading,
+        login,
+        logout,
+      }}
     >
       {children}
     </AuthContext.Provider>

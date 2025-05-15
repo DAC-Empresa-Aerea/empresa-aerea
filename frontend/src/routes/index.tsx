@@ -9,7 +9,7 @@ import CustomerRoutes from "./CustomerRoutes";
 import EmployeeRoutes from "./EmployeeRoutes";
 
 //Para layouts
-const EmployeeLayout = Loadable(lazy(() => import("../layouts/Dashboard")));
+const PublicLayout = Loadable(lazy(() => import("../layouts/Public")));
 
 //Para pages
 const Teste = Loadable(lazy(() => import("../pages/LandingPage")));
@@ -17,6 +17,7 @@ const Teste = Loadable(lazy(() => import("../pages/LandingPage")));
 const router = createBrowserRouter([
   {
     path: Routes.HOME,
+    element: <PublicLayout />, // Envolve LandingPage com layout público
     children: [
       {
         index: true,
