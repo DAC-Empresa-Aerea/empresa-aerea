@@ -18,29 +18,24 @@ public class Customer {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long codigo;
+    private Long code;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "cpf", nullable = false, unique = true)
     private String cpf;
 
-    @Column(nullable = false, unique = true)
+    @Column(name = "email", nullable = false, unique = true)
     private String email;
 
-    @Column(nullable = false, length = 11)
-    private String nome;
+    @Column(nullable = false)
+    private String name;
 
     @Column(name = "saldo_milhas", nullable = false)
     @Min(value = 0, message = "O saldo de milhas não pode ser menor que zero")
-    private Integer saldoMilhas;
+    private Integer milesBalance;
 
     @Embedded
     @NotNull(message = "Endereço é obrigatório")
     @Valid
-    private Address endereco;
-
-    public Customer orElseThrow(Object object) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'orElseThrow'");
-    }
+    private Address address;
 
 }

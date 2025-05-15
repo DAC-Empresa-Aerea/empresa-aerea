@@ -7,11 +7,10 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
 @Data
-@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
@@ -33,4 +32,8 @@ public class Employee {
 
     @Column(name = "telefone", nullable = true)
     private String phoneNumber;
+    
+    @Column(name = "ativo", nullable = false)
+    private boolean active = true;
+    
 }

@@ -10,6 +10,6 @@ import com.ms.customer.model.MilesHistory;
 
 public interface MilesHistoryRepository extends JpaRepository<MilesHistory, LocalDateTime> {
     List<MilesHistory> findByCustomer(Customer customer);
-    List<MilesHistory> findByCustomerAndDataBetween(Customer customer, LocalDateTime startDate, LocalDateTime endDate);
+    List<MilesHistory> findByCustomerAndDateBetween(Customer customer, LocalDateTime startDate, LocalDateTime endDate);
     List<MilesHistory> findByCustomerAndType(Customer cliente, String tipo);
 }

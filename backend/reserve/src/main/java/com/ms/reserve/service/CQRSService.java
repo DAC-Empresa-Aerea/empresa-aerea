@@ -42,7 +42,8 @@ public class CQRSService {
         reserveQuery.setMilesUsed(reserveRequest.getMilesUsed());
         reserveQuery.setStatusCode(reserveRequest.getStatus());
         reserveQuery.setStatusDescription(StatusEnum.fromCode(reserveRequest.getStatus()).getDescription());
-        reserveQuery.setStatusAbbreviation(StatusEnum.fromCode(reserveRequest.getStatus()).getAbbreviation());                
+        reserveQuery.setStatusAbbreviation(StatusEnum.fromCode(reserveRequest.getStatus()).getAbbreviation());
+        reserveQuery.setSeatsQuantity(reserveRequest.getSeatsQuantity());                
 
         reserveQueryRepository.save(reserveQuery);
     }

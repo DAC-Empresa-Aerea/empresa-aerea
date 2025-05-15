@@ -32,7 +32,7 @@ public class ReserveFlightResponseDTO {
 	private Integer seatsQuantity;
 
 	@JsonProperty("codigo_cliente")
-	private String clientCode;
+	private Long customerCode;
 
 	@JsonProperty("estado")
 	private String status;
@@ -41,7 +41,7 @@ public class ReserveFlightResponseDTO {
 	private String flightCode;
 
 	@JsonProperty("codigo_aeroporto_origem")
-	private String airportOriginCode;
+	private String originAirportCode;
 
 	@JsonProperty("codigo_aeroporto_destino")
 	private String destinyAirportCode;

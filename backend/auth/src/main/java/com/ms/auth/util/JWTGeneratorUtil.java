@@ -1,6 +1,7 @@
 package com.ms.auth.util;
 
 import java.util.Date;
+import java.util.UUID;
 
 import org.springframework.stereotype.Component;
 
@@ -20,10 +21,12 @@ public class JWTGeneratorUtil {
     }
 
     public String generateToken(String subject, String role) {
+        String jti = UUID.randomUUID().toString();
         Date now = new Date();
         Date exp = new Date(now.getTime() + jwtProperties.getExpiration());
 
         return Jwts.builder()
+            .setId(jti)
             .setSubject(subject)
             .claim("role", role)
             .setIssuedAt(now)
