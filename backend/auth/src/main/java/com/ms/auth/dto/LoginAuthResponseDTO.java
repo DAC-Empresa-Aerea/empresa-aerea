@@ -20,8 +20,9 @@ public class LoginAuthResponseDTO {
     private String tokenType;
 
     @JsonProperty("tipo")
-    private String tipo;
+    private String role;
 
     @JsonProperty("usuario")
-    private Object usuario;
+    private Object user;
+    
 }

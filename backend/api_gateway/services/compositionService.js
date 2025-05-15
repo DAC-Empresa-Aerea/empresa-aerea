@@ -1,38 +1,92 @@
 const axios = require('../utils/axiosInstance');
-const { RESERVATION, FLIGHT, AUTH, CUSTOMER } = require('../config/services');
+const createError = require('http-errors');
+const { RESERVATION, FLIGHT, AUTH, CUSTOMER, EMPLOYEE } = require('../config/services');
+
+//-----------------------Customer-----------------------//
 
 exports.listCustomerReservations = async customerId => {
-  // 1) pega as reservas
-  const { data: reservas } = await axios.get(
-    `${RESERVATION}/reservas?clienteId=${customerId}`
-  );
+  try {
+    const { data: reservas } = await axios.get(
+      `${RESERVATION}/reservas?clienteId=${customerId}`
+    );
 
-  // 2) busca todos os voos em paralelo
-  const withFlights = await Promise.all(
-    reservas.map(async r => {
-      const { data: voo } = await axios.get(
-        `${FLIGHT}/voos/${r.voo.codigo}`
-      );
-      return { ...r, voo };
-    })
-  );
-  return withFlights;
+    const withFlights = await Promise.all(
+      reservas.map(async r => {
+        const { data: voo } = await axios.get(
+          `${FLIGHT}/voos/${r.codigo_voo}`
+        );
+        console.log(voo);
+        return { ...r, voo };
+      })
+    );
+    
+    return withFlights;
+  }
+  catch (err) {
+    if (err.response) {
+      const { status, data } = err.response;
+      throw createError(status, data.message || 'Erro ao buscar reservas do cliente');
+    }
+
+    throw createError(500, 'Erro interno ao buscar reservas do cliente');
+  }
 };
+
+exports.getCustomerMilesWithTransitions = async customerId => {
+  try {
+    const { data: milhas } = await axios.get(`${CUSTOMER}/clientes/${customerId}/milhas`);
+    const { data: transacoes } = await axios.get(`${CUSTOMER}/clientes/${customerId}/transacoes`);
+
+    return { cliente, milhas, transacoes };
+  }
+  catch (err) {
+    if (err.response) {
+      const { status, data } = err.response;
+      throw createError(status, data.message || 'Erro ao buscar milhas do cliente');
+    }
+
+    throw createError(500, 'Erro interno ao buscar milhas do cliente');
+  }
+}
+
+//-----------------------Reserve-----------------------//
 
 exports.getReservationWithFlight = async codigo => {
   const { data: reserva } = await axios.get(`${RESERVATION}/reservas/${codigo}`);
-  const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.voo_codigo}`);
+  console.log(reserva);
+  const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.codigo_voo}`);
   reserva.voo = voo;
-  delete reserva.voo_codigo;
+  delete reserva.codigo_voo;
   return reserva;
 };
 
-exports.getLoginWithCustomer = async (email, password) => {
-  const { data: login } = await axios.post(`${AUTH}/login`, {
-    login: email,
-    senha: password,
-  });
-  const { data: customer } = await axios.get(`${CUSTOMER}/clientes/email/${email}`);
-  login.usuario = customer;
-  return login;
+
+//-----------------------Auth-----------------------//
+
+exports.getLoginWithUser = async (email, password) => {
+  try {
+    const { data: login } = await axios.post(`${AUTH}/login`, {
+      login: email,
+      senha: password,
+    });
+
+    if(login.tipo === "CLIENTE") {
+      const { data: customer } = await axios.get(`${CUSTOMER}/clientes/email/${email}`);
+      login.usuario = customer;
+    }
+    else if(login.tipo === "FUNCIONARIO") {
+      const { data: funcionario } = await axios.get(`${EMPLOYEE}/funcionarios/email/${email}`);
+      login.usuario = funcionario;
+    }
+
+    return login;
+  }
+  catch (err) {
+    if (err.response) {
+      const { status, data } = err.response;
+      throw createError(status, data.message || 'Unauthorized');
+    }
+
+    throw createError(500, 'Erro interno ao autenticar');
+  }
 }

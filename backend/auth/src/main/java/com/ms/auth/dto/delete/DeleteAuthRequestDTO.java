@@ -1,4 +1,4 @@
-package com.ms.auth.dto;
+package com.ms.auth.dto.delete;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,6 +9,8 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class CreateAuthResponseDTO {
-    boolean success;
+public class DeleteAuthRequestDTO {
+    private String email;
+    private String role;
 }
+
