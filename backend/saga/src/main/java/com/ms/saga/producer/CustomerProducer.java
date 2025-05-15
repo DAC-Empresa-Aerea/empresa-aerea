@@ -1,7 +1,5 @@
 package com.ms.saga.producer;
 
-import java.math.BigDecimal;
-
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;

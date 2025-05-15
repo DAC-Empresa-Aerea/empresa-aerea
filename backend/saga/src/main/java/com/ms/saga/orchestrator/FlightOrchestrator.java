@@ -49,6 +49,9 @@ public class FlightOrchestrator {
             throw new BusinessException(flightResp.getError());
         }
 
+        //Salva o StatusCode caso precise fazer rollback
+        FlightStatusDTO statusRollback = new FlightStatusDTO(id, dto.getEstado());
+
         switch (status.getStatusCode()) {
             case "CANCELADO":
                 status.setStatusCode("CANCELADA_VOO");
@@ -66,7 +69,7 @@ public class FlightOrchestrator {
             reserveProducer.updateStatusReserve(status);
         
         if(reserveResp != null && !reserveResp.isSuccess()) {
-            flightProducer.rollbackFlightStatus(status);
+            flightProducer.rollbackFlightStatus(statusRollback);  
             throw new BusinessException(reserveResp.getError());
         }
 
@@ -87,7 +90,7 @@ public class FlightOrchestrator {
             }
         }
 
-        
+
 
         return flightResp.getData();
     }
