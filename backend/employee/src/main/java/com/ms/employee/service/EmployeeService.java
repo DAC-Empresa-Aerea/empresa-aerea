@@ -2,6 +2,7 @@ package com.ms.employee.service;
 
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 import jakarta.validation.Validator;
 
@@ -12,11 +13,12 @@ import org.springframework.beans.BeanUtils;
 
 import com.ms.employee.dto.employee.EmployeeRequestDTO;
 import com.ms.employee.dto.employee.EmployeeResponseDTO;
+import com.ms.employee.dto.employee.update.UpdateEmployeeRequestDTO;
+import com.ms.employee.dto.employee.update.UpdateEmployeeResponseDTO;
 import com.ms.employee.exception.BusinessException;
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
@@ -29,15 +31,6 @@ public class EmployeeService {
     @Autowired
     private Validator validator;
 
-    //#region Método para criar um funcionário
-    /**
-     * Cria um novo funcionário e o salva no repositório.
-     *
-     * @param employee O objeto EmployeeRequestDTO contendo os detalhes do funcionário a ser criado.
-     *                 Deve incluir valores não nulos e não vazios para CPF, email, nome e telefone.
-     * @return O objeto EmployeeResponseDTO representando o funcionário recém-criado após ser salvo no repositório.
-     * @throws IllegalArgumentException se qualquer campo obrigatório (CPF, email, nome ou telefone) for nulo ou vazio.
-     */
     public EmployeeResponseDTO create(EmployeeRequestDTO employee) {
         Set<ConstraintViolation<EmployeeRequestDTO>> violations = validator.validate(employee);
 
@@ -55,6 +48,7 @@ public class EmployeeService {
 
         Employee employeeEntity = new Employee();
         BeanUtils.copyProperties(employee, employeeEntity);
+        employeeEntity.setActive(true);
 
         Employee savedEmployee = employeeRepository.save(employeeEntity);
 
@@ -63,105 +57,77 @@ public class EmployeeService {
 
         return employeeCreated;
     }
-    //#endregion
-
-
-    //#region Método para recuperar todos os funcionários
-    /**
-     * Recupera todos os funcionários do repositório.
-     *
-     * @return Uma lista contendo todos os funcionários.
-     */
-    public List<Employee> getAllEmployees() {
-        return employeeRepository.findAll();
-    }
-    //#endregion
-
-    //#region Método para recuperar um funcionário por ID
-    /**
-     * Recupera um funcionário específico do repositório com base no ID fornecido.
-     *
-     * @param id O ID do funcionário a ser recuperado.
-     * @return O objeto Employee correspondente ao ID fornecido, ou null se não encontrado.
-     */
-    public EmployeeResponseDTO findById(Long id) {
-        Employee employee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
-        return convertToEmployeeResponseDTO(employee);
+    
+    public List<EmployeeResponseDTO> getAllActiveEmployees() {
+        return employeeRepository.findAll().stream()
+        .filter(employee -> employee.isActive())
+        .map(employee -> {
+            EmployeeResponseDTO dto = new EmployeeResponseDTO();
+            BeanUtils.copyProperties(employee, dto);
+            return dto;
+        })
+        .collect(Collectors.toList());
     }
 
-    //#endregion
-  
-    
-    
-    //#region Método para atualizar um funcionário
-    /**
-     * Atualiza os detalhes de um funcionário existente com base no ID fornecido.
-     *
-     * @param id       O ID do funcionário a ser atualizado.
-     * @param employee O objeto Employee contendo os novos detalhes a serem atualizados.
-     * @return O objeto Employee atualizado após ser salvo no repositório.
-     * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
-     */
-    public EmployeeResponseDTO updateEmployee(Long id, EmployeeRequestDTO employee) {
+    public UpdateEmployeeResponseDTO updateEmployee(Long id, UpdateEmployeeRequestDTO employee) {
         Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
+                .orElseThrow(() -> new BusinessException("EMPLOYEE_NOT_FOUND", "Funcionário não encontrado.", HttpStatus.NOT_FOUND.value()));
 
-        existingEmployee.setCpf(employee.getCpf());
+        if(!existingEmployee.isActive()) {
+            throw new BusinessException("EMPLOYEE_NOT_ACTIVE", "Funcionário não está ativo.", HttpStatus.BAD_REQUEST.value());
+        }    
+        
+        String oldEmail = existingEmployee.getEmail();
+
         existingEmployee.setEmail(employee.getEmail());
         existingEmployee.setName(employee.getName());
         existingEmployee.setPhoneNumber(employee.getPhoneNumber());
 
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
 
-        return convertToEmployeeResponseDTO(updatedEmployee);
-    }
-    //#endregion
-   
-    //#region Método para deletar um funcionário
-    /**
-     * Deleta um funcionário existente com base no ID fornecido.
-     *
-     * @param id O ID do funcionário a ser deletado.
-     * @throws IllegalArgumentException se o funcionário não for encontrado com o ID fornecido.
-     */
-    public void deleteEmployee(Long id) {
-        Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
-        employeeRepository.delete(existingEmployee);
-    }
-    //#endregion
+        UpdateEmployeeResponseDTO updateEmployeeResponseDTO = new UpdateEmployeeResponseDTO();
+        updateEmployeeResponseDTO.setId(updatedEmployee.getId());
+        updateEmployeeResponseDTO.setCpf(updatedEmployee.getCpf());
+        updateEmployeeResponseDTO.setEmail(updatedEmployee.getEmail());
+        updateEmployeeResponseDTO.setName(updatedEmployee.getName());
+        updateEmployeeResponseDTO.setPhoneNumber(updatedEmployee.getPhoneNumber());
+        updateEmployeeResponseDTO.setOldEmail(oldEmail);
 
-    private EmployeeResponseDTO convertToEmployeeResponseDTO(Employee employee) {
+        return updateEmployeeResponseDTO;
+    }
+    
+    public EmployeeResponseDTO deactivateEmployee(Long id) {
+        Employee existingEmployee = employeeRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("EMPLOYEE_NOT_FOUND", "Funcionário não encontrado.", HttpStatus.NOT_FOUND.value()));
+
+        if (!existingEmployee.isActive()) {
+            throw new BusinessException("EMPLOYEE_ALREADY_DEACTIVATED", "Funcionário já está desativado.", HttpStatus.BAD_REQUEST.value());
+        }
+
+        
+        Long activeEmployeesCount = employeeRepository.countByActiveTrue();
+        if (activeEmployeesCount <= 1) {
+            throw new BusinessException("LAST_ACTIVE_EMPLOYEE", "Não é possível desativar o último funcionário ativo.", HttpStatus.BAD_REQUEST.value());
+        }
+
+        existingEmployee.setActive(false);
+        Employee updatedEmployee = employeeRepository.save(existingEmployee);
         EmployeeResponseDTO dto = new EmployeeResponseDTO();
-        dto.setId(employee.getId());
-        dto.setCpf(employee.getCpf());
-        dto.setEmail(employee.getEmail());
-        dto.setName(employee.getName());
-        dto.setPhoneNumber(employee.getPhoneNumber());
+        BeanUtils.copyProperties(updatedEmployee, dto);
         return dto;
+    }
+
+    // Usado para rollback de criação (não excluir)
+    public void deleteById(Long id) {
+        employeeRepository.deleteById(id);
     }
 
     public EmployeeResponseDTO findByEmail(String email) {
         Employee employee = employeeRepository.findByEmail(email);
 
-        if (employee == null) {
-            throw new EntityNotFoundException("Funcionário com email " + email + " não encontrado.");
-        }
-
-        return convertToEmployeeResponseDTO(employee);
-    }
-
-    public void deleteById(Long id) {
-        employeeRepository.deleteById(id);
-    }
-
-    public boolean emailExists(String email) {
-        return employeeRepository.existsByEmail(email);
-    }
-
-    public boolean cpfExists(String cpf) {
-        return employeeRepository.existsByCpf(cpf);
+        EmployeeResponseDTO dto = new EmployeeResponseDTO();
+        BeanUtils.copyProperties(employee, dto);
+        return dto;
     }
 
 }

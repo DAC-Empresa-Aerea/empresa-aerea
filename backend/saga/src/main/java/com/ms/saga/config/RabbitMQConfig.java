@@ -10,6 +10,9 @@ public class RabbitMQConfig {
     public static final String CREATE_AUTH_EXCHANGE = "create.auth.exchange";
     public static final String CREATE_AUTH_ROUTING_KEY = "create.auth.routing.key";
 
+    public static final String UPDATE_AUTH_EXCHANGE = "update.auth.exchange";
+    public static final String UPDATE_AUTH_ROUTING_KEY = "update.auth.routing.key";
+
     public static final String CREATE_CUSTOMER_EXCHANGE = "create.customer.exchange";
     public static final String CREATE_CUSTOMER_ROUTING_KEY = "create.customer.routing.key";
 
@@ -52,6 +55,15 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_CREATE_EMPLOYEE_EXCHANGE = "rollback.create.employee.exchange";
     public static final String ROLLBACK_CREATE_EMPLOYEE_ROUTING_KEY = "rollback.create.employee.routing.key";
 
+    public static final String UPDATE_EMPLOYEE_EXCHANGE = "update.employee.exchange";
+    public static final String UPDATE_EMPLOYEE_ROUTING_KEY = "update.employee.routing.key";
+
+    public static final String DELETE_EMPLOYEE_EXCHANGE = "delete.employee.exchange";
+    public static final String DELETE_EMPLOYEE_ROUTING_KEY = "delete.employee.routing.key";
+
+    public static final String DELETE_AUTH_EXCHANGE = "delete.auth.exchange";
+    public static final String DELETE_AUTH_ROUTING_KEY = "delete.auth.routing.key";
+  
     public static final String REFUND_MILES_EXCHANGE = "refund.miles.exchange";
     public static final String REFUND_MILES_ROUTING_KEY = "refund.miles.routing.key";
 
@@ -60,5 +72,5 @@ public class RabbitMQConfig {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
         return converter;
     }
-    
+
 }
