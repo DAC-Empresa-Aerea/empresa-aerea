@@ -1,5 +1,7 @@
 package com.ms.saga.orchestrator;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
@@ -8,7 +10,9 @@ import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightResponseDTO;
 import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.flight.FlightStatusRequestDTO;
+import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.saga.exception.BusinessException;
+import com.ms.saga.producer.CustomerProducer;
 import com.ms.saga.producer.FlightProducer;
 import com.ms.saga.producer.ReserveProducer;
 
@@ -20,6 +24,9 @@ public class FlightOrchestrator {
 
     @Autowired 
     private ReserveProducer reserveProducer;
+
+    @Autowired
+    private CustomerProducer customerProducer;
     
     public FlightResponseDTO processPatchStatusFlight(String id, FlightStatusRequestDTO dto) {
         if(dto.getEstado() == null) {
@@ -28,6 +35,8 @@ public class FlightOrchestrator {
         else if(!(dto.getEstado().equals("CANCELADO") || dto.getEstado().equals("REALIZADO"))) {
             throw new BusinessException("400", "O status do voo deve ser CANCELADO ou REALIZADO.", HttpStatus.BAD_REQUEST.value());
         }
+
+        // Envia o comando de atualização de status do voo
 
         FlightStatusDTO status = new FlightStatusDTO(id, dto.getEstado());
 
@@ -48,13 +57,19 @@ public class FlightOrchestrator {
                 break;
         }
 
-        SagaResponse<Void> reserveResp =
+        // Envia o status atualizado para o serviço de reserva
+
+        SagaResponse<List<RegisterReserveResponseDTO>> reserveResp =
             reserveProducer.updateStatusReserve(status);
         
         if(reserveResp != null && !reserveResp.isSuccess()) {
             flightProducer.rollbackFlightStatus(status);
             throw new BusinessException(reserveResp.getError());
         }
+
+        System.out.println("RESERVAS ATUALIZADAS: " + reserveResp.getData().size());
+
+        // Envia o comando de atualização de milhas do cliente
 
         return flightResp.getData();
     }

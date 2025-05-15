@@ -49,5 +49,15 @@ public class CustomerProducer {
         
     }
 
+
+    public SagaResponse<DebitSeatRequestDTO> sendRefoudSeat(DebitSeatRequestDTO dto) {
+        return rabbitTemplate.convertSendAndReceiveAsType(
+            RabbitMQConfig.ROLLBACK_RESERVE_SEAT_EXCHANGE,
+            RabbitMQConfig.ROLLBACK_RESERVE_SEAT_ROUTING_KEY,
+            dto,
+            new ParameterizedTypeReference<SagaResponse<DebitSeatRequestDTO>>() {}
+        );
+    }
+
 }
 

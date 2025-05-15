@@ -1,5 +1,7 @@
 package com.ms.reserve.consumer;
 
+import java.util.List;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -40,11 +42,10 @@ public class ReserveConsumer {
         }
     }
 
-    @RabbitListener(queues = RabbitMQConfig.RESERVE_STATUS_UPDATED_QUEUE)
-    public SagaResponse<String> updateStatus(FlightStatusDTO dto) {
+    @RabbitListener(queues = RabbitMQConfig.RESERVE_STATUS_UPDATE_QUEUE)
+    public SagaResponse<List<RegisterReserveResponseDTO>> updateStatus(FlightStatusDTO dto) {
         try {
-            reserveService.updateStatusReserveWithFlightCode(dto);
-            return SagaResponse.success("UPDATE_RESERVER_SUCESS");
+            return SagaResponse.success(reserveService.updateStatusReserveWithFlightCode(dto));
         }
         catch (BusinessException e) {
             return SagaResponse.error(e.getMessage(), e.getCode(), e.getStatus());

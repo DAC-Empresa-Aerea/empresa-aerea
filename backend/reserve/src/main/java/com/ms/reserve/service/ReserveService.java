@@ -1,6 +1,7 @@
 package com.ms.reserve.service;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -107,7 +108,9 @@ public class ReserveService {
         ReserveQuery reserveQuery = reserveQueryRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
 
-        StatusEnum currentStatus = StatusEnum.fromCode(reserveQuery.getCode());
+        System.out.println("Reserva encontrada: " + reserveQuery.getStatusCode());
+        StatusEnum currentStatus = StatusEnum.fromCode(reserveQuery.getStatusCode());
+        System.out.println("Status atual: " + currentStatus);
 
         if (currentStatus.equals(newStatus)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reserva já está no status " + newStatus.getCode());
@@ -136,14 +139,16 @@ public class ReserveService {
         return reserveResponseDTO;
     }
 
-    public void updateStatusReserveWithFlightCode(FlightStatusDTO dto) {
+    public List<RegisterReserveResponseDTO> updateStatusReserveWithFlightCode(FlightStatusDTO dto) {
         List<ReserveQuery> reserves = reserveQueryRepository.findByFlightCode(dto.getFlightCode());
 
         if(reserves.isEmpty()) {
-            return;
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada");
         }
 
-        if(dto.getStatusCode() == "CANCELADA_VOO") {
+        List<RegisterReserveResponseDTO> responseListDTO = new ArrayList<>();
+
+        if(dto.getStatusCode().equals("CANCELADA_VOO")) {
             String flightCanceledCode = StatusEnum.FLIGHT_CANCELED.getCode();
             ReserveStatusCommand statusCanceled = statusCommandRepository.findById(flightCanceledCode)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -162,6 +167,12 @@ public class ReserveService {
                     BeanUtils.copyProperties(rq, reserveCommand);
                     reserveCommand.setStatus(statusCanceled);
                     reserveCommandRepository.save(reserveCommand);
+
+                    RegisterReserveResponseDTO response = new RegisterReserveResponseDTO();
+                    BeanUtils.copyProperties(rq, response);
+                    response.setStatus(statusCanceled.getCode());
+                    responseListDTO.add(response);
+
                     cqrsProducer.sendStatusUpdate(rq.getCode(), statusCanceled.getCode());
                 } else if (current.equals(StatusEnum.FLIGHT_CANCELED)) {
                     continue;
@@ -172,7 +183,7 @@ public class ReserveService {
             }
         }
 
-        if(dto.getStatusCode() == "REALIZADA") {
+        if(dto.getStatusCode().equals("REALIZADA")) {
             String flightFinishedCode = StatusEnum.FINISHED.getCode();
             ReserveStatusCommand statusFinished = statusCommandRepository.findById(flightFinishedCode)
                 .orElseThrow(() -> new ResponseStatusException(
@@ -188,10 +199,24 @@ public class ReserveService {
 
                     reserveQueryRepository.save(rq);
                     ReserveCommand reserveCommand = new ReserveCommand();
-                    BeanUtils.copyProperties(rq, reserveCommand);
+
+                    reserveCommand.setCustomerCode(rq.getCustomerCode());
+                    reserveCommand.setMilesUsed(rq.getMilesUsed());
+                    reserveCommand.setFlightCode(rq.getFlightCode());
+                    reserveCommand.setSeatsQuantity(rq.getSeatsQuantity());
+                    reserveCommand.setValue(rq.getValue());
+                    reserveCommand.setCode(rq.getCode());
+                    reserveCommand.setDate(rq.getDate());
                     reserveCommand.setStatus(statusFinished);
+
                     reserveCommandRepository.save(reserveCommand);
-                    cqrsProducer.sendStatusUpdate(rq.getCode(), statusFinished.getCode());
+
+                    RegisterReserveResponseDTO response = new RegisterReserveResponseDTO();
+                    BeanUtils.copyProperties(rq, response);
+                    response.setStatus(statusFinished.getCode());
+                    responseListDTO.add(response);
+
+                    cqrsProducer.sendStatusUpdate(rq.getCode(), rq.getStatusCode());
                 } else if (current.equals(StatusEnum.FINISHED)) {
                     continue;
                 } else {
@@ -200,6 +225,9 @@ public class ReserveService {
                 }
             }
         }
+
+        System.out.println("Respostas: " + responseListDTO);
+        return responseListDTO;
         
     }
 
