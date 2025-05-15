@@ -122,4 +122,12 @@ public class EmployeeService {
         employeeRepository.deleteById(id);
     }
 
+    public EmployeeResponseDTO findByEmail(String email) {
+        Employee employee = employeeRepository.findByEmail(email);
+
+        EmployeeResponseDTO dto = new EmployeeResponseDTO();
+        BeanUtils.copyProperties(employee, dto);
+        return dto;
+    }
+
 }
