@@ -52,6 +52,9 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_CREATE_EMPLOYEE_EXCHANGE = "rollback.create.employee.exchange";
     public static final String ROLLBACK_CREATE_EMPLOYEE_ROUTING_KEY = "rollback.create.employee.routing.key";
 
+    public static final String REFUND_MILES_EXCHANGE = "refund.miles.exchange";
+    public static final String REFUND_MILES_ROUTING_KEY = "refund.miles.routing.key";
+
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();

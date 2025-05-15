@@ -1,11 +1,14 @@
 package com.ms.saga.orchestrator;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.ms.saga.dto.customer.refundMiles.RefundMilesRequestDTO;
 import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightResponseDTO;
 import com.ms.saga.dto.flight.FlightStatusDTO;
@@ -67,9 +70,22 @@ public class FlightOrchestrator {
             throw new BusinessException(reserveResp.getError());
         }
 
-        System.out.println("RESERVAS ATUALIZADAS: " + reserveResp.getData().size());
-
         // Envia o comando de atualização de milhas do cliente
+        for(RegisterReserveResponseDTO rq : reserveResp.getData()) {
+            RefundMilesRequestDTO refundMilesRequest = new RefundMilesRequestDTO();
+            refundMilesRequest.setCustomerCode(rq.getCustomerCode());
+
+            int value = rq.getValue()
+              .divide(BigDecimal.valueOf(5))
+              .setScale(0, RoundingMode.DOWN)
+              .intValue();
+ 
+            refundMilesRequest.setAmount(value);
+            refundMilesRequest.setResonRefund("Cancelamento de voo da reserva: " + rq.getReserveCode());
+            refundMilesRequest.setReserverCode(rq.getReserveCode());
+
+            customerProducer.sendRefoudSeat(refundMilesRequest);
+        }
 
         return flightResp.getData();
     }

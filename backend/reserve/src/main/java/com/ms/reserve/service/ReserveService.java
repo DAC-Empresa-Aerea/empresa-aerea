@@ -226,7 +226,6 @@ public class ReserveService {
             }
         }
 
-        System.out.println("Respostas: " + responseListDTO);
         return responseListDTO;
         
     }
