@@ -164,13 +164,26 @@ public class ReserveService {
 
                     reserveQueryRepository.save(rq);
                     ReserveCommand reserveCommand = new ReserveCommand();
-                    BeanUtils.copyProperties(rq, reserveCommand);
+                    reserveCommand.setCode(rq.getCode());
+                    reserveCommand.setCustomerCode(rq.getCustomerCode());
+                    reserveCommand.setMilesUsed(rq.getMilesUsed());
+                    reserveCommand.setFlightCode(rq.getFlightCode());
+                    reserveCommand.setSeatsQuantity(rq.getSeatsQuantity());
+                    reserveCommand.setValue(rq.getValue());
+                    reserveCommand.setDate(rq.getDate());
                     reserveCommand.setStatus(statusCanceled);
+
                     reserveCommandRepository.save(reserveCommand);
 
                     RegisterReserveResponseDTO response = new RegisterReserveResponseDTO();
-                    BeanUtils.copyProperties(rq, response);
+                    response.setReserveCode(rq.getCode());
+                    response.setCustomerCode(rq.getCustomerCode());
+                    response.setDate(rq.getDate());
+                    response.setValue(rq.getValue());
                     response.setStatus(statusCanceled.getCode());
+                    response.setSeatsQuantity(rq.getSeatsQuantity());
+                    response.setMilesUsed(rq.getMilesUsed());
+
                     responseListDTO.add(response);
 
                     cqrsProducer.sendStatusUpdate(rq.getCode(), statusCanceled.getCode());

@@ -72,6 +72,7 @@ public class FlightOrchestrator {
 
         // Envia o comando de atualização de milhas do cliente
         for(RegisterReserveResponseDTO rq : reserveResp.getData()) {
+            
             RefundMilesRequestDTO refundMilesRequest = new RefundMilesRequestDTO();
             refundMilesRequest.setCustomerCode(rq.getCustomerCode());
 

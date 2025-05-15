@@ -52,13 +52,14 @@ public class CustomerConsumer {
     }
 
     @RabbitListener(queues = RabbitMQConfig.REFUND_MILES_QUEUE)
-    public SagaResponse<RefundMilesRequestDTO> receiveRefundMiles(@Payload @Valid RefundMilesRequestDTO dto) {
+    public void receiveRefundMiles(@Payload @Valid RefundMilesRequestDTO dto) {
         try {
-            return SagaResponse.success(customerService.refundMiles(dto));
-        } catch (BusinessException e) {
-            return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
+            customerService.refundMiles(dto);
+        }
+        catch (BusinessException e) {
+            throw new BusinessException(e.getCode(), e.getMessage(), e.getStatus());
         } catch (Exception e) {
-            return SagaResponse.error("REFUND_MILES_ERROR", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+            throw new BusinessException("REFUND_MILES_ERROR", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
     }
     

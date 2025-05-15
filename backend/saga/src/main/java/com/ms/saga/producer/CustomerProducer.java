@@ -52,7 +52,6 @@ public class CustomerProducer {
         
     }
 
-
     public void sendRefoudSeat(RefundMilesRequestDTO dto) {
         rabbitTemplate.convertAndSend(
             RabbitMQConfig.REFUND_MILES_EXCHANGE,
