@@ -71,22 +71,23 @@ public class FlightOrchestrator {
         }
 
         // Envia o comando de atualização de milhas do cliente
-        for(RegisterReserveResponseDTO rq : reserveResp.getData()) {
-            
-            RefundMilesRequestDTO refundMilesRequest = new RefundMilesRequestDTO();
-            refundMilesRequest.setCustomerCode(rq.getCustomerCode());
+        if(status.getStatusCode().equals("CANCELADA_VOO")) {
+            for(RegisterReserveResponseDTO rq : reserveResp.getData()) {
 
-            int value = rq.getValue()
-              .divide(BigDecimal.valueOf(5))
-              .setScale(0, RoundingMode.DOWN)
-              .intValue();
- 
-            refundMilesRequest.setAmount(value);
-            refundMilesRequest.setResonRefund("Cancelamento de voo da reserva: " + rq.getReserveCode());
-            refundMilesRequest.setReserverCode(rq.getReserveCode());
+                RefundMilesRequestDTO refundMilesRequest = new RefundMilesRequestDTO();
+                refundMilesRequest.setCustomerCode(rq.getCustomerCode());
+                refundMilesRequest.setAmount(rq.getValue()
+                    .divide(BigDecimal.valueOf(5))
+                    .setScale(0, RoundingMode.DOWN)
+                    .intValue());
+                refundMilesRequest.setResonRefund("Cancelamento de voo da reserva: " + rq.getReserveCode());
+                refundMilesRequest.setReserverCode(rq.getReserveCode());
 
-            customerProducer.sendRefoudSeat(refundMilesRequest);
+                customerProducer.sendRefoudSeat(refundMilesRequest);
+            }
         }
+
+        
 
         return flightResp.getData();
     }

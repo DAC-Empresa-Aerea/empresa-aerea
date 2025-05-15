@@ -232,7 +232,36 @@ public class ReserveService {
                     cqrsProducer.sendStatusUpdate(rq.getCode(), rq.getStatusCode());
                 } else if (current.equals(StatusEnum.FINISHED)) {
                     continue;
-                } else {
+                } else if(StatusEnum.canTransfer(current, StatusEnum.NOT_FINISHED)) {
+                    rq.setStatusCode(StatusEnum.NOT_FINISHED.getCode());
+                    rq.setStatusAbbreviation(StatusEnum.NOT_FINISHED.getAbbreviation());
+                    rq.setStatusDescription(StatusEnum.NOT_FINISHED.getDescription());
+
+                    reserveQueryRepository.save(rq);
+                    ReserveCommand reserveCommand = new ReserveCommand();
+
+                    reserveCommand.setCustomerCode(rq.getCustomerCode());
+                    reserveCommand.setMilesUsed(rq.getMilesUsed());
+                    reserveCommand.setFlightCode(rq.getFlightCode());
+                    reserveCommand.setSeatsQuantity(rq.getSeatsQuantity());
+                    reserveCommand.setValue(rq.getValue());
+                    reserveCommand.setCode(rq.getCode());
+                    reserveCommand.setDate(rq.getDate());
+                    reserveCommand.setStatus(statusFinished);
+
+                    reserveCommandRepository.save(reserveCommand);
+
+                    RegisterReserveResponseDTO response = new RegisterReserveResponseDTO();
+                    BeanUtils.copyProperties(rq, response);
+                    response.setStatus(StatusEnum.NOT_FINISHED.getCode());
+                    responseListDTO.add(response);
+
+                    cqrsProducer.sendStatusUpdate(rq.getCode(), StatusEnum.NOT_FINISHED.getCode());
+                }
+                else if (current.equals(StatusEnum.FLIGHT_CANCELED)) {
+                    continue;
+                }
+                else {
                     throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
                         "Não é possível transferir do status " + current.getCode() + " para " + flightFinishedCode);
                 }
