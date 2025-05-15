@@ -19,7 +19,6 @@ import com.ms.employee.exception.BusinessException;
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
 
-import jakarta.persistence.EntityNotFoundException;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 
@@ -72,8 +71,12 @@ public class EmployeeService {
 
     public UpdateEmployeeResponseDTO updateEmployee(Long id, UpdateEmployeeRequestDTO employee) {
         Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
+                .orElseThrow(() -> new BusinessException("EMPLOYEE_NOT_FOUND", "Funcionário não encontrado.", HttpStatus.NOT_FOUND.value()));
 
+        if(!existingEmployee.isActive()) {
+            throw new BusinessException("EMPLOYEE_NOT_ACTIVE", "Funcionário não está ativo.", HttpStatus.BAD_REQUEST.value());
+        }    
+        
         String oldEmail = existingEmployee.getEmail();
 
         existingEmployee.setEmail(employee.getEmail());
@@ -95,7 +98,18 @@ public class EmployeeService {
     
     public EmployeeResponseDTO deactivateEmployee(Long id) {
         Employee existingEmployee = employeeRepository.findById(id)
-                .orElseThrow(() -> new EntityNotFoundException("Funcionário com ID " + id + " não encontrado."));
+                .orElseThrow(() -> new BusinessException("EMPLOYEE_NOT_FOUND", "Funcionário não encontrado.", HttpStatus.NOT_FOUND.value()));
+
+        if (!existingEmployee.isActive()) {
+            throw new BusinessException("EMPLOYEE_ALREADY_DEACTIVATED", "Funcionário já está desativado.", HttpStatus.BAD_REQUEST.value());
+        }
+
+        
+        Long activeEmployeesCount = employeeRepository.countByActiveTrue();
+        if (activeEmployeesCount <= 1) {
+            throw new BusinessException("LAST_ACTIVE_EMPLOYEE", "Não é possível desativar o último funcionário ativo.", HttpStatus.BAD_REQUEST.value());
+        }
+
         existingEmployee.setActive(false);
         Employee updatedEmployee = employeeRepository.save(existingEmployee);
         EmployeeResponseDTO dto = new EmployeeResponseDTO();
@@ -103,6 +117,7 @@ public class EmployeeService {
         return dto;
     }
 
+    // Usado para rollback de criação (não excluir)
     public void deleteById(Long id) {
         employeeRepository.deleteById(id);
     }
