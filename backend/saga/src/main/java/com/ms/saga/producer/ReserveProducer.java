@@ -44,4 +44,13 @@ public class ReserveProducer {
         return (SagaResponse<Void>) reply;
     }
 
+    public SagaResponse<RegisterReserveResponseDTO> sendGetReserve(String reserveCode) {
+    return rabbitTemplate.convertSendAndReceiveAsType(
+        RabbitMQConfig.GET_RESERVE_EXCHANGE,          
+        RabbitMQConfig.GET_RESERVE_ROUTING_KEY,       
+        reserveCode,                                  
+        new ParameterizedTypeReference<SagaResponse<RegisterReserveResponseDTO>>() {}
+    );
+}
+
 }

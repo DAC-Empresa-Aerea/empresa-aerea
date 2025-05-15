@@ -23,7 +23,7 @@ import com.ms.saga.producer.ReserveProducer;
 @Component
 public class ReserveOrchestrator {
 
-    @Autowired 
+    @Autowired
     private ReserveProducer reserveProducer;
 
     @Autowired
@@ -35,58 +35,54 @@ public class ReserveOrchestrator {
     public ReserveFlightResponseDTO processRegisterReserve(ReserveFlightRequestDTO reserveRequest) {
         // Validacao do voo e atualizacao de poltronas
         UpdateSeatsRequestDTO seatsRequest = new UpdateSeatsRequestDTO(
-            reserveRequest.getFlightCode(), 
-            reserveRequest.getSeatsQuantity(), 
-            reserveRequest.getOriginAirportCode(), 
-            reserveRequest.getDestinyAirportCode(), 
-            reserveRequest.getValue(), 
-            reserveRequest.getMilesUsed()
-        );
+                reserveRequest.getFlightCode(),
+                reserveRequest.getSeatsQuantity(),
+                reserveRequest.getOriginAirportCode(),
+                reserveRequest.getDestinyAirportCode(),
+                reserveRequest.getValue(),
+                reserveRequest.getMilesUsed());
 
         SagaResponse<UpdateSeatsResponseDTO> seatsResponse = flightProducer.sendReserveSeats(seatsRequest);
 
-        if(!seatsResponse.isSuccess()) {
+        if (!seatsResponse.isSuccess()) {
             throw new BusinessException(seatsResponse.getError());
         }
         // Criação de uma reserva (precisa do código)
         RegisterReserveRequestDTO registerReserveRequestDTO = new RegisterReserveRequestDTO(
-            reserveRequest.getCustomerCode(),
-            seatsResponse.getData().getValue(),
-            seatsResponse.getData().getMilesUsed(),
-            reserveRequest.getFlightCode(),
-            seatsResponse.getData().getSeatsQuantity()
-        );
+                reserveRequest.getCustomerCode(),
+                seatsResponse.getData().getValue(),
+                seatsResponse.getData().getMilesUsed(),
+                reserveRequest.getFlightCode(),
+                seatsResponse.getData().getSeatsQuantity());
 
-        SagaResponse<RegisterReserveResponseDTO> registerReserveResponse = reserveProducer.sendCreateReserve(registerReserveRequestDTO);
+        SagaResponse<RegisterReserveResponseDTO> registerReserveResponse = reserveProducer
+                .sendCreateReserve(registerReserveRequestDTO);
 
-        if(!registerReserveResponse.isSuccess()) {
+        if (!registerReserveResponse.isSuccess()) {
             RollbackReserveSeatsDTO rollbackReserveSeatsDTO = new RollbackReserveSeatsDTO(
-                seatsRequest.getFlightCode(), 
-                seatsRequest.getSeatsQuantity()
-            );
+                    seatsRequest.getFlightCode(),
+                    seatsRequest.getSeatsQuantity());
             flightProducer.sendRollbackReserveSeats(rollbackReserveSeatsDTO);
 
             throw new BusinessException(registerReserveResponse.getError());
         }
 
-        // Validacao e debito de milhas do cliente  
+        // Validacao e debito de milhas do cliente
         DebitSeatRequestDTO seatDebit = new DebitSeatRequestDTO(
-            reserveRequest.getCustomerCode(), 
-            registerReserveResponse.getData().getReserveCode(),
-            seatsResponse.getData().getMilesUsed(),
-            seatsResponse.getData().getValue(),
-            seatsResponse.getData().getSeatsQuantity(),
-            seatsResponse.getData().getOriginAirportCode(),
-            seatsResponse.getData().getDestinyAirportCode()
-        );
+                reserveRequest.getCustomerCode(),
+                registerReserveResponse.getData().getReserveCode(),
+                seatsResponse.getData().getMilesUsed(),
+                seatsResponse.getData().getValue(),
+                seatsResponse.getData().getSeatsQuantity(),
+                seatsResponse.getData().getOriginAirportCode(),
+                seatsResponse.getData().getDestinyAirportCode());
 
         SagaResponse<DebitSeatResponseDTO> debitSeatResponseDTO = customerProducer.sendSeatDebit(seatDebit);
 
-        if(!debitSeatResponseDTO.isSuccess()) {
+        if (!debitSeatResponseDTO.isSuccess()) {
             RollbackReserveSeatsDTO rollbackReserveSeatsDTO = new RollbackReserveSeatsDTO(
-                seatsRequest.getFlightCode(), 
-                seatsRequest.getSeatsQuantity()
-            );
+                    seatsRequest.getFlightCode(),
+                    seatsRequest.getSeatsQuantity());
             flightProducer.sendRollbackReserveSeats(rollbackReserveSeatsDTO);
 
             reserveProducer.sendRollbackRegisterReserve(registerReserveResponse.getData().getReserveCode());
@@ -105,103 +101,42 @@ public class ReserveOrchestrator {
         reserveFlightResponseDTO.setOriginAirportCode(debitSeatResponseDTO.getData().getOriginAirportCode());
         reserveFlightResponseDTO.setDestinyAirportCode(debitSeatResponseDTO.getData().getDestinyAirportCode());
         reserveFlightResponseDTO.setFlightCode(seatsResponse.getData().getFlightCode());
-        
+
         return reserveFlightResponseDTO;
     }
 
     public CancelReserveResponseDTO processCancelReserve(String id) {
-        // Validar existencia de reserva e se pode ser cancelada (estado = criada, checkin)
-            // Se erro, retorna 404
+        // Validar existencia de reserva e se pode ser cancelada (estado = criada,
+        // checkin)
+        // Se erro, retorna 404
+        SagaResponse<RegisterReserveResponseDTO> reserveResponse = reserveProducer.sendGetReserve(id);
+
+        if (!reserveResponse.isSuccess()) {
+            throw new BusinessException(reserveResponse.getError());
+        }
+
+        RegisterReserveResponseDTO reserveData = reserveResponse.getData();
+
+        // 2 - Validar se pode ser cancelada
+        if (!reserveData.getStatus().equalsIgnoreCase("CRIADA") && !reserveData.getStatus().equalsIgnoreCase("CHECKIN")) {
+            throw new BusinessException("Reserva não pode ser cancelada com status atual: " + reserveData.getStatus());
+        }
         // Cancelar a reserva
         // Retornar valor da reserva
-            // Se erro, rollback
+        // Se erro, rollback
         // Atualiza poltronas do voo
-            // Se erro, rollback
+        // Se erro, rollback
         // Retorna valor
 
         // Lembrar de usar o ErrorDTO e SagaResponse
-                // Validacao do voo e atualizacao de poltronas
+        // Validacao do voo e atualizacao de poltronas
 
-        ReserveFlightRequestDTO reserveRequest = new ReserveFlightRequestDTO();
-        UpdateSeatsRequestDTO seatsRequest = new UpdateSeatsRequestDTO(
-            reserveRequest.getFlightCode(), 
-            reserveRequest.getSeatsQuantity(), 
-            reserveRequest.getOriginAirportCode(), 
-            reserveRequest.getDestinyAirportCode(), 
-            reserveRequest.getValue(), 
-            reserveRequest.getMilesUsed()
-        );
-
-        SagaResponse<UpdateSeatsResponseDTO> seatsResponse = flightProducer.sendReserveSeats(seatsRequest);
-
-        if(!seatsResponse.isSuccess()) {
-            throw new BusinessException(seatsResponse.getError());
-        }
-        // Criação de uma reserva (precisa do código)
-        RegisterReserveRequestDTO registerReserveRequestDTO = new RegisterReserveRequestDTO(
-            reserveRequest.getCustomerCode(),
-            seatsResponse.getData().getValue(),
-            seatsResponse.getData().getMilesUsed(),
-            reserveRequest.getFlightCode(),
-            seatsResponse.getData().getSeatsQuantity()
-        );
-
-        SagaResponse<RegisterReserveResponseDTO> registerReserveResponse = reserveProducer.sendCreateReserve(registerReserveRequestDTO);
-
-        if(!registerReserveResponse.isSuccess()) {
-            RollbackReserveSeatsDTO rollbackReserveSeatsDTO = new RollbackReserveSeatsDTO(
-                seatsRequest.getFlightCode(), 
-                seatsRequest.getSeatsQuantity()
-            );
-            flightProducer.sendRollbackReserveSeats(rollbackReserveSeatsDTO);
-
-            throw new BusinessException(registerReserveResponse.getError());
-        }
-
-        // Validacao e debito de milhas do cliente  
-        DebitSeatRequestDTO seatDebit = new DebitSeatRequestDTO(
-            reserveRequest.getCustomerCode(), 
-            registerReserveResponse.getData().getReserveCode(),
-            seatsResponse.getData().getMilesUsed(),
-            seatsResponse.getData().getValue(),
-            seatsResponse.getData().getSeatsQuantity(),
-            seatsResponse.getData().getOriginAirportCode(),
-            seatsResponse.getData().getDestinyAirportCode()
-        );
-
-        SagaResponse<DebitSeatResponseDTO> debitSeatResponseDTO = customerProducer.sendSeatDebit(seatDebit);
-
-        if(!debitSeatResponseDTO.isSuccess()) {
-            RollbackReserveSeatsDTO rollbackReserveSeatsDTO = new RollbackReserveSeatsDTO(
-                seatsRequest.getFlightCode(), 
-                seatsRequest.getSeatsQuantity()
-            );
-            flightProducer.sendRollbackReserveSeats(rollbackReserveSeatsDTO);
-
-            reserveProducer.sendRollbackRegisterReserve(registerReserveResponse.getData().getReserveCode());
-
-            throw new BusinessException(debitSeatResponseDTO.getError());
-        }
-
-        ReserveFlightResponseDTO reserveFlightResponseDTO = new ReserveFlightResponseDTO();
-        reserveFlightResponseDTO.setCode(debitSeatResponseDTO.getData().getReserveCode());
-        reserveFlightResponseDTO.setCustomerCode(debitSeatResponseDTO.getData().getCustomerCode());
-        reserveFlightResponseDTO.setDate(registerReserveResponse.getData().getDate());
-        reserveFlightResponseDTO.setValue(debitSeatResponseDTO.getData().getValue());
-        reserveFlightResponseDTO.setMilesUsed(debitSeatResponseDTO.getData().getMilesUsed());
-        reserveFlightResponseDTO.setStatus(registerReserveResponse.getData().getStatus());
-        reserveFlightResponseDTO.setSeatsQuantity(debitSeatResponseDTO.getData().getSeatsQuantity());
-        reserveFlightResponseDTO.setOriginAirportCode(debitSeatResponseDTO.getData().getOriginAirportCode());
-        reserveFlightResponseDTO.setDestinyAirportCode(debitSeatResponseDTO.getData().getDestinyAirportCode());
-        reserveFlightResponseDTO.setFlightCode(seatsResponse.getData().getFlightCode());
-        
-        
         return new CancelReserveResponseDTO();
     }
 
-    //Update status reserve because the flight status changed
+    // Update status reserve because the flight status changed
     public void updateStatusReserve(FlightStatusDTO dto) {
         reserveProducer.updateStatusReserve(dto);
     }
-    
+
 }
