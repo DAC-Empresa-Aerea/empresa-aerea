@@ -1,11 +1,13 @@
 package com.ms.customer.infrastructure.database;
 
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.ms.customer.repository.CustomerRepository;
 import com.ms.customer.repository.MilesHistoryRepository;
 
+@Profile("dev")
 @Service
 public class DatabaseResetService {
 
