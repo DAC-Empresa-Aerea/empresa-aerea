@@ -5,20 +5,15 @@ import { useAuth } from "../../../../contexts/loginContext";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const { signOut, isAuthenticated, user } = useAuth();
   const navigate = useNavigate();
 
-  // Recupera o usuário e tipo do localStorage
-  const storedUser = localStorage.getItem("user");
-  const storedUserType = localStorage.getItem("userType");
-
-  const user = storedUser ? JSON.parse(storedUser) : null;
-
-  const isLoggedIn = !!user && !!storedUserType;
+  const isLoggedIn = isAuthenticated;
 
   const handleLogout = () => {
-    logout();
-    navigate("/login");
+    signOut().then(() => {
+      navigate("/login");
+    });
   };
 
   return (
@@ -49,13 +44,17 @@ const Header = () => {
 
           {isLoggedIn ? (
             <div className="py-6 text-right">
-              <p className="text-sm">Saldo de milhas: <strong>{user?.saldo_milhas ?? 0}</strong></p>
-              <button
+                {user && "saldo_milhas" in user && (
+                <p className="text-sm">
+                  Saldo de milhas: <strong>{(user as any).saldo_milhas}</strong>
+                </p>
+                )}
+                <button
                 onClick={handleLogout}
                 className="text-base font-semibold text-gray-900 hover:bg-gray-100 px-4 py-2 rounded-md"
-              >
+                >
                 Logout
-              </button>
+                </button>
             </div>
           ) : (
             <div className="py-6">
@@ -102,7 +101,9 @@ const Header = () => {
               </nav>
               {isLoggedIn ? (
                 <div className="py-6">
-                  <p className="text-sm mb-2">Saldo de milhas: <strong>{user?.saldo_milhas ?? 0}</strong></p>
+                  <p className="text-sm">
+                    Saldo de milhas: <strong>{(user as any).saldo_milhas}</strong>
+                  </p>
                   <button
                     onClick={handleLogout}
                     className="text-base font-semibold text-gray-900 hover:bg-gray-100 px-4 py-2 rounded-md w-full"

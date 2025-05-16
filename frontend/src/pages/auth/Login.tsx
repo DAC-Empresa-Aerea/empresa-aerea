@@ -17,7 +17,7 @@ const Login = () => {
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
   const [isLoading, setIsLoading] = useState(false);
-  const { login } = useAuth();
+  const { signIn } = useAuth();
   const navigate = useNavigate();
 
   const validateEmail = (email: string) => {
@@ -70,7 +70,7 @@ const Login = () => {
     }
 
     try {
-      const response = await login({ login: email, senha: password });
+      const response = await signIn(email, password);
 
       if (response.tipo === "CLIENTE") {
         navigate(`/${CustomerRoutesEnum.BASE}/${CustomerRoutesEnum.HOME}`);

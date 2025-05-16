@@ -3,18 +3,21 @@ import MilesPurchaseHeader from "../../components/organisms/milesOrganisms/Miles
 import StatementTable from "../../components/organisms/StatementTable";
 import { getMilesStatementByCustomerCode } from "../../services/milesService";
 import { useAuth } from "../../contexts/loginContext";
-import { MilesTransaction } from "../../types/Miles";
+import { MilesTransaction } from "../../types/api/miles";
+import { useGetMiles } from "../../hooks/customers/useGetMiles";
 
 const ConsultStatement = () => {
   const { user, isAuthenticated, loading } = useAuth();
   const [statement, setStatement] = useState<MilesTransaction[]>([]);
   const [error, setError] = useState<string>("");
 
+  const getMiles = useGetMiles(user?.codigo || 0);
+
   const fetchMilesStatement = async () => {
     if (isAuthenticated && user && user.codigo) {
       try {
-        const data = await getMilesStatementByCustomerCode(user.codigo);
-        setStatement(data);
+        const data = await getMiles.mutateAsync();
+        setStatement(data.transacoes);
       } catch (err) {
         setError("Erro ao buscar extrato de milhas.");
         console.error(err);

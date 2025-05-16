@@ -1,5 +1,5 @@
 import StatementListItem from "../atoms/StatementListItem";
-import { MilesTransaction } from "../../types/Miles";
+import { MilesTransaction } from "../../types/api/miles";
 
 interface StatementListProps {
     title: string;

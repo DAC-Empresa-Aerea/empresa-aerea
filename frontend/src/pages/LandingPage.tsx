@@ -6,9 +6,9 @@ import { useAuth } from "../contexts/loginContext";
 
 const LandingPage: React.FC = () => {
 
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, signOut } = useAuth();
   useEffect(() => {
-    logout();
+    signOut();
   }, []);
 
   const singles = [
