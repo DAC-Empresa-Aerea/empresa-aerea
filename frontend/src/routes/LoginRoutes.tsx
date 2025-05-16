@@ -3,9 +3,6 @@ import Loadable from "../components/organisms/loadable";
 import { Routes } from "./routes.enum";
 
 const LoginLayout = Loadable(lazy(() => import("../layouts/Login")));
-const SelfRegistrationLayout = Loadable(
-  lazy(() => import("../layouts/Self-registration"))
-);
 
 const Login = Loadable(lazy(() => import("../pages/auth/Login")));
 const SelfRegistration = Loadable(
@@ -14,6 +11,7 @@ const SelfRegistration = Loadable(
 
 const LoginRoutes = {
   path: "/",
+  element: <LoginLayout />, // Adiciona o layout de login para rotas públicas
   children: [
     {
       path: Routes.LOGIN,

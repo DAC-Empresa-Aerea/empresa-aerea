@@ -6,17 +6,13 @@ interface EmployeeListProps {
   employees: Employee[];
   editEmployee: (employee: Employee | null) => void;
   deleteEmployee: (employee: Employee | null) => void;
-  buttonText: string;
-  onViewMoreClick: () => void;
 }
 
 function EmployeeList({
   title,
   employees,
-  buttonText,
   editEmployee,
   deleteEmployee,
-  onViewMoreClick,
 }: EmployeeListProps) {
   return (
     <section className="bg-white m-7 p-4 min-w-3/4 max-w-full h-full shadow-medium flex gap-4 flex-col rounded-2xl">
@@ -30,9 +26,6 @@ function EmployeeList({
           />
         ))}
       </ul>
-      <button onClick={onViewMoreClick} className="btn-view-more">
-        {buttonText}
-      </button>
     </section>
   );
 }

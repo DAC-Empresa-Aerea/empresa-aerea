@@ -25,9 +25,6 @@ function StatementList({
                         buttonText={buttonText} onClick={() => {}} />
                 ))}
             </ul>
-            <button onClick={onViewMoreClick} className="btn-view-more">
-                {buttonText}
-            </button>
         </section>
     );
 }

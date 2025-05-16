@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/loginContext";
 import { updateCustomerMiles, createMilesTransaction } from "../../services/milesService";
 import { getCustomerByCpf } from "../../services/customerService";
@@ -9,6 +10,7 @@ import MilesOptionsSelector from "../../components/molecules/milesMolecules/Mile
 import MilesSlider from "../../components/molecules/milesMolecules/MilesSlider";
 import PriceSummary from "../../components/molecules/milesMolecules/PriceSummary";
 import TransactionConfirmation from "../../components/organisms/milesOrganisms/TransactionConfirmation";
+import { MilesTransactionType } from "../../types/Miles";
 
 const BuyMiles: React.FC = () => {
   const { user, setUser } = useAuth();
@@ -17,6 +19,11 @@ const BuyMiles: React.FC = () => {
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const [transaction, setTransaction] = useState<any | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const goToStatement = () => {
+    navigate("/customer/consultStatement");
+  };
 
   const MILES_PRICE_RATIO = 5.0;
 
@@ -44,6 +51,8 @@ const BuyMiles: React.FC = () => {
         valor_reais: priceInReais,
         quantidade_milhas: milesAmount,
         descricao: "COMPRA DE MILHAS",
+        codigo_reserva: "",
+        tipo: MilesTransactionType.ENTRADA,
       });
 
       setTransaction(newTransaction);
@@ -132,6 +141,15 @@ const BuyMiles: React.FC = () => {
                   formatCurrency={formatCurrency}
                 />
               </form>
+              {/* Botão de ir para o extrato */}
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={goToStatement}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                >
+                  Ver Extrato
+                </button>
+              </div>
             </div>
           </div>
         )}

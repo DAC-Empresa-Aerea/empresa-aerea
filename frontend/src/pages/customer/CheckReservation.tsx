@@ -1,84 +1,35 @@
 import { useState } from "react";
-import { Reserve } from "../../components/atoms/TableItem";
+import { getReserveByCode } from "../../services/reserveService";
+import Reserve from "../../types/Reserve";
 import CancelReservation from "../../components/molecules/modalsMolecules/CancelReservation";
 import BasicInput from "../../components/atoms/inputs/BasicInput";
 import ReservationDetails from "../../components/organisms/ReservationDetails/Index";
 import CityDetails from "../../components/molecules/flight/CityDetails";
 import FlightDetails from "../../components/organisms/FlightDetails/Index";
+import { useNavigate } from "react-router-dom";
+
 
 const ConsultarReserva = () => {
   const [codigoReserva, setCodigoReserva] = useState("");
   const [selectedReserve, setSelectedReserve] = useState<Reserve | null>(null);
   const [isModalCancelOpen, setIsModalCancelOpen] = useState(false);
+  const navigate = useNavigate();
 
-  // Simulação de dados da API
-  const [reserves] = useState<Reserve[]>([
-    {
-      codigo: "XPT789",
-      data: new Date("2024-10-10T14:30:00Z-03:00"),
-      valor: 250.0,
-      milhas_utilizadas: 50,
-      quantidade_poltronas: 1,
-      codigo_cliente: 1,
-      estado: "CONFIRMADO",
-      voo: {
-        codigo: "TADS0001",
-        data: new Date("2024-10-10T14:30:00Z-03:00"),
-        valor_passagem: 500.0,
-        quantidade_poltronas_total: 100,
-        quantidade_poltronas_ocupadas: 90,
-        estado: "CRIADA",
-        aeroporto_origem: {
-          codigo: "GRU",
-          nome: "Aeroporto Internacional de São Paulo/Guarulhos",
-          cidade: "Guarulhos",
-          uf: "SP",
-        },
-        aeroporto_destino: {
-          codigo: "GIG",
-          nome: "Aeroporto Internacional do Rio de Janeiro/Galeão",
-          cidade: "Rio de Janeiro",
-          uf: "RJ",
-        },
-      },
-    },
-    {
-      codigo: "XPT788",
-      data: new Date("2024-10-10T14:30:00Z-03:00"),
-      valor: 250.0,
-      milhas_utilizadas: 50,
-      quantidade_poltronas: 1,
-      codigo_cliente: 1,
-      estado: "CRIADA",
-      voo: {
-        codigo: "TADS0001",
-        data: new Date("2024-10-15T14:30:00Z-03:00"),
-        valor_passagem: 500.0,
-        quantidade_poltronas_total: 100,
-        quantidade_poltronas_ocupadas: 90,
-        estado: "CONFIRMADO",
-        aeroporto_origem: {
-          codigo: "GRU",
-          nome: "Aeroporto Internacional de São Paulo/Guarulhos",
-          cidade: "Guarulhos",
-          uf: "SP",
-        },
-        aeroporto_destino: {
-          codigo: "GIG",
-          nome: "Aeroporto Internacional do Rio de Janeiro/Galeão",
-          cidade: "Rio de Janeiro",
-          uf: "RJ",
-        },
-      },
-    },
-  ]);
+  const goToCustomerHome = () => {
+    navigate("/customer/home");
+  };
 
-  const handleSearch = () => {
-    const reservaFound = reserves.find((r) => r.codigo === codigoReserva);
-    if (reservaFound) {
-      setSelectedReserve(reservaFound);
-    } else {
-      alert("Reserva não encontrada");
+  const handleSearch = async () => {
+    try {
+      const reserva = await getReserveByCode(codigoReserva);
+      if (reserva) {
+        setSelectedReserve(reserva);
+      } else {
+        alert("Reserva não encontrada");
+      }
+    } catch (error) {
+      console.error("Erro ao buscar reserva:", error);
+      alert("Erro ao buscar reserva. Tente novamente.");
     }
   };
 
@@ -104,7 +55,7 @@ const ConsultarReserva = () => {
             <ReservationDetails reservation={selectedReserve} />
             <FlightDetails
               code={selectedReserve.voo.codigo}
-              date={selectedReserve.voo.data}
+              date={new Date(selectedReserve.voo.data)}
               price={selectedReserve.voo.valor_passagem}
             />
           </div>
@@ -128,28 +79,27 @@ const ConsultarReserva = () => {
             />
           </div>
 
-          {/* Botão para cancelar reserva */}
           {(selectedReserve.estado === "CRIADA" ||
             selectedReserve.estado === "CHECK-IN") && (
-            <div className="mt-4">
-              <button
-                onClick={() => setIsModalCancelOpen(true)}
-                className="bg-red-500 text-white px-4 py-2 rounded w-full"
-              >
-                Cancelar Reserva
-              </button>
-            </div>
-          )}
+              <div className="mt-4">
+                <button
+                  onClick={() => setIsModalCancelOpen(true)}
+                  className="bg-red-500 text-white px-4 py-2 rounded w-full"
+                >
+                  Cancelar Reserva
+                </button>
+              </div>
+            )}
         </div>
       )}
 
-      {/* Modal de Cancelamento */}
       {selectedReserve && isModalCancelOpen && (
         <CancelReservation
           cancelisOpen={isModalCancelOpen}
           cancelClose={() => setIsModalCancelOpen(false)}
           canceltitle={`Confirmar cancelamento da Reserva #${selectedReserve.codigo}`}
           selectedReserve={selectedReserve}
+          onUpdate={goToCustomerHome}
         />
       )}
     </div>

@@ -12,18 +12,19 @@ const Footer: React.FC = () => {
             Fly<span className="text-lg">High</span>
           </div>
           <div className="text-gray-medium mt-2 font-roboto">
-            O seu sistema de gerenciamento de Voos 2025.
+            Projeto de DAC: Sistema de Gerenciamento de Voos.
           </div>
           <div className="text-gray-medium mt-4 font-roboto">
             FlyHigh © {currentYear}
           </div>
         </div>
         <div className="space-y-2 flex flex-col">
-          <div className="text-gray-dark font-bold">Central de ajuda</div>
-          <LinkButton href="#">Redes Sociais</LinkButton>
-          <LinkButton href="#">Time de Suporte</LinkButton>
-          <LinkButton href="#">Manual de Usuário</LinkButton>
-          <LinkButton href="#">Entre em contato</LinkButton>
+          <div className="text-gray-dark font-bold">Projeto desenvolvido por:</div>
+          <LinkButton href="https://github.com/voidalzk">Gabriel Francelino Voidaleski</LinkButton>
+          <LinkButton href="https://github.com/Starbiel">Gabriel Henrique Speranceta</LinkButton>
+          <LinkButton href="https://github.com/joaoguerios">João Pedro Costa Guerios</LinkButton>
+          <LinkButton href="https://github.com/Luccachl">Lucca Haj Mussi Chella</LinkButton>
+          <LinkButton href="https://github.com/WesleyParastchuk">Wesley Parastchuk</LinkButton>
         </div>
       </div>
     </footer>

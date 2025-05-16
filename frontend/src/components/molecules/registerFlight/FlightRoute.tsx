@@ -1,5 +1,5 @@
 import DropdownInput from "../../atoms/inputs/DropdownInput";
-
+import { getAirports } from "../../../services/airportService";
 interface FlightRouteProps {
   originAirportCode: string;
   destinationAirportCode: string;

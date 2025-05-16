@@ -18,6 +18,7 @@ const CustomerHomePage = () => {
     if (isAuthenticated && user && user.codigo) {
       try {
         const response = await getReservesByCustomerCode(user.codigo.toString());
+
         setReserves(response);
       } catch (err) {
         setError("Erro ao buscar reservas do cliente.");
@@ -45,12 +46,17 @@ const CustomerHomePage = () => {
   return (
     <div>
       {error && <p style={{ color: "red" }}>{error}</p>}
-      <ReservationTable
-        reserves={reserves}
-        onFlightClick={handleFlightClick}
-        cancelFlightClick={cancelFlightClick}
-      />
-
+  
+      {reserves.length === 0 ? (
+        <p className="text-xl font-bold mb-4 text-center">Nenhuma reserva encontrada.</p>
+      ) : (
+        <ReservationTable
+          reserves={reserves}
+          onFlightClick={handleFlightClick}
+          cancelFlightClick={cancelFlightClick}
+        />
+      )}
+  
       {selectedReserve && (
         <SeeReservation
           moreInfoisOpen={isModalInfoOpen}
@@ -59,7 +65,7 @@ const CustomerHomePage = () => {
           selectedReserve={selectedReserve}
         />
       )}
-
+  
       {selectedReserve && (
         <CancelReservation
           cancelisOpen={isModalCancelOpen}
@@ -71,6 +77,7 @@ const CustomerHomePage = () => {
       )}
     </div>
   );
+  
 };
 
 export default CustomerHomePage;

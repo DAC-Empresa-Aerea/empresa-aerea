@@ -21,15 +21,17 @@ export const createMilesTransaction = async ({
   valor_reais,
   quantidade_milhas,
   descricao,
-}: Omit<MilesTransaction, "data" | "codigo_reserva" | "tipo">) => {
+  codigo_reserva,
+  tipo
+}: Omit<MilesTransaction, "data"> & { tipo: MilesTransactionType }) => {
   const novaTransacao: MilesTransaction = {
     codigo_cliente,
     data: new Date().toISOString(),
     valor_reais,
     quantidade_milhas,
     descricao,
-    codigo_reserva: "",
-    tipo: MilesTransactionType.ENTRADA,
+    codigo_reserva,
+    tipo,
   };
 
   const response = await axios.post(`${API_URL}/Miles`, novaTransacao);

@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import DropdownInput from "../atoms/inputs/DropdownInput";
+import { getAirports } from "../../services/airportService";
 
 
 interface SearchInputProps {
@@ -10,33 +11,25 @@ interface SearchInputProps {
 function SearchInput({
     handleSearch,
     handleCancelSearch,
-} : SearchInputProps) {
+}: SearchInputProps) {
 
     const [selectedFirstValue, setSelectedFirstValue] = useState("");
     const [selectedSecondValue, setSelectedSecondValue] = useState("");
+    const [airports, setAirports] = useState([]);
 
-    const singles = [
-        "JFK",
-        "LAX",
-        "ORD",
-        "ATL",
-        "DFW",
-        "DEN",
-        "SFO",
-        "LAS",
-        "SEA",
-        "MIA",
-        "CWB",
-        "GIG",
-        "GRU",
-        "SCL",
-        "MEX",
-        "FRA",
-        "LHR",
-        "CDG",
-        "MAD",
-        "BOM",
-    ];
+    const availableAirportsForFirst = airports.filter(airport => airport !== selectedSecondValue);
+    const availableAirportsForSecond = airports.filter(airport => airport !== selectedFirstValue);
+
+    useEffect(() => {
+        getAirports()
+            .then((data) => {
+                const airportCodes = data.map((airport: any) => airport.codigo);
+                setAirports(airportCodes);
+            })
+            .catch((error) => {
+                console.error("Erro ao buscar voos:", error);
+            });
+    }, []);
 
     function handleResetValues() {
         setSelectedFirstValue("");
@@ -49,21 +42,25 @@ function SearchInput({
                 <h1 className="font-roboto text-2xl font-semibold text-alien mb-6">
                     Buscar Voos
                 </h1>
-                <DropdownInput options={singles} setSelectedValue={setSelectedFirstValue} value={selectedFirstValue}/>   
-                <DropdownInput options={singles} setSelectedValue={setSelectedSecondValue} value={selectedSecondValue}/>
+                <h2 className="font-roboto text-lg font-semibold text-alien">
+                    Origem
+                </h2>
+                <DropdownInput options={availableAirportsForFirst} setSelectedValue={setSelectedFirstValue} value={selectedFirstValue} />
+                <h3 className="font-roboto text-lg font-semibold text-alien"> Chegada</h3>
+                <DropdownInput options={availableAirportsForSecond} setSelectedValue={setSelectedSecondValue} value={selectedSecondValue} />
                 <button
-                        onClick={() => {handleCancelSearch(); handleResetValues()}}
-                        className="w-10 rounded-md bg-blue-600 px-4 py-1 text-white hover:bg-blue-700 cursor-pointer self-end"
-                        >
-                            X
+                    onClick={() => { handleCancelSearch(); handleResetValues(); }}
+                    className="flex items-center justify-center rounded-md bg-blue-600 px-6 py-1 text-white hover:bg-blue-700 cursor-pointer self-end"
+                >
+                    Limpar
                 </button>
             </div>
             <div>
                 <button
-                        onClick={() => handleSearch(selectedFirstValue, selectedSecondValue)}
-                        className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 cursor-pointer"
-                        >
-                        Buscar
+                    onClick={() => handleSearch(selectedFirstValue, selectedSecondValue)}
+                    className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 cursor-pointer"
+                >
+                    Buscar
                 </button>
             </div>
         </div>

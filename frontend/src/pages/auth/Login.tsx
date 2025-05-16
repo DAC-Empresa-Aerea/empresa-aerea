@@ -14,12 +14,60 @@ const Login = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
+
+  const validateEmail = (email: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+  };
+
+  const validatePassword = (password: string) => {
+    const hasMinLength = password.length >= 4;
+    const hasNumber = /[0-9]/.test(password);
+
+    return {
+      isValid:
+        hasMinLength &&
+        hasNumber,
+      requirements: {
+        hasMinLength,
+        hasNumber,
+      },
+    };
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setEmailError("");
+    setPasswordError("");
+    setIsLoading(true);
+
+    if (!validateEmail(email)) {
+      setEmailError("Por favor, insira um email válido");
+      setIsLoading(false);
+      return;
+    }
+
+    const passwordValidation = validatePassword(password);
+    if (!passwordValidation.isValid) {
+      const requirements = passwordValidation.requirements;
+      const missingRequirements = [];
+
+      if (!requirements.hasMinLength)
+        missingRequirements.push("4 caracteres");
+      if (!requirements.hasNumber) missingRequirements.push("um número");
+
+      setPasswordError(
+        `A senha deve conter: ${missingRequirements.join(", ")}`
+      );
+      setIsLoading(false);
+      return;
+    }
 
     try {
       const response = await login({ login: email, senha: password });
@@ -32,11 +80,22 @@ const Login = () => {
         navigate("/");
       }
     } catch (err) {
-      const errorMessage =
-        err instanceof Error
-          ? err.message
-          : "Login failed. Please check your credentials.";
+      let errorMessage =
+        "Falha no login. Por favor, verifique suas credenciais.";
+
+      if (err instanceof Error) {
+        if (err.message.includes("Usuário ou senha inválidos")) {
+          errorMessage =
+            "Email ou senha incorretos. Por favor, tente novamente.";
+        } else if (err.message.includes("Erro na requisição de login")) {
+          errorMessage =
+            "Erro ao conectar com o servidor. Por favor, tente novamente mais tarde.";
+        }
+      }
+
       setError(errorMessage);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -49,7 +108,7 @@ const Login = () => {
           FlyHigh
         </h1>
         <div className="flex justify-center items-center cursor-default">
-          <h2 className="text-gray-800">Welcome to Fly</h2>
+          <h2 className="text-gray-800">Bem vindo ao Fly</h2>
           <h2 className="font-bold text-gray-800">High</h2>
         </div>
         <h2 className="mb-4 text-center text-2xl text-gray-800 cursor-default">
@@ -70,9 +129,17 @@ const Login = () => {
               type="email"
               value={email}
               placeholder="Email"
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                setEmailError("");
+              }}
               required
+              classNameAdd={emailError ? "border-red-500" : ""}
+              disabled={isLoading}
             />
+            {emailError && (
+              <p className="text-red-500 text-sm mt-1">{emailError}</p>
+            )}
           </div>
 
           {/* Password field */}
@@ -80,36 +147,31 @@ const Login = () => {
             <BasicInput
               type="password"
               value={password}
-              placeholder="Password"
-              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Senha"
+              onChange={(e) => {
+                setPassword(e.target.value);
+                setPasswordError("");
+              }}
               required
+              classNameAdd={passwordError ? "border-red-500" : ""}
+              disabled={isLoading}
             />
-          </div>
-
-          {/* Options */}
-          <div className="mb-4 flex items-center justify-between">
-            <label className="flex items-center">
-              <input
-                type="checkbox"
-                className="h-4 w-4 rounded border-gray-300"
-              />
-              <span className="ml-2 text-sm text-gray-600">
-                Keep me signed in
-              </span>
-            </label>
-            <a href="#" className="text-sm text-blue-500">
-              Forgot Password?
-            </a>
+            {passwordError && (
+              <p className="text-red-500 text-sm mt-1">{passwordError}</p>
+            )}
           </div>
 
           {/* Login button */}
-          <SubmitButton text="Login" />
+          <SubmitButton
+            text={isLoading ? "Entrando..." : "Entrar"}
+            disabled={isLoading}
+          />
 
           {/* Registration link */}
           <p className="mt-4 text-center text-sm text-gray-600 cursor-default">
-            Don't have an account?{" "}
+            Não tem uma conta?{" "}
             <a href="/register" className="text-blue-500 hover:underline">
-              Register
+              Registre-se
             </a>
           </p>
         </form>
