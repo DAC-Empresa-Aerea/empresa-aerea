@@ -1,29 +1,31 @@
 package com.ms.employee.seed;
 
-import org.springframework.boot.ApplicationRunner;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.stereotype.Component;
 
 import com.ms.employee.model.Employee;
 import com.ms.employee.repository.EmployeeRepository;
 
 import java.util.List;
 
-@Configuration
-public class EmployeeInitializer {
+@Component
+public class EmployeeInitializer implements DataSeeder {
 
-    @Bean
-    public ApplicationRunner initEmployees(EmployeeRepository repository) {
-        return args -> {
-            List<Employee> predefinedEmployees = List.of(
-                new Employee(null, "90769281001", "func_pre@gmail.com", "Funcionario Pre", "11999999999", true)
-            );
+    private final EmployeeRepository employeeRepository;
 
-            for (Employee emp : predefinedEmployees) {
-                if (!repository.existsByCpf(emp.getCpf())) {
-                    repository.save(emp);
-                }
+    public EmployeeInitializer(EmployeeRepository employeeRepository) {
+        this.employeeRepository = employeeRepository;
+    }
+
+    @Override
+    public void seed() {
+        List<Employee> predefinedEmployees = List.of(
+            new Employee(null, "90769281001", "func_pre@gmail.com", "Funcionario Pre", "11999999999", true)
+        );
+
+        for (Employee emp : predefinedEmployees) {
+            if (!employeeRepository.existsByCpf(emp.getCpf())) {
+                employeeRepository.save(emp);
             }
-        };
+        }
     }
 }
