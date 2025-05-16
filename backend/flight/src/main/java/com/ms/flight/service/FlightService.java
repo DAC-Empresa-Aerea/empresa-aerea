@@ -3,7 +3,8 @@ package com.ms.flight.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -102,8 +103,9 @@ public class FlightService {
         return flightResponse;
     }
 
-    public FlightByAirportDTO searchFlightsByAirport(LocalDate data, String origem, String destino) {
-        List<Flight> flights = flightRepository.findByAirportAndDate(origem, destino, data.atStartOfDay());
+    public FlightByAirportDTO searchFlightsByAirport(LocalDate date, String origem, String destino) {
+        OffsetDateTime startDate = date.atStartOfDay().atOffset(ZoneOffset.of("-03:00"));
+        List<Flight> flights = flightRepository.findByAirportAndDate(origem, destino, startDate);
 
         List<FlightWithAirportResponseDTO> flightResponses = flights.stream()
             .map(flight -> {
@@ -123,14 +125,16 @@ public class FlightService {
         FlightByAirportDTO flightByAirportDTO = new FlightByAirportDTO();
         flightByAirportDTO.setOrigem(origem);
         flightByAirportDTO.setDestino(destino);
-        flightByAirportDTO.setData(data.atStartOfDay());
+        flightByAirportDTO.setData(startDate);
         flightByAirportDTO.setVoos(flightResponses);
 
         return flightByAirportDTO;
     }
 
-    public List<FlightWithAirportResponseDTO> searchFlightsByDate (LocalDate dataInicio, LocalDate dataFim) {
-        List<Flight> flights = flightRepository.findAllByDateBetween(dataInicio.atStartOfDay(), dataFim.atStartOfDay());
+    public List<FlightWithAirportResponseDTO> searchFlightsByDate (LocalDate startDate, LocalDate endDate) {
+        OffsetDateTime startDateOffset = startDate.atStartOfDay().atOffset(ZoneOffset.of("-03:00"));
+        OffsetDateTime endDateOffset = endDate.atStartOfDay().atOffset(ZoneOffset.of("-03:00"));
+        List<Flight> flights = flightRepository.findAllByDateBetween(startDateOffset, endDateOffset);
 
         return flights.stream()
             .map(flight -> {
@@ -208,7 +212,7 @@ public class FlightService {
             return SagaResponse.error("SEAT_REQUEST_EXCEEDS_AVAILABILITY", "Número de poltronas ocupadas excede o total.", HttpStatus.BAD_REQUEST.value());
         }
 
-        if(flight.getData().isBefore(LocalDateTime.now())) {
+        if(flight.getData().isBefore(OffsetDateTime.now())) {
             return SagaResponse.error("INVALID_FLIGHT_DATE_PAST", "A data do voo não pode ser anterior a data atual.", HttpStatus.BAD_REQUEST.value());
         }
 

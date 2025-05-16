@@ -1,6 +1,6 @@
 package com.ms.reserve.service;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -50,7 +50,7 @@ public class ReserveService {
         
         reserveCommand.setCode(GenerateReserveCodeUtil.generate());
         reserveCommand.setStatus(status);
-        reserveCommand.setDate(LocalDateTime.now());
+        reserveCommand.setDate(OffsetDateTime.now());
         
         reserveCommandRepository.save(reserveCommand);
         

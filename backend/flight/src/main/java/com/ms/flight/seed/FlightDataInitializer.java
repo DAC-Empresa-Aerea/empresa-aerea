@@ -11,7 +11,7 @@ import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Component;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Component
@@ -43,7 +43,6 @@ public class FlightDataInitializer implements DataSeeder {
                     statusEnum.getSigla(),
                     statusEnum.getDescricao()
                 );
-                statusRepository.save(status);
             }
         }
 
@@ -64,11 +63,11 @@ public class FlightDataInitializer implements DataSeeder {
             .orElseThrow(() -> new IllegalStateException("Status 'CONFIRMADO' não encontrado."));
 
         List<Flight> flights = List.of(
-            new Flight("VOOS0001", LocalDateTime.parse("2025-08-10T10:30:00"), new BigDecimal("450.00"), 180, 0,
+            new Flight("VOOS0001", OffsetDateTime.parse("2025-08-10T10:30:00-03:00"), new BigDecimal("450.00"), 180, 0,
                 status, getAirport("POA"), getAirport("CWB")),
-            new Flight("VOOS0002", LocalDateTime.parse("2025-09-11T09:30:00"), new BigDecimal("600.00"), 150, 0,
+            new Flight("VOOS0002", OffsetDateTime.parse("2025-09-11T09:30:00-03:00"), new BigDecimal("600.00"), 150, 0,
                 status, getAirport("CWB"), getAirport("GIG")),
-            new Flight("VOOS0003", LocalDateTime.parse("2025-10-12T08:30:00"), new BigDecimal("400.00"), 160, 0,
+            new Flight("VOOS0003", OffsetDateTime.parse("2025-10-12T08:30:00-03:00"), new BigDecimal("400.00"), 160, 0,
                 status, getAirport("CWB"), getAirport("POA"))
         );
 

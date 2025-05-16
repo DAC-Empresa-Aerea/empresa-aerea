@@ -1,7 +1,7 @@
 package com.ms.flight.dto.flight;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ms.flight.dto.airport.AirportResponseDTO;
@@ -19,7 +19,7 @@ public class FlightWithAirportResponseDTO {
 
     private String codigo;
 
-    private LocalDateTime data;
+    private OffsetDateTime data;
     
     @JsonProperty("valor_passagem")
     private BigDecimal valorPassagem;

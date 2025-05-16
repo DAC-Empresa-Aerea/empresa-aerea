@@ -1,6 +1,6 @@
 package com.ms.flight.repository;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -19,13 +19,13 @@ public interface FlightRepository extends JpaRepository<Flight, String> {
     List<Flight> findByAirportAndDate(
         @Param("origem") String origem,
         @Param("destino") String destino,
-        @Param("data") LocalDateTime data
+        @Param("data") OffsetDateTime data
     );
 
     @Query("SELECT f FROM Flight f WHERE f.data BETWEEN :dataInicio AND :dataFim")
     List<Flight> findAllByDateBetween(
-        @Param("dataInicio") LocalDateTime dataInicio,
-        @Param("dataFim") LocalDateTime dataFim
+        @Param("dataInicio") OffsetDateTime dataInicio,
+        @Param("dataFim") OffsetDateTime dataFim
     );
 
 }
