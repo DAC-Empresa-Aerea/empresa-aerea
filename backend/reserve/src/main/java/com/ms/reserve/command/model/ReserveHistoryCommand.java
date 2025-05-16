@@ -1,6 +1,6 @@
 package com.ms.reserve.command.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +25,7 @@ public class ReserveHistoryCommand {
     private ReserveCommand reserve;
 
     @Column(name = "data", nullable = false)
-    private LocalDateTime date;
+    private OffsetDateTime date;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "estado_origem", referencedColumnName = "codigo", nullable = false)

@@ -15,7 +15,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.List;
 
 @Configuration
@@ -64,7 +64,7 @@ public class FlightDataInitializer {
 
                 List<Flight> flights = List.of(
                     new Flight("VOOS0001",
-                        LocalDateTime.parse("2025-08-10T10:30:00"),
+                        OffsetDateTime.parse("2025-08-10T10:30:00-03:00"),
                         new BigDecimal("450.00"),
                         180,
                         0,
@@ -73,7 +73,7 @@ public class FlightDataInitializer {
                         airportRepository.findById("CWB").orElseThrow()
                     ),
                     new Flight("VOOS0002",
-                        LocalDateTime.parse("2025-09-11T09:30:00"),
+                        OffsetDateTime.parse("2025-09-11T09:30:00-03:00"),
                         new BigDecimal("600.00"),
                         150,
                         0,
@@ -82,7 +82,7 @@ public class FlightDataInitializer {
                         airportRepository.findById("GIG").orElseThrow()
                     ),
                     new Flight("VOOS0003",
-                        LocalDateTime.parse("2025-10-12T08:30:00"),
+                        OffsetDateTime.parse("2025-10-12T08:30:00-03:00"),
                         new BigDecimal("400.00"),
                         160,
                         0,
