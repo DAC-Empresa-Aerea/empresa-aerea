@@ -47,6 +47,7 @@ public class AuthService {
     @Autowired
     private BlacklistService blacklistService;
 
+
     public boolean emailExists(String email) {
         return authRepository.findByLogin(email) != null;
     }
@@ -72,9 +73,6 @@ public class AuthService {
 
     public UpdateAuthDTO updateAuth(UpdateAuthDTO authRequest) {
         Auth auth = authRepository.findByLogin(authRequest.getOldEmail());
-
-        System.out.println("Old" + authRequest.getOldEmail());
-        System.out.println("New" + authRequest.getNewEmail());
 
         if (auth == null) {
             throw new BusinessException(

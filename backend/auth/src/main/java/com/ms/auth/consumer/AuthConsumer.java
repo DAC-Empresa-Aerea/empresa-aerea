@@ -15,8 +15,6 @@ import com.ms.auth.dto.update.UpdateAuthDTO;
 import com.ms.auth.exception.BusinessException;
 import com.ms.auth.service.AuthService;
 
-import jakarta.validation.Valid;
-
 @Component
 public class AuthConsumer {
 
@@ -24,7 +22,7 @@ public class AuthConsumer {
     private AuthService authService;
 
     @RabbitListener(queues = RabbitMQConfig.CREATE_AUTH_QUEUE)
-    public SagaResponse<CreateAuthResponseDTO> receiveAuthQueue (@Payload @Valid CreateAuthRequestDTO authRequest) {
+    public SagaResponse<CreateAuthResponseDTO> receiveAuthQueue (@Payload CreateAuthRequestDTO authRequest) {
 
         if (authService.emailExists(authRequest.getEmail())) {
             return SagaResponse.error("EMAIL_EXISTS", "Email já cadastrado", HttpStatus.CONFLICT.value());

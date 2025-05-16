@@ -129,6 +129,7 @@ services:
 
       EMAIL_USERNAME: ${EMAIL_USERNAME}
       EMAIL_PASSWORD: ${EMAIL_PASSWORD}
+      MAIL_ACTIVATE_SEND: ${MAIL_ACTIVATE_SEND}
 
   ms-customer:
     build:
