@@ -2,7 +2,6 @@ package com.ms.flight.dto.flight;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
