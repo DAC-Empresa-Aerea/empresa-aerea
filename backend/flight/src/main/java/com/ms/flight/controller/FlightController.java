@@ -15,6 +15,7 @@ import java.time.LocalDate;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -30,8 +31,8 @@ public class FlightController {
     
     @PostMapping()
     public ResponseEntity<FlightResponseDTO> registerFlight(@RequestBody @Valid RegisterFlightRequestDTO flightRequest) {
-        
-        return ResponseEntity.ok(flightService.registerFlight(flightRequest));
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(flightService.registerFlight(flightRequest));
     }
 
     @GetMapping("/{id}")
