@@ -1,4 +1,4 @@
-package com.ms.employee.dto.employee;
+package com.ms.saga.dto.employee.delete;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -13,7 +13,7 @@ import lombok.Setter;
 @AllArgsConstructor
 @Getter
 @Setter
-public class EmployeeResponseDTO {
+public class DeleteEmployeeResponseDTO {
 
     @JsonProperty("codigo")
     private Long id;
@@ -29,8 +29,5 @@ public class EmployeeResponseDTO {
     
     @JsonProperty("telefone")
     private String phoneNumber;
-
-    @JsonProperty("tipo")
-    private String type = "FUNCIONARIO";
 
 }

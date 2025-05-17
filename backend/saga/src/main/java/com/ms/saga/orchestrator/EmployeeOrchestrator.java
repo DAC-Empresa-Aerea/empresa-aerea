@@ -11,8 +11,10 @@ import com.ms.saga.dto.auth.delete.DeleteAuthRequestDTO;
 import com.ms.saga.dto.auth.update.UpdateAuthDTO;
 import com.ms.saga.dto.employee.EmployeeRequestDTO;
 import com.ms.saga.dto.employee.EmployeeResponseDTO;
-import com.ms.saga.dto.employee.update.EmployeeUpdateRequestDTO;
-import com.ms.saga.dto.employee.update.EmployeeUpdateResponseDTO;
+import com.ms.saga.dto.employee.delete.DeleteEmployeeResponseDTO;
+import com.ms.saga.dto.employee.update.UpdateEmployeeRequestDTO;
+import com.ms.saga.dto.employee.update.UpdateEmployeeResponseDTO;
+import com.ms.saga.dto.employee.update.EmployeeUpdatedResponseDTO;
 import com.ms.saga.dto.error.ErrorDTO;
 import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.exception.BusinessException;
@@ -51,8 +53,8 @@ public class EmployeeOrchestrator {
         return employeeResponse.getData();
     }
     
-    public EmployeeResponseDTO processUpdateEmployee(Long employeeId, EmployeeUpdateRequestDTO employeeRequest) {
-        SagaResponse<EmployeeUpdateResponseDTO> employeeResponse = employeeProducer.sendUpdateEmployee(employeeId, employeeRequest);
+    public EmployeeUpdatedResponseDTO processUpdateEmployee(Long employeeId, UpdateEmployeeRequestDTO employeeRequest) {
+        SagaResponse<UpdateEmployeeResponseDTO> employeeResponse = employeeProducer.sendUpdateEmployee(employeeId, employeeRequest);
         
         if (!employeeResponse.isSuccess()) {
             ErrorDTO error = employeeResponse.getError();
@@ -70,14 +72,14 @@ public class EmployeeOrchestrator {
             throw new BusinessException(error);
         }
 
-        EmployeeResponseDTO employeeResponseDTO = new EmployeeResponseDTO();
+        EmployeeUpdatedResponseDTO employeeResponseDTO = new EmployeeUpdatedResponseDTO();
         BeanUtils.copyProperties(employeeResponse.getData(), employeeResponseDTO);
         
         return employeeResponseDTO;
     }
     
-    public EmployeeResponseDTO processDeleteEmployee(Long employeeId) {
-        SagaResponse<EmployeeResponseDTO> employeeResponse = employeeProducer.sendDeleteEmployee(employeeId);
+    public DeleteEmployeeResponseDTO processDeleteEmployee(Long employeeId) {
+        SagaResponse<DeleteEmployeeResponseDTO> employeeResponse = employeeProducer.sendDeleteEmployee(employeeId);
 
         if (!employeeResponse.isSuccess()) {
             ErrorDTO error = employeeResponse.getError();

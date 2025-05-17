@@ -13,7 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.ms.saga.dto.employee.EmployeeRequestDTO;
 import com.ms.saga.dto.employee.EmployeeResponseDTO;
-import com.ms.saga.dto.employee.update.EmployeeUpdateRequestDTO;
+import com.ms.saga.dto.employee.delete.DeleteEmployeeResponseDTO;
+import com.ms.saga.dto.employee.update.UpdateEmployeeRequestDTO;
+import com.ms.saga.dto.employee.update.EmployeeUpdatedResponseDTO;
 import com.ms.saga.orchestrator.EmployeeOrchestrator;
 
 @RestController
@@ -30,16 +32,16 @@ public class EmployeeController {
     }
     
     @PutMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDTO> updateEmployee(
+    public ResponseEntity<EmployeeUpdatedResponseDTO> updateEmployee(
             @PathVariable Long id,
-            @RequestBody EmployeeUpdateRequestDTO employee) {
+            @RequestBody UpdateEmployeeRequestDTO employee) {
                 
         return ResponseEntity.ok(saga.processUpdateEmployee(id, employee));
     }
     
     @DeleteMapping("/{id}")
-    public ResponseEntity<EmployeeResponseDTO> deleteEmployee(@PathVariable Long id) {
-        EmployeeResponseDTO deleted = saga.processDeleteEmployee(id);
+    public ResponseEntity<DeleteEmployeeResponseDTO> deleteEmployee(@PathVariable Long id) {
+        DeleteEmployeeResponseDTO deleted = saga.processDeleteEmployee(id);
         return ResponseEntity.ok(deleted);
     }
 }
