@@ -11,7 +11,8 @@ import com.ms.auth.dto.create.CreateAuthRequestDTO;
 import com.ms.auth.dto.create.CreateAuthResponseDTO;
 import com.ms.auth.dto.delete.DeleteAuthRequestDTO;
 import com.ms.auth.dto.error.SagaResponse;
-import com.ms.auth.dto.update.UpdateAuthDTO;
+import com.ms.auth.dto.update.UpdateAuthRequestDTO;
+import com.ms.auth.dto.update.UpdateAuthResponseDTO;
 import com.ms.auth.exception.BusinessException;
 import com.ms.auth.service.AuthService;
 import com.ms.auth.util.ValidationUtil;
@@ -39,9 +40,12 @@ public class AuthConsumer {
     }
     
     @RabbitListener(queues = RabbitMQConfig.UPDATE_AUTH_QUEUE)
-    public SagaResponse<UpdateAuthDTO> receiveUpdateAuthQueue (@Payload UpdateAuthDTO authRequest) {
+    public SagaResponse<UpdateAuthResponseDTO> receiveUpdateAuthQueue (@Payload UpdateAuthRequestDTO authRequest) {
         try {
             return SagaResponse.success(authService.updateAuth(authRequest));
+        } catch (ConstraintViolationException e) {
+            String errors = ValidationUtil.extractMessages(e);
+            return SagaResponse.error("VALIDATION_ERROR", errors, HttpStatus.BAD_REQUEST.value());
         } catch (BusinessException e) {
             return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
         } catch (Exception e) {

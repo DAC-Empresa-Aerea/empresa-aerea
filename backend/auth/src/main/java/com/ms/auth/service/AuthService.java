@@ -16,7 +16,8 @@ import com.ms.auth.dto.Roles;
 import com.ms.auth.dto.create.CreateAuthRequestDTO;
 import com.ms.auth.dto.create.CreateAuthResponseDTO;
 import com.ms.auth.dto.delete.DeleteAuthRequestDTO;
-import com.ms.auth.dto.update.UpdateAuthDTO;
+import com.ms.auth.dto.update.UpdateAuthRequestDTO;
+import com.ms.auth.dto.update.UpdateAuthResponseDTO;
 import com.ms.auth.exception.BusinessException;
 import com.ms.auth.factory.RoleFactory;
 import com.ms.auth.model.Auth;
@@ -108,7 +109,13 @@ public class AuthService {
         return new CreateAuthResponseDTO(true);
     }
 
-    public UpdateAuthDTO updateAuth(UpdateAuthDTO authRequest) {
+    public UpdateAuthResponseDTO updateAuth(UpdateAuthRequestDTO authRequest) {
+        Set<ConstraintViolation<UpdateAuthRequestDTO>> violations = validator.validate(authRequest);
+
+        if(!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
         Auth auth = authRepository.findByLogin(authRequest.getOldEmail());
 
         if (auth == null) {
@@ -119,11 +126,21 @@ public class AuthService {
             );
         }
 
+        String salt = HashUtil.generateSalt();
+        String hashedPassword = HashUtil.hashPassword(authRequest.getPassword(), salt);
+
         auth.setLogin(authRequest.getNewEmail());
+        auth.setPassword(hashedPassword);
+        auth.setSalt(salt);
 
         authRepository.save(auth);
 
-        return authRequest;
+        UpdateAuthResponseDTO response = new UpdateAuthResponseDTO();
+        response.setNewEmail(authRequest.getNewEmail());
+        response.setOldEmail(authRequest.getOldEmail());
+        response.setRole(authRequest.getRole());
+
+        return response;
     }
 
     public LoginAuthResponseDTO login(LoginAuthRequestDTO authRequest) {
