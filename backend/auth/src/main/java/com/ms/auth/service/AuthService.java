@@ -1,6 +1,7 @@
 package com.ms.auth.service;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,6 +12,7 @@ import com.ms.auth.config.JwtProperties;
 import com.ms.auth.dto.LoginAuthRequestDTO;
 import com.ms.auth.dto.LoginAuthResponseDTO;
 import com.ms.auth.dto.LogoutAuthDTO;
+import com.ms.auth.dto.Roles;
 import com.ms.auth.dto.create.CreateAuthRequestDTO;
 import com.ms.auth.dto.create.CreateAuthResponseDTO;
 import com.ms.auth.dto.delete.DeleteAuthRequestDTO;
@@ -25,6 +27,9 @@ import com.ms.auth.util.PasswordGeneratorUtil;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 
 @Service
 public class AuthService {
@@ -47,14 +52,46 @@ public class AuthService {
     @Autowired
     private BlacklistService blacklistService;
 
-
-    public boolean emailExists(String email) {
-        return authRepository.findByLogin(email) != null;
-    }
+    @Autowired
+    private Validator validator;
 
     public CreateAuthResponseDTO createAuth(CreateAuthRequestDTO authRequest) {
+        Set<ConstraintViolation<CreateAuthRequestDTO>> violations = validator.validate(authRequest);
+        String password = null;
 
-        String password = PasswordGeneratorUtil.generate();
+        if(!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        if (authRepository.findByLogin(authRequest.getEmail()) != null) {
+            throw new BusinessException(
+                "AUTH_ALREADY_EXISTS", 
+                "Authentication already exists for the given email and role", 
+                HttpStatus.BAD_REQUEST.value()
+            );
+        }
+        
+        if (authRequest.getRole().equals(Roles.EMPLOYEE)) {
+            if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
+                throw new BusinessException(
+                    "PASSWORD_NOT_ALLOWED", 
+                    "Password need to be provided for the given role", 
+                    HttpStatus.BAD_REQUEST.value()
+                );
+            }
+
+            if(authRequest.getPassword().length() != 4) {
+                throw new BusinessException(
+                    "PASSWORD_NOT_ALLOWED", 
+                    "Password invalid for the given role", 
+                    HttpStatus.BAD_REQUEST.value()
+                );
+            }
+
+            password = authRequest.getPassword();
+        } else {
+            password = PasswordGeneratorUtil.generate();
+        }
 
         String salt = HashUtil.generateSalt();
         String hashedPassword = HashUtil.hashPassword(password, salt);
