@@ -28,4 +28,7 @@ public class UpdateEmployeeRequestDTO {
     @JsonProperty("telefone")
     private String phoneNumber;
 
+    @JsonProperty("senha")
+    private String password;
+
 }

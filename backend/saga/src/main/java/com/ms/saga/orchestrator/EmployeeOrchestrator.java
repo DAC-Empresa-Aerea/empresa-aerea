@@ -62,7 +62,7 @@ public class EmployeeOrchestrator {
         }
 
         SagaResponse<UpdateAuthDTO> authResponse = authProducer.sendUpdateAuth(
-            new UpdateAuthDTO(employeeResponse.getData().getEmail(), employeeResponse.getData().getOldEmail(), Roles.EMPLOYEE)
+            new UpdateAuthDTO(employeeResponse.getData().getEmail(), employeeResponse.getData().getOldEmail(), employeeRequest.getPassword(), Roles.EMPLOYEE)
         );
 
         if(!authResponse.isSuccess()) {
