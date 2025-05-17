@@ -40,7 +40,7 @@ public class EmployeeOrchestrator {
         }
 
         SagaResponse<CreateAuthResponseDTO> authResponse = authProducer.sendCreateAuth(
-            new CreateAuthRequestDTO(employeeRequest.getEmail(), Roles.EMPLOYEE)
+            new CreateAuthRequestDTO(employeeRequest.getEmail(), employeeRequest.getPassword(), Roles.EMPLOYEE)
         );
 
         if (!authResponse.isSuccess()) {
