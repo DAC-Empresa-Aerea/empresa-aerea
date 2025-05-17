@@ -43,6 +43,8 @@ public class FlightDataInitializer implements DataSeeder {
                     statusEnum.getSigla(),
                     statusEnum.getDescricao()
                 );
+
+                statusRepository.save(status);
             }
         }
 
