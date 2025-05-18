@@ -11,6 +11,31 @@ airportRoutes.use('/', flightController.proxyToAirports);
 
 const flightRoutes = express.Router();
 flightRoutes.use(authenticateJWT);
+
+flightRoutes.get('/', authorizeRoles('FUNCIONARIO', 'CLIENTE'), (req, res, next) => {
+  const { data, dataFim, origem, destino } = req.query;
+
+  const formatDate = (isoString) => {
+    if (!isoString) return undefined;
+    return isoString.substring(0, 10);
+  };
+
+  const dataFormatada = formatDate(data);
+  const dataFimFormatada = formatDate(dataFim);
+
+  const params = {};
+  if (dataFormatada) params.data = dataFormatada;
+  if (dataFimFormatada) params['data-fim'] = dataFimFormatada;
+  if (origem) params.origem = origem;
+  if (destino) params.destino = destino;
+
+  const queryParams = new URLSearchParams(params).toString();
+
+  const rotaCompleta = `?${queryParams}`;
+
+  flightController.proxyToFlightComQuery(rotaCompleta, req, res, next);
+});
+
 flightRoutes.use(authorizeRoles('FUNCIONARIO'));
 
 flightRoutes.patch('/:id/estado', (req, res, next) => {
@@ -28,7 +53,7 @@ flightRoutes.use('/', flightController.proxyToFlight);
 const getFlightRoute = express.Router();
 getFlightRoute.use(authenticateJWT);
 
-getFlightRoute.get('/:id', flightController.proxyToFlight)
+getFlightRoute.get('/:id', flightController.proxyToFlight);
 
 module.exports = {
     airportRoutes,
