@@ -11,6 +11,7 @@ import com.ms.saga.orchestrator.ReserveOrchestrator;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -27,7 +28,7 @@ public class ReserveController {
     @PostMapping()
     public ResponseEntity<ReserveFlightResponseDTO> registerReserve(@RequestBody @Valid ReserveFlightRequestDTO reserveRequest) {
           
-        return ResponseEntity.ok(saga.processRegisterReserve(reserveRequest));
+        return ResponseEntity.status(HttpStatus.CREATED).body(saga.processRegisterReserve(reserveRequest));
     }
 
     @DeleteMapping("/{id}")
