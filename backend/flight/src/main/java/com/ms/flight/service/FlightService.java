@@ -19,6 +19,7 @@ import com.ms.flight.dto.flight.FlightByAirportDTO;
 import com.ms.flight.dto.flight.FlightResponseDTO;
 import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
+import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsInfoDTO;
 import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsRequestDTO;
 import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsResponseDTO;
 import com.ms.flight.dto.flight.reserveSeat.rollback.RollbackReserveSeatsDTO;
@@ -222,17 +223,31 @@ public class FlightService {
         flight.setPoltronasOcupadas(flight.getPoltronasOcupadas() + request.getSeatsQuantity());
         flightRepository.save(flight);
 
-        UpdateSeatsResponseDTO response = new UpdateSeatsResponseDTO();
-        response.setFlightCode(flight.getCodigo());
-        response.setSeatsQuantity(request.getSeatsQuantity());
-        response.setOriginAirportCode(flight.getOrigem().getCodigo());
-        response.setDestinyAirportCode(flight.getDestino().getCodigo());
-        response.setValue(flight.getValor());
-        response.setMilesUsed(
-        flight.getValor()
-            .divide(BigDecimal.valueOf(5), 0, RoundingMode.CEILING)
-            .intValue()
+        
+
+        FlightWithAirportResponseDTO flightWithAirportResponse = new FlightWithAirportResponseDTO();
+        flightWithAirportResponse.setCodigo(flight.getCodigo());
+        flightWithAirportResponse.setData(flight.getData());
+        flightWithAirportResponse.setValorPassagem(flight.getValor());
+        flightWithAirportResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
+        flightWithAirportResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
+        flightWithAirportResponse.setEstado(flight.getEstado().getCodigo());
+        flightWithAirportResponse.setAeroportoOrigem(new AirportResponseDTO(flight.getOrigem().getCodigo(), flight.getOrigem().getNome(), flight.getOrigem().getCidade(), flight.getOrigem().getUF()));
+        flightWithAirportResponse.setAeroportoDestino(new AirportResponseDTO(flight.getDestino().getCodigo(), flight.getDestino().getNome(), flight.getDestino().getCidade(), flight.getDestino().getUF()));
+        
+        UpdateSeatsInfoDTO updateSeatsInfo = new UpdateSeatsInfoDTO();
+        updateSeatsInfo.setMilesUsed(
+            flight.getValor()
+                .divide(BigDecimal.valueOf(5), 0, RoundingMode.CEILING)
+                .intValue()
         );
+        updateSeatsInfo.setValue(flight.getValor());
+        updateSeatsInfo.setSeatsQuantity(request.getSeatsQuantity());
+        
+
+        UpdateSeatsResponseDTO response = new UpdateSeatsResponseDTO();
+        response.setFlight(flightWithAirportResponse);
+        response.setInfo(updateSeatsInfo);
 
         return SagaResponse.success(response);
     

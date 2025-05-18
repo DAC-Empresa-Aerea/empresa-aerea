@@ -1,10 +1,10 @@
-package com.ms.flight.dto.flight;
+package com.ms.saga.dto.flight.updateSeats;
 
 import java.math.BigDecimal;
 import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.ms.flight.dto.airport.AirportResponseDTO;
+import com.ms.saga.dto.flight.AirportDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,25 +17,27 @@ import lombok.Setter;
 @Setter
 public class FlightWithAirportResponseDTO {
 
-    
-    private String codigo;
+    @JsonProperty("codigo")
+    private String code;
 
-    private OffsetDateTime data;
+    @JsonProperty("data")
+    private OffsetDateTime date;
     
     @JsonProperty("valor_passagem")
-    private BigDecimal valorPassagem;
+    private BigDecimal value;
 
     @JsonProperty("quantidade_poltronas_total")
-    private Integer quantidadePoltronasTotal;
+    private Integer totalSeatCount;
 
     @JsonProperty("quantidade_poltronas_ocupadas")
-    private Integer quantidadePoltronasOcupadas;
+    private Integer occupiedSeatsCount;
 
-    private String estado;
+    @JsonProperty("quantidade_poltronas_disponiveis")
+    private String status;
     
     @JsonProperty("aeroporto_origem")
-    private AirportResponseDTO aeroportoOrigem;
+    private AirportDTO originAirport;
 
     @JsonProperty("aeroporto_destino")
-    private AirportResponseDTO aeroportoDestino;
+    private AirportDTO destinyAirport;
 }
