@@ -11,7 +11,7 @@ import {
 } from "../types/api/reserve";
 
 /** GET /reservas/{codigoReserva} */
-export const getReserve = (codigo: number) =>
+export const getReserve = (codigo: string) =>
   api.get<SearchReserveResponse>(`/reservas/${codigo}`);
 
 /** POST /reservas */

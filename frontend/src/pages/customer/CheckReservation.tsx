@@ -1,35 +1,40 @@
 import { useState } from "react";
-import { getReserveByCode } from "../../services/reserveService";
-import Reserve from "../../types/Reserve";
+
+import { ReserveWithFlight } from "../../types/api/reserve";
 import CancelReservation from "../../components/molecules/modalsMolecules/CancelReservation";
 import BasicInput from "../../components/atoms/inputs/BasicInput";
 import ReservationDetails from "../../components/organisms/ReservationDetails/Index";
 import CityDetails from "../../components/molecules/flight/CityDetails";
 import FlightDetails from "../../components/organisms/FlightDetails/Index";
 import { useNavigate } from "react-router-dom";
+import { useReserves } from "../../hooks/reserves/useReserves";
 
 
 const ConsultarReserva = () => {
   const [codigoReserva, setCodigoReserva] = useState("");
-  const [selectedReserve, setSelectedReserve] = useState<Reserve | null>(null);
+  const [selectedReserve, setSelectedReserve] = useState<ReserveWithFlight | undefined>();
+  const [error, setError] = useState<string>("");
   const [isModalCancelOpen, setIsModalCancelOpen] = useState(false);
   const navigate = useNavigate();
+
+  const getReserves = useReserves(codigoReserva);
 
   const goToCustomerHome = () => {
     navigate("/customer/home");
   };
 
   const handleSearch = async () => {
-    try {
-      const reserva = await getReserveByCode(codigoReserva);
-      if (reserva) {
-        setSelectedReserve(reserva);
-      } else {
-        alert("Reserva não encontrada");
+    if (codigoReserva) {
+      try {
+        const response = await getReserves.refetch();
+        if(!response.data && response?.error?.message === "Request failed with status code 404") {
+          setError("Reserva não encontrada.");
+          return;
+        }
+        setSelectedReserve(response.data);	
+      } catch (error) {
+        console.log("Erro ao buscar reserva:", error);
       }
-    } catch (error) {
-      console.error("Erro ao buscar reserva:", error);
-      alert("Erro ao buscar reserva. Tente novamente.");
     }
   };
 
@@ -48,6 +53,8 @@ const ConsultarReserva = () => {
       >
         Buscar Reserva
       </button>
+
+      {error && <p className="text-red-500 mt-2">{error}</p>}	
 
       {selectedReserve && (
         <div className="mt-6 border p-4 rounded shadow">

@@ -1,4 +1,3 @@
-// hooks/customers/useCustomer.ts
 import { useQuery } from '@tanstack/react-query';
 import { getCustomer } from '../../services/costumers';
 import { CustomerWithCode } from '../../types/api/customer';

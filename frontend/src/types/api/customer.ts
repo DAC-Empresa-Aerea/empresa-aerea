@@ -19,6 +19,7 @@ export interface CustomerWithCode extends Customer {
   codigo: number;
 }
 
+
 //------------------------------------------------------------------------
 
 // POST -> /clientes
@@ -26,7 +27,7 @@ export interface CustomerWithCode extends Customer {
 // SUCCESS -> 201
 // ERRORS -> 409
 
-export type CreateCustomerRequest = Customer;
+export type CreateCustomerRequest = Omit<Customer, 'senha'>;
 
 export type CreateCustomerResponse = CustomerWithCode;
 

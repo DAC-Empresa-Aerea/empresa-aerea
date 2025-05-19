@@ -1,10 +1,10 @@
-import Reserve from "../../../types/Reserve";
+import { ReserveWithFlight } from "../../../types/api/reserve";
 
 interface SeeReservationProps {
   moreInfoisOpen: boolean;
   moreInfoonClose: () => void;
   moreInfotitle: string;
-  selectedReserve: Reserve;
+  selectedReserve: ReserveWithFlight;
 }
 
 function SeeReservation({ moreInfoisOpen, moreInfoonClose, moreInfotitle, selectedReserve }: SeeReservationProps) {
