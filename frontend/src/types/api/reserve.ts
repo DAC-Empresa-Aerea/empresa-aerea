@@ -8,7 +8,7 @@ export enum ReserveStatus {
 }
 
 export interface Reserve {
-  codigo: number;
+  codigo: string;
   data: number;
   valor: number;
   milhas_utilizadas: number;

@@ -19,7 +19,7 @@ export const createReserve = (body: CreateReserveRequest) =>
   api.post<CreateReserveResponse>("/reservas", body);
 
 /** DELETE /reservas/{codigoReserva} */
-export const deleteReserve = (codigo: number) =>
+export const deleteReserve = (codigo: string) =>
   api.delete<DeleteReserveResponse>(`/reservas/${codigo}`);
 
 /** PATCH /reservas/{codigo}/estado  → CHECK-IN */

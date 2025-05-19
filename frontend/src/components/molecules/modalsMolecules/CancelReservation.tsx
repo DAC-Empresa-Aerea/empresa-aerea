@@ -1,7 +1,7 @@
-import Reserve from "../../../types/Reserve";
 import { FaTimes } from "react-icons/fa";
 import { UpdateReserve } from "../../../services/reserveService";
 import { ReserveWithFlight } from "../../../types/api/reserve";
+import { useCancelReserve } from "../../../hooks/reserves/useCancelReserve";
 
 interface CancelReservationProps {
   cancelisOpen: boolean;
@@ -19,13 +19,11 @@ function CancelReservation({
   onUpdate,
 }: CancelReservationProps) {
   if (!cancelisOpen) return null;
+  const { mutateAsync: cancelReserve } = useCancelReserve();
 
   const handleCancel = async () => {
     try {
-      await UpdateReserve("asqwer", {
-        ...selectedReserve,
-        estado: "CANCELADA",
-      });
+      await cancelReserve(selectedReserve.codigo);
       onUpdate();
       cancelClose();
     } catch (error) {
