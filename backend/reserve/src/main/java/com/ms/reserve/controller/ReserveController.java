@@ -35,6 +35,11 @@ public class ReserveController {
     public ResponseEntity<List<ReserveResponseDTO>> getReservesByCliente(@RequestParam("clienteId") @Valid String clienteId) {
         Long clientIdLong = Long.parseLong(clienteId);
         List<ReserveResponseDTO> reservas = reserveService.getReservesByCustomerId(clientIdLong);
+
+        if (reservas.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+
         return ResponseEntity.ok(reservas);
     }
     

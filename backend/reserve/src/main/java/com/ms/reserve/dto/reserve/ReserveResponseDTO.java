@@ -1,7 +1,7 @@
 package com.ms.reserve.dto.reserve;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,7 +20,7 @@ public class ReserveResponseDTO {
     private String code;
 
     @JsonProperty("data")
-    private LocalDateTime date;
+    private OffsetDateTime date;
 
     @JsonProperty("valor")
     private BigDecimal value;

@@ -117,10 +117,24 @@ public class EmployeeService {
         return dto;
     }
 
+    public EmployeeResponseDTO findByIdAndActive(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new BusinessException("EMPLOYEE_NOT_FOUND", "Funcionário não encontrado.", HttpStatus.NOT_FOUND.value()));
+
+        if (!employee.isActive()) {
+            throw new BusinessException("EMPLOYEE_NOT_FOUND", "Funcionário não encontrado.", HttpStatus.NOT_FOUND.value());
+        }
+
+        EmployeeResponseDTO dto = new EmployeeResponseDTO();
+        BeanUtils.copyProperties(employee, dto);
+        return dto;
+    }
+
     // Usado para rollback de criação (não excluir)
     public void deleteById(Long id) {
         employeeRepository.deleteById(id);
     }
+
 
     public EmployeeResponseDTO findByEmail(String email) {
         Employee employee = employeeRepository.findByEmail(email);

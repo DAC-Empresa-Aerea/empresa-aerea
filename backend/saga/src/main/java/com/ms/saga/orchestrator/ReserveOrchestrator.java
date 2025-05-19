@@ -51,10 +51,10 @@ public class ReserveOrchestrator {
         // Criação de uma reserva (precisa do código)
         RegisterReserveRequestDTO registerReserveRequestDTO = new RegisterReserveRequestDTO(
             reserveRequest.getCustomerCode(),
-            seatsResponse.getData().getValue(),
-            seatsResponse.getData().getMilesUsed(),
+            reserveRequest.getValue(),
+            reserveRequest.getMilesUsed(),
             reserveRequest.getFlightCode(),
-            seatsResponse.getData().getSeatsQuantity()
+            seatsResponse.getData().getInfo().getSeatsQuantity()
         );
 
         SagaResponse<RegisterReserveResponseDTO> registerReserveResponse = reserveProducer.sendCreateReserve(registerReserveRequestDTO);
@@ -73,11 +73,11 @@ public class ReserveOrchestrator {
         DebitSeatRequestDTO seatDebit = new DebitSeatRequestDTO(
             reserveRequest.getCustomerCode(), 
             registerReserveResponse.getData().getReserveCode(),
-            seatsResponse.getData().getMilesUsed(),
-            seatsResponse.getData().getValue(),
-            seatsResponse.getData().getSeatsQuantity(),
-            seatsResponse.getData().getOriginAirportCode(),
-            seatsResponse.getData().getDestinyAirportCode()
+            reserveRequest.getMilesUsed(),
+            reserveRequest.getValue(),
+            seatsResponse.getData().getInfo().getSeatsQuantity(),
+            seatsResponse.getData().getFlight().getOriginAirport().getCode(),
+            seatsResponse.getData().getFlight().getDestinyAirport().getCode()
         );
 
         SagaResponse<DebitSeatResponseDTO> debitSeatResponseDTO = customerProducer.sendSeatDebit(seatDebit);
@@ -98,13 +98,11 @@ public class ReserveOrchestrator {
         reserveFlightResponseDTO.setCode(debitSeatResponseDTO.getData().getReserveCode());
         reserveFlightResponseDTO.setCustomerCode(debitSeatResponseDTO.getData().getCustomerCode());
         reserveFlightResponseDTO.setDate(registerReserveResponse.getData().getDate());
-        reserveFlightResponseDTO.setValue(debitSeatResponseDTO.getData().getValue());
-        reserveFlightResponseDTO.setMilesUsed(debitSeatResponseDTO.getData().getMilesUsed());
+        reserveFlightResponseDTO.setValue(reserveRequest.getValue());
+        reserveFlightResponseDTO.setMilesUsed(reserveRequest.getMilesUsed());
         reserveFlightResponseDTO.setStatus(registerReserveResponse.getData().getStatus());
         reserveFlightResponseDTO.setSeatsQuantity(debitSeatResponseDTO.getData().getSeatsQuantity());
-        reserveFlightResponseDTO.setOriginAirportCode(debitSeatResponseDTO.getData().getOriginAirportCode());
-        reserveFlightResponseDTO.setDestinyAirportCode(debitSeatResponseDTO.getData().getDestinyAirportCode());
-        reserveFlightResponseDTO.setFlightCode(seatsResponse.getData().getFlightCode());
+        reserveFlightResponseDTO.setFlight(seatsResponse.getData().getFlight());
         
         return reserveFlightResponseDTO;
     }

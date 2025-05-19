@@ -3,7 +3,8 @@ package com.ms.flight.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
+import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,7 +18,9 @@ import com.ms.flight.dto.error.SagaResponse;
 import com.ms.flight.dto.flight.FlightByAirportDTO;
 import com.ms.flight.dto.flight.FlightResponseDTO;
 import com.ms.flight.dto.flight.FlightWithAirportResponseDTO;
+import com.ms.flight.dto.flight.FlightsInIntervalTimeDTO;
 import com.ms.flight.dto.flight.register.RegisterFlightRequestDTO;
+import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsInfoDTO;
 import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsRequestDTO;
 import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsResponseDTO;
 import com.ms.flight.dto.flight.reserveSeat.rollback.RollbackReserveSeatsDTO;
@@ -102,48 +105,63 @@ public class FlightService {
         return flightResponse;
     }
 
-    public FlightByAirportDTO searchFlightsByAirport(LocalDate data, String origem, String destino) {
-        List<Flight> flights = flightRepository.findByAirportAndDate(origem, destino, data.atStartOfDay());
+    public FlightByAirportDTO searchFlightsByAirport(LocalDate date, String origem, String destino) {
+        OffsetDateTime startDate = date.atStartOfDay().atOffset(ZoneOffset.of("-03:00"));
+
+        List<Flight> flights = flightRepository.findByAirportAndDate(
+            origem, destino, startDate);
 
         List<FlightWithAirportResponseDTO> flightResponses = flights.stream()
             .map(flight -> {
-                FlightWithAirportResponseDTO flightResponse = new FlightWithAirportResponseDTO();
-                flightResponse.setCodigo(flight.getCodigo());
-                flightResponse.setData(flight.getData());
-                flightResponse.setValorPassagem(flight.getValor());
-                flightResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
-                flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
-                flightResponse.setEstado(flight.getEstado().getCodigo());
-                flightResponse.setAeroportoOrigem(new AirportResponseDTO(flight.getOrigem().getCodigo(), flight.getOrigem().getNome(), flight.getOrigem().getCidade(), flight.getOrigem().getUF()));
-                flightResponse.setAeroportoDestino(new AirportResponseDTO(flight.getDestino().getCodigo(), flight.getDestino().getNome(), flight.getDestino().getCidade(), flight.getDestino().getUF()));
-                return flightResponse;
+                FlightWithAirportResponseDTO dto = new FlightWithAirportResponseDTO();
+                dto.setCodigo(flight.getCodigo());
+                dto.setData(flight.getData());
+                dto.setValorPassagem(flight.getValor());
+                dto.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
+                dto.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
+                dto.setEstado(flight.getEstado().getCodigo());
+                dto.setAeroportoOrigem(new AirportResponseDTO(flight.getOrigem().getCodigo(), flight.getOrigem().getNome(), flight.getOrigem().getCidade(), flight.getOrigem().getUF()));
+                dto.setAeroportoDestino(new AirportResponseDTO(flight.getDestino().getCodigo(), flight.getDestino().getNome(), flight.getDestino().getCidade(), flight.getDestino().getUF()));
+                return dto;
             })
             .toList();
 
-        FlightByAirportDTO flightByAirportDTO = new FlightByAirportDTO();
-        flightByAirportDTO.setOrigem(origem);
-        flightByAirportDTO.setDestino(destino);
-        flightByAirportDTO.setData(data.atStartOfDay());
-        flightByAirportDTO.setVoos(flightResponses);
+        FlightByAirportDTO result = new FlightByAirportDTO();
+        result.setOrigem(origem);
+        result.setDestino(destino);
+        result.setData(startDate);
+        result.setVoos(flightResponses);
 
-        return flightByAirportDTO;
+        return result;
     }
 
-    public List<FlightWithAirportResponseDTO> searchFlightsByDate (LocalDate dataInicio, LocalDate dataFim) {
-        List<Flight> flights = flightRepository.findAllByDateBetween(dataInicio.atStartOfDay(), dataFim.atStartOfDay());
 
-        return flights.stream()
-            .map(flight -> {
-                FlightWithAirportResponseDTO flightResponse = new FlightWithAirportResponseDTO();
-                flightResponse.setCodigo(flight.getCodigo());
-                flightResponse.setData(flight.getData());
-                flightResponse.setValorPassagem(flight.getValor());
-                flightResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
-                flightResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
-                flightResponse.setEstado(flight.getEstado().getCodigo());
-                return flightResponse;
-            })
-            .toList();
+    public FlightsInIntervalTimeDTO searchFlightsByDate (LocalDate startDate, LocalDate endDate) {
+        OffsetDateTime startDateOffset = startDate.atStartOfDay().atOffset(ZoneOffset.of("-03:00"));
+        OffsetDateTime endDateOffset = endDate.atStartOfDay().atOffset(ZoneOffset.of("-03:00"));
+        List<Flight> flights = flightRepository.findAllByDateBetween(startDateOffset, endDateOffset);
+        
+        FlightsInIntervalTimeDTO result = new FlightsInIntervalTimeDTO();
+        result.setFlights(
+            flights.stream()
+                .map(flight -> {
+                    FlightWithAirportResponseDTO dto = new FlightWithAirportResponseDTO();
+                    dto.setCodigo(flight.getCodigo());
+                    dto.setData(flight.getData());
+                    dto.setValorPassagem(flight.getValor());
+                    dto.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
+                    dto.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
+                    dto.setEstado(flight.getEstado().getCodigo());
+                    dto.setAeroportoOrigem(new AirportResponseDTO(flight.getOrigem().getCodigo(), flight.getOrigem().getNome(), flight.getOrigem().getCidade(), flight.getOrigem().getUF()));
+                    dto.setAeroportoDestino(new AirportResponseDTO(flight.getDestino().getCodigo(), flight.getDestino().getNome(), flight.getDestino().getCidade(), flight.getDestino().getUF()));
+                    return dto;
+                })
+                .toList()
+        );
+        result.setStartDate(startDate);
+        result.setEndDate(endDate);
+
+        return result;
     }
 
     public FlightResponseDTO updateFlight(FlightStatusRequestDTO flightRequest) {
@@ -208,24 +226,38 @@ public class FlightService {
             return SagaResponse.error("SEAT_REQUEST_EXCEEDS_AVAILABILITY", "Número de poltronas ocupadas excede o total.", HttpStatus.BAD_REQUEST.value());
         }
 
-        if(flight.getData().isBefore(LocalDateTime.now())) {
+        if(flight.getData().isBefore(OffsetDateTime.now())) {
             return SagaResponse.error("INVALID_FLIGHT_DATE_PAST", "A data do voo não pode ser anterior a data atual.", HttpStatus.BAD_REQUEST.value());
         }
 
         flight.setPoltronasOcupadas(flight.getPoltronasOcupadas() + request.getSeatsQuantity());
         flightRepository.save(flight);
 
-        UpdateSeatsResponseDTO response = new UpdateSeatsResponseDTO();
-        response.setFlightCode(flight.getCodigo());
-        response.setSeatsQuantity(request.getSeatsQuantity());
-        response.setOriginAirportCode(flight.getOrigem().getCodigo());
-        response.setDestinyAirportCode(flight.getDestino().getCodigo());
-        response.setValue(flight.getValor());
-        response.setMilesUsed(
-        flight.getValor()
-            .divide(BigDecimal.valueOf(5), 0, RoundingMode.CEILING)
-            .intValue()
+        
+
+        FlightWithAirportResponseDTO flightWithAirportResponse = new FlightWithAirportResponseDTO();
+        flightWithAirportResponse.setCodigo(flight.getCodigo());
+        flightWithAirportResponse.setData(flight.getData());
+        flightWithAirportResponse.setValorPassagem(flight.getValor());
+        flightWithAirportResponse.setQuantidadePoltronasTotal(flight.getPoltronasTotais());
+        flightWithAirportResponse.setQuantidadePoltronasOcupadas(flight.getPoltronasOcupadas());
+        flightWithAirportResponse.setEstado(flight.getEstado().getCodigo());
+        flightWithAirportResponse.setAeroportoOrigem(new AirportResponseDTO(flight.getOrigem().getCodigo(), flight.getOrigem().getNome(), flight.getOrigem().getCidade(), flight.getOrigem().getUF()));
+        flightWithAirportResponse.setAeroportoDestino(new AirportResponseDTO(flight.getDestino().getCodigo(), flight.getDestino().getNome(), flight.getDestino().getCidade(), flight.getDestino().getUF()));
+        
+        UpdateSeatsInfoDTO updateSeatsInfo = new UpdateSeatsInfoDTO();
+        updateSeatsInfo.setMilesUsed(
+            flight.getValor()
+                .divide(BigDecimal.valueOf(5), 0, RoundingMode.CEILING)
+                .intValue()
         );
+        updateSeatsInfo.setValue(flight.getValor());
+        updateSeatsInfo.setSeatsQuantity(request.getSeatsQuantity());
+        
+
+        UpdateSeatsResponseDTO response = new UpdateSeatsResponseDTO();
+        response.setFlight(flightWithAirportResponse);
+        response.setInfo(updateSeatsInfo);
 
         return SagaResponse.success(response);
     

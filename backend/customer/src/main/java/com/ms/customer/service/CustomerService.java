@@ -1,7 +1,7 @@
 package com.ms.customer.service;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -126,7 +126,7 @@ public class CustomerService {
 
         milesHistory.setAmountInReais(amountInReais);
         milesHistory.setCustomer(customer);
-        milesHistory.setDate(LocalDateTime.now());
+        milesHistory.setDate(OffsetDateTime.now());
         milesHistory.setDescription("COMPRA DE MILHAS");
         milesHistory.setMilesQuantity(requestDTO.getQuantity());
         milesHistory.setReserveCode("");
@@ -174,14 +174,14 @@ public class CustomerService {
         Customer customer = customerOptional.get();
 
         if (customer.getMilesBalance() < debitSeat.getMilesUsed()) {
-            throw new BusinessException("INSUFFICIENT_MILES", "Saldo de milhas insuficiente.", HttpStatus.BAD_REQUEST.value());
+            throw new BusinessException("INSUFFICIENT_MILES", "Saldo de milhas insuficiente", HttpStatus.BAD_REQUEST.value());
         }
 
         customer.setMilesBalance(customer.getMilesBalance() - debitSeat.getMilesUsed());
 
         MilesHistory transaction = new MilesHistory();
         transaction.setCustomer(customer);
-        transaction.setDate(LocalDateTime.now());
+        transaction.setDate(OffsetDateTime.now());
         transaction.setAmountInReais(debitSeat.getValue());
         transaction.setReserveCode(debitSeat.getReserveCode());
         transaction.setMilesQuantity(debitSeat.getMilesUsed());
@@ -221,7 +221,7 @@ public class CustomerService {
 
         MilesHistory transaction = new MilesHistory();
         transaction.setCustomer(customer);
-        transaction.setDate(LocalDateTime.now());
+        transaction.setDate(OffsetDateTime.now());
         transaction.setAmountInReais(BigDecimal.ZERO);
         transaction.setReserveCode(dto.getReserverCode());
         transaction.setMilesQuantity(dto.getAmount());

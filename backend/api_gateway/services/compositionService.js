@@ -6,9 +6,13 @@ const { RESERVATION, FLIGHT, AUTH, CUSTOMER, EMPLOYEE } = require('../config/ser
 
 exports.listCustomerReservations = async customerId => {
   try {
-    const { data: reservas } = await axios.get(
+    const { data: reservas, status } = await axios.get(
       `${RESERVATION}/reservas?clienteId=${customerId}`
     );
+
+    if (status === 204) {
+      return [];
+    }
 
     const withFlights = await Promise.all(
       reservas.map(async r => {
@@ -23,6 +27,7 @@ exports.listCustomerReservations = async customerId => {
     return withFlights;
   }
   catch (err) {
+    console.log(err);
     if (err.response) {
       const { status, data } = err.response;
       throw createError(status, data.message || 'Erro ao buscar reservas do cliente');

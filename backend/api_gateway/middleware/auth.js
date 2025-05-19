@@ -12,7 +12,7 @@ module.exports = function authenticateJWT(req, res, next) {
 
   jwt.verify(token, process.env.SECRET, (err, payload) => {
     if (err) {
-      return res.status(403).json({ message: 'Token inválido ou expirado' });
+      return res.status(401).json({ message: 'Token inválido ou expirado' });
     }
     req.user = { login: payload.sub, role: payload.role };
     next();

@@ -16,4 +16,10 @@ exports.proxyToSagasComId = (rotaCompleta, req, res, next) => {
     return proxy(req, res, next, rotaCompleta);
 };
 
+exports.proxyToFlightComQuery = (rotaCompleta, req, res, next) => {
+  req.urlProxy = rotaCompleta;
+  const proxy = proxyService(FLIGHT, '/voos');
+  return proxy(req, res, next);
+};
+
 exports.proxyToAirports = proxyService(FLIGHT, '/aeroportos');
