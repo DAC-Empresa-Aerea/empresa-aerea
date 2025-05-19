@@ -8,7 +8,8 @@ import com.ms.saga.dto.Roles;
 import com.ms.saga.dto.auth.create.CreateAuthRequestDTO;
 import com.ms.saga.dto.auth.create.CreateAuthResponseDTO;
 import com.ms.saga.dto.auth.delete.DeleteAuthRequestDTO;
-import com.ms.saga.dto.auth.update.UpdateAuthDTO;
+import com.ms.saga.dto.auth.update.UpdateAuthRequestDTO;
+import com.ms.saga.dto.auth.update.UpdateAuthResponseDTO;
 import com.ms.saga.dto.employee.EmployeeRequestDTO;
 import com.ms.saga.dto.employee.EmployeeResponseDTO;
 import com.ms.saga.dto.employee.delete.DeleteEmployeeResponseDTO;
@@ -61,8 +62,8 @@ public class EmployeeOrchestrator {
             throw new BusinessException(error);
         }
 
-        SagaResponse<UpdateAuthDTO> authResponse = authProducer.sendUpdateAuth(
-            new UpdateAuthDTO(employeeResponse.getData().getEmail(), employeeResponse.getData().getOldEmail(), employeeRequest.getPassword(), Roles.EMPLOYEE)
+        SagaResponse<UpdateAuthResponseDTO> authResponse = authProducer.sendUpdateAuth(
+            new UpdateAuthRequestDTO(employeeResponse.getData().getEmail(), employeeResponse.getData().getOldEmail(), employeeRequest.getPassword(), Roles.EMPLOYEE)
         );
 
         if(!authResponse.isSuccess()) {
