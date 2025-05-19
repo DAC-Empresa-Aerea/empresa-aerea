@@ -13,18 +13,20 @@ const flightRoutes = express.Router();
 flightRoutes.use(authenticateJWT);
 
 flightRoutes.get('/', authorizeRoles('FUNCIONARIO', 'CLIENTE'), (req, res, next) => {
-  const { data, dataFim, origem, destino } = req.query;
+  const { origem, destino } = req.query;
+  const dataInicio = req.query['data'] || req.query['inicio'];
+  const dataFim = req.query['data-fim'] || req.query['fim'];
 
   const formatDate = (isoString) => {
     if (!isoString) return undefined;
     return isoString.substring(0, 10);
   };
 
-  const dataFormatada = formatDate(data);
+  const dataInicioFormatada = formatDate(dataInicio);
   const dataFimFormatada = formatDate(dataFim);
 
   const params = {};
-  if (dataFormatada) params.data = dataFormatada;
+  if (dataInicioFormatada) params.data = dataInicioFormatada;
   if (dataFimFormatada) params['data-fim'] = dataFimFormatada;
   if (origem) params.origem = origem;
   if (destino) params.destino = destino;
