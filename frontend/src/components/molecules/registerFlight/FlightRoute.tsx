@@ -1,11 +1,11 @@
 import DropdownInput from "../../atoms/inputs/DropdownInput";
-import { getAirports } from "../../../services/airportService";
+import { Airport } from "../../../types/api/flight";
 interface FlightRouteProps {
   originAirportCode: string;
   destinationAirportCode: string;
   setOriginAirportCode: (value: string) => void;
   setDestinationAirportCode: (value: string) => void;
-  airports: string[];
+  airports: Airport[];
 }
 
 const FlightRoute = ({
@@ -21,8 +21,8 @@ const FlightRoute = ({
         <h3 className="text-gray-800 ml-2">Aeroporto de saída:</h3>
         <DropdownInput
           options={airports.filter(
-            (airport) => airport !== destinationAirportCode
-          )}
+            (airport) => airport.codigo !== destinationAirportCode
+          ).map((airport) => airport.codigo)}
           setSelectedValue={setOriginAirportCode}
           value={originAirportCode}
           required
@@ -31,7 +31,7 @@ const FlightRoute = ({
       <div className="flex-1">
         <h3 className="text-gray-800 ml-2">Aeroporto de chegada:</h3>
         <DropdownInput
-          options={airports.filter((airport) => airport !== originAirportCode)}
+          options={airports.filter((airport) => airport.codigo !== originAirportCode).map((airport) => airport.codigo)}
           setSelectedValue={setDestinationAirportCode}
           value={destinationAirportCode}
           required

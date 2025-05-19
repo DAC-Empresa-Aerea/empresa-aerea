@@ -6,11 +6,11 @@ import { useAuth } from "../../../../contexts/loginContext";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated, logout } = useAuth();
+  const { isAuthenticated, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
-    logout();
+    signOut();
     navigate("/login"); 
   };
 

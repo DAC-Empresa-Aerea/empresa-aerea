@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import LogoImage from "../../atoms/images/LogoImage";
 import MaskedInput from "../../atoms/inputs/MaskedInput";
 import FlightDate from "../../molecules/registerFlight/FlightDate";
@@ -7,21 +7,8 @@ import FlightSeats from "../../molecules/registerFlight/FlightSeat";
 import SubmitButton from "../../atoms/buttons/SubmitButton";
 import FlightPrice from "../../molecules/registerFlight/FlightPrice";
 import Flight from "../../../types/Flight";
-import { getAirportByCode } from "../../../services/airportService";
-import { createFlight } from "../../../services/flightsService";
-import { getAirports } from "../../../services/airportService";
-import { useNavigate } from "react-router-dom";
+import { useAirports } from "../../../hooks/useAiports";
 import ConfirmCreateFlightModal from "../../molecules/modalsMolecules/ConfirmCreateFlightModal";
-
-function generateFlightCode() {
-  const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-  const letterPart = Array.from({ length: 4 }, () =>
-    letters[Math.floor(Math.random() * letters.length)]
-  ).join("");
-  const numberPart = Math.floor(1000 + Math.random() * 9000); // 1000–9999
-  return `${letterPart}${numberPart}`;
-}
-
 
 function RegisterFlightsForm() {
   const [flight, setFlight] = useState<Flight>({
@@ -44,50 +31,17 @@ function RegisterFlightsForm() {
       uf: "",
     },
   });
-  const [airports, setAirports] = useState([]);
   const [flightDate, setFlightDate] = useState(() => new Date().toISOString().slice(0, 10));
   const [flightTime, setFlightTime] = useState("00:00");
   const [isModalOpen, setIsModalOpen] = useState(false); 
-  const navigate = useNavigate();
 
-  useEffect(() => {
-    getAirports()
-      .then((data) => {
-        const airportCodes = data.map((airport: any) => airport.codigo);
-        setAirports(airportCodes);
-
-        setFlight((prev) => ({
-          ...prev,
-          codigo: generateFlightCode(),
-          quantidade_poltronas_ocupadas: 0,
-        }));
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar voos:", error);
-      });
-  }, []);
+  const { data: airports = [], isLoading, error } = useAirports();
 
   const onSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsModalOpen(true);
   };
 
-const handleCreateFlight = async () => {
-  try {
-    const combinedDateTime = new Date(`${flightDate}T${flightTime}:00`);
-
-    await createFlight({
-      ...flight,
-      data: combinedDateTime,
-    });
-
-    navigate("/employee/home");
-    setIsModalOpen(false);
-  } catch (error) {
-    console.error("Erro ao criar voo:", error);
-    setIsModalOpen(false);
-  }
-};
 
   return (
     <div className="flex min-h-dvh items-center justify-center font-roboto">
@@ -108,11 +62,10 @@ const handleCreateFlight = async () => {
             destinationAirportCode={flight.aeroporto_destino?.codigo || ""}
             setOriginAirportCode={async (value) => {
               try {
-                const aeroporto = await getAirportByCode(value);
-                const { id, ...aeroportoSemId } = aeroporto;
+                const aeroporto = (Array.isArray(airports) ? airports : airports.data).find((a) => a.codigo === value);
                 setFlight({
                   ...flight,
-                  aeroporto_origem: aeroportoSemId,
+                  aeroporto_origem: aeroporto ? aeroporto : { codigo: "", nome: "", cidade: "", uf: "" },
                 });
               } catch (error) {
                 console.error(error);
@@ -120,17 +73,16 @@ const handleCreateFlight = async () => {
             }}
             setDestinationAirportCode={async (value) => {
               try {
-                const aeroporto = await getAirportByCode(value);
-                const { id, ...aeroportoSemId } = aeroporto;
+                const aeroporto = (Array.isArray(airports) ? airports : airports.data).find((a) => a.codigo === value);
                 setFlight({
                   ...flight,
-                  aeroporto_destino: aeroportoSemId,
+                  aeroporto_destino: aeroporto ? aeroporto : { codigo: "", nome: "", cidade: "", uf: "" },
                 });
               } catch (error) {
                 console.error(error);
               }
             }}
-            airports={airports}
+            airports={Array.isArray(airports) ? airports : airports.data}
           />
 
           <FlightPrice

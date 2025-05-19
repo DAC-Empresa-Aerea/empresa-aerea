@@ -1,8 +1,8 @@
 import { FaTimes } from "react-icons/fa";
 import Flight from "../../../types/Flight";
-import { createFlight } from "../../../services/flightsService";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
+import { useCreateFlight } from "../../../hooks/flights/useCreateFlight";
 
 interface ConfirmCreateFlightModalProps {
   flight: Flight;
@@ -16,10 +16,17 @@ function ConfirmCreateFlightModal({ flight, isOpen, onClose }: ConfirmCreateFlig
 
   if (!isOpen) return null;
 
+  const { mutateAsync: createFlight } = useCreateFlight();
+
   const handleCreateFlight = async () => {
     setStatus("loading");
     try {
-      await createFlight(flight);
+      await createFlight({
+        ...flight,
+        data: new Date(flight.data).toISOString(),
+        codigo_aeroporto_origem: flight.aeroporto_origem.codigo,
+        codigo_aeroporto_destino: flight.aeroporto_destino.codigo,
+      });
       setStatus("success");
       setTimeout(() => {
         navigate("/employee/home");
