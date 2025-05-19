@@ -174,16 +174,16 @@ public class AuthService {
         authRepository.delete(auth);
     }
 
-    public void logout(LogoutAuthDTO dto) {
-        Claims claims = Jwts.parserBuilder()
-            .setSigningKey(jwtProperties.getSecret().getBytes())
-            .build()
-            .parseClaimsJws(dto.getToken())
-            .getBody();
+    // public void logout(LogoutAuthDTO dto) {
+    //     Claims claims = Jwts.parserBuilder()
+    //         .setSigningKey(jwtProperties.getSecret().getBytes())
+    //         .build()
+    //         .parseClaimsJws(dto.getToken())
+    //         .getBody();
 
-        String jti = claims.getId();
-        Date exp = claims.getExpiration();
-        blacklistService.blacklistToken(jti, exp);
-    }
+    //     String jti = claims.getId();
+    //     Date exp = claims.getExpiration();
+    //     blacklistService.blacklistToken(jti, exp);
+    // }
 
 }

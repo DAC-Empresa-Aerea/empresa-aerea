@@ -54,15 +54,8 @@ public class AuthConsumer {
     }
 
     @RabbitListener(queues = RabbitMQConfig.DELETE_AUTH_QUEUE)
-    public SagaResponse<Void> receiveDeleteAuthQueue(@Payload DeleteAuthRequestDTO request) {
-        try {
-            authService.deleteAuth(request);
-            return SagaResponse.success(null);
-        } catch (BusinessException e) {
-            return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
-        } catch (Exception e) {
-            return SagaResponse.error("DELETE_AUTH_FAILED", "Falha ao deletar autenticação", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
+    public void receiveDeleteAuthQueue(@Payload DeleteAuthRequestDTO request) {
+        authService.deleteAuth(request);
     }
 
 }
