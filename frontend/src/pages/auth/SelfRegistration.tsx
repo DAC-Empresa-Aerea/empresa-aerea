@@ -6,7 +6,7 @@ import MaskedInput from "../../components/atoms/inputs/MaskedInput";
 import { fetchAddressByCep } from "../../utils/ViaCep";
 import SubmitButton from "../../components/atoms/buttons/SubmitButton";
 //import { register } from "../../services/authService";
-import { registerCustomer } from "../../services/customerService";
+import { useCreateCustomer } from "../../hooks/customers/useCreateCustomer";
 
 const SelfRegistration = () => {
   const [name, setName] = useState("");
@@ -24,6 +24,7 @@ const SelfRegistration = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { mutateAsync: registerCustomer } = useCreateCustomer();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -36,6 +37,7 @@ const SelfRegistration = () => {
         cpf,
         email,
         nome: name,
+        saldo_milhas: 0,
         endereco: {
           cep,
           uf: state,
@@ -43,6 +45,7 @@ const SelfRegistration = () => {
           rua: street,
           numero: number,
           complemento: complement,
+          bairro: ""
         }
       });
 
@@ -53,8 +56,9 @@ const SelfRegistration = () => {
       }, 2000);
 
     } catch (err: any) {
+      console.error(err);
       const errorMessage =
-        err?.response?.data?.message ||
+        err?.response?.data?.erro ||
         (err instanceof Error ? err.message : "Erro ao registrar. Tente novamente.");
       setError(errorMessage);
     } finally {

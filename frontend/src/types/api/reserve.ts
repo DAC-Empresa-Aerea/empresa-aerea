@@ -1,6 +1,7 @@
 import { FlightWithAirports } from "./flight";
 
 export enum ReserveStatus {
+  CRIADA = "CRIADA", 
   CONFIRMADO = "CONFIRMADO",
   CHECKIN = "CHECK-IN",
   EMBARCADO = "EMBARCADA",

@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import MilesPurchaseHeader from "../../components/organisms/milesOrganisms/MilesPurchaseHeader";
 import StatementTable from "../../components/organisms/StatementTable";
-import { getMilesStatementByCustomerCode } from "../../services/milesService";
 import { useAuth } from "../../contexts/loginContext";
 import { MilesTransaction } from "../../types/api/miles";
 import { useGetMiles } from "../../hooks/customers/useGetMiles";
@@ -40,8 +39,19 @@ const ConsultStatement = () => {
         />
 
         {error && <p className="text-red-500 mb-4">{error}</p>}
-
-        <StatementTable statements={statement} />
+        {statement.length === 0 ? (
+          <p className="text-xl font-bold mb-4 text-center">
+            Nenhuma transação encontrada.
+          </p>
+        ) : (
+          <>
+            <p className="text-xl font-bold mb-4 text-center">
+              Total de transações: {statement.length}
+            </p>
+            <StatementTable statements={statement} />
+          </>
+        )}
+        
       </div>
     </div>
   );

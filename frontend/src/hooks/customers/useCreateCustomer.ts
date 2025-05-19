@@ -1,4 +1,3 @@
-// hooks/customers/useCreateCustomer.ts
 import { useMutation } from '@tanstack/react-query';
 import { queryClient } from '../../App';
 import { createCustomer } from '../../services/costumers';
