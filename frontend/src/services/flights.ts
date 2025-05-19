@@ -31,3 +31,4 @@ export const updateFlightStatus = (
   codigo: string,
   body: UpdateFlightStatusRequest
 ) => api.patch<FlightWithAirportCodes>(`/voos/${codigo}/estado`, body);
+
