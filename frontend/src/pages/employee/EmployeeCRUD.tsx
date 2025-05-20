@@ -6,11 +6,16 @@ import BasicModal, {
 } from "../../components/atoms/modals/_BasicModal";
 import EmployeeForm from "../../components/organisms/EmployeeForm";
 import CircularButton from "../../components/atoms/buttons/CircularButton";
-import EmployeeService from "../../services/EmployeeService";
+import { useEmployees } from "../../hooks/employees/useEmployees";
+import { useCreateEmployee } from "../../hooks/employees/useCreateEmployee";
+import { useUpdateEmployee } from "../../hooks/employees/useUpdateEmployee";
+import { useDeleteEmployee } from "../../hooks/employees/useDeleteEmployee";
 
 function EmployeeCRUD() {
   const [employees, setEmployees] = useState<Employee[]>([]);
-  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(null);
+  const [selectedEmployee, setSelectedEmployee] = useState<Employee | null>(
+    null
+  );
   const [confirmDelete, setConfirmDelete] = useState<Employee | null>(null);
 
   const [openModal, setOpenModal] = useState<CloseOptions>({
@@ -22,11 +27,14 @@ function EmployeeCRUD() {
     text: "Fechar",
   });
 
+  const { data: employeesData, refetch } = useEmployees();
+  const createEmployeeMutation = useCreateEmployee();
+  const updateEmployeeMutation = useUpdateEmployee();
+  const deleteEmployeeMutation = useDeleteEmployee();
+
   useEffect(() => {
-    EmployeeService.getAll()
-      .then(setEmployees)
-      .catch((err) => console.error("Erro ao buscar funcionários:", err));
-  }, []);
+    if (employeesData) setEmployees(employeesData);
+  }, [employeesData]);
 
   const handleDeleteEmployee = (employee?: Employee | null) => {
     if (employee) {
@@ -37,8 +45,7 @@ function EmployeeCRUD() {
   const confirmDeleteEmployee = async () => {
     if (confirmDelete) {
       try {
-        const { codigo } = await EmployeeService.getByCodigo(confirmDelete.codigo);
-        await EmployeeService.remove(codigo);
+        await deleteEmployeeMutation.mutateAsync(confirmDelete.codigo);
         setEmployees((prev) =>
           prev.filter((emp) => emp.codigo !== confirmDelete.codigo)
         );
@@ -59,18 +66,24 @@ function EmployeeCRUD() {
   const onConfirmEdit = async (employee: Employee) => {
     try {
       employee.telefone = employee.telefone.replace(/\D/g, "");
-
       if (employee.codigo) {
-        const { codigo } = await EmployeeService.getByCodigo(employee.codigo);
-        const updated = await EmployeeService.update(codigo, employee);
+        // Para update, garantir senha (pode ser string vazia se não for alterada)
+        await updateEmployeeMutation.mutateAsync({
+          codigo: employee.codigo,
+          data: { ...employee, senha: "" },
+        });
         setEmployees((prev) =>
-          prev.map((emp) => (emp.codigo === updated.codigo ? updated : emp))
+          prev.map((emp) => (emp.codigo === employee.codigo ? employee : emp))
         );
       } else {
-        const created = await EmployeeService.create(employee);
+        // Para create, gerar senha aleatória
+        const senha = Math.random().toString(36).slice(-6);
+        const created = await createEmployeeMutation.mutateAsync({
+          ...employee,
+          senha,
+        });
         setEmployees((prev) => [...prev, created]);
       }
-
       setSelectedEmployee(null);
       setOpenModal((prev) => ({ ...prev, isOpen: false }));
     } catch (err) {
@@ -102,7 +115,10 @@ function EmployeeCRUD() {
             text: "Fechar",
           }}
         >
-          <p>Tem certeza que deseja excluir o funcionário <strong>{confirmDelete.nome}</strong>?</p>
+          <p>
+            Tem certeza que deseja excluir o funcionário{" "}
+            <strong>{confirmDelete.nome}</strong>?
+          </p>
           <div className="flex justify-end mt-4 gap-2 w-full">
             <button
               onClick={confirmDeleteEmployee}
@@ -110,7 +126,6 @@ function EmployeeCRUD() {
             >
               Confirmar Deleção
             </button>
-
           </div>
         </BasicModal>
       )}
