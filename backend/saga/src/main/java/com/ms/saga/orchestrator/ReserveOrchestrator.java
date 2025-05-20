@@ -51,8 +51,8 @@ public class ReserveOrchestrator {
         // Criação de uma reserva (precisa do código)
         RegisterReserveRequestDTO registerReserveRequestDTO = new RegisterReserveRequestDTO(
             reserveRequest.getCustomerCode(),
-            seatsResponse.getData().getInfo().getValue(),
-            seatsResponse.getData().getInfo().getMilesUsed(),
+            reserveRequest.getValue(),
+            reserveRequest.getMilesUsed(),
             reserveRequest.getFlightCode(),
             seatsResponse.getData().getInfo().getSeatsQuantity()
         );
@@ -73,8 +73,8 @@ public class ReserveOrchestrator {
         DebitSeatRequestDTO seatDebit = new DebitSeatRequestDTO(
             reserveRequest.getCustomerCode(), 
             registerReserveResponse.getData().getReserveCode(),
-            seatsResponse.getData().getInfo().getMilesUsed(),
-            seatsResponse.getData().getInfo().getValue(),
+            reserveRequest.getMilesUsed(),
+            reserveRequest.getValue(),
             seatsResponse.getData().getInfo().getSeatsQuantity(),
             seatsResponse.getData().getFlight().getOriginAirport().getCode(),
             seatsResponse.getData().getFlight().getDestinyAirport().getCode()
@@ -98,8 +98,8 @@ public class ReserveOrchestrator {
         reserveFlightResponseDTO.setCode(debitSeatResponseDTO.getData().getReserveCode());
         reserveFlightResponseDTO.setCustomerCode(debitSeatResponseDTO.getData().getCustomerCode());
         reserveFlightResponseDTO.setDate(registerReserveResponse.getData().getDate());
-        reserveFlightResponseDTO.setValue(debitSeatResponseDTO.getData().getValue());
-        reserveFlightResponseDTO.setMilesUsed(debitSeatResponseDTO.getData().getMilesUsed());
+        reserveFlightResponseDTO.setValue(reserveRequest.getValue());
+        reserveFlightResponseDTO.setMilesUsed(reserveRequest.getMilesUsed());
         reserveFlightResponseDTO.setStatus(registerReserveResponse.getData().getStatus());
         reserveFlightResponseDTO.setSeatsQuantity(debitSeatResponseDTO.getData().getSeatsQuantity());
         reserveFlightResponseDTO.setFlight(seatsResponse.getData().getFlight());

@@ -174,7 +174,7 @@ public class CustomerService {
         Customer customer = customerOptional.get();
 
         if (customer.getMilesBalance() < debitSeat.getMilesUsed()) {
-            throw new BusinessException("INSUFFICIENT_MILES", "Saldo de milhas insuficiente.", HttpStatus.BAD_REQUEST.value());
+            throw new BusinessException("INSUFFICIENT_MILES", "Saldo de milhas insuficiente", HttpStatus.BAD_REQUEST.value());
         }
 
         customer.setMilesBalance(customer.getMilesBalance() - debitSeat.getMilesUsed());

@@ -16,7 +16,4 @@ public class LogoutAuthDTO {
     @Email(message = "O login deve ser um e-mail válido")
     private String login;
 
-    @JsonProperty("token")    
-    private String token;
-
 }
