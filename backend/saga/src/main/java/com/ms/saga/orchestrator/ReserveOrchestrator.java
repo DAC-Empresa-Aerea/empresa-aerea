@@ -10,6 +10,7 @@ import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
 import com.ms.saga.dto.flight.updateSeats.rollback.RollbackReserveSeatsDTO;
+import com.ms.saga.dto.reserve.cancel.BuscarReservaRequestDTO;
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
@@ -19,6 +20,7 @@ import com.ms.saga.exception.BusinessException;
 import com.ms.saga.producer.CustomerProducer;
 import com.ms.saga.producer.FlightProducer;
 import com.ms.saga.producer.ReserveProducer;
+import com.ms.saga.dto.reserve.cancel.BuscarReservaResponseDTO;
 
 @Component
 public class ReserveOrchestrator {
@@ -105,33 +107,22 @@ public class ReserveOrchestrator {
         return reserveFlightResponseDTO;
     }
 
-    public CancelReserveResponseDTO processCancelReserve(String id) {
-        // Validar existencia de reserva e se pode ser cancelada (estado = criada,
-        // checkin)
-        // Se erro, retorna 404
-        SagaResponse<RegisterReserveResponseDTO> reserveResponse = reserveProducer.sendGetReserve(id);
+    public BuscarReservaResponseDTO processCancelReserve(String id) {
+        System.out.println("Cancelando reserva: " + id);
 
-        if (!reserveResponse.isSuccess()) {
-            throw new BusinessException(reserveResponse.getError());
+        // 1. Buscar reserva
+        BuscarReservaRequestDTO buscarDto = new BuscarReservaRequestDTO();
+        buscarDto.setReservaId(id);
+
+        SagaResponse<BuscarReservaResponseDTO> reserveResponse = reserveProducer.sendGetReserve(id);
+
+        if (!reserveResponse.isSuccess() || reserveResponse.getData() == null) {
+            throw new BusinessException("Reserva não encontrada ou erro ao buscar");
         }
 
-        RegisterReserveResponseDTO reserveData = reserveResponse.getData();
+        BuscarReservaResponseDTO reserva = reserveResponse.getData();
 
-        // 2 - Validar se pode ser cancelada
-        if (!reserveData.getStatus().equalsIgnoreCase("CRIADA") && !reserveData.getStatus().equalsIgnoreCase("CHECKIN")) {
-            throw new BusinessException("Reserva não pode ser cancelada com status atual: " + reserveData.getStatus());
-        }
-        // Cancelar a reserva
-        // Retornar valor da reserva
-        // Se erro, rollback
-        // Atualiza poltronas do voo
-        // Se erro, rollback
-        // Retorna valor
-
-        // Lembrar de usar o ErrorDTO e SagaResponse
-        // Validacao do voo e atualizacao de poltronas
-
-        return new CancelReserveResponseDTO();
+        return reserva;
     }
 
     // Update status reserve because the flight status changed

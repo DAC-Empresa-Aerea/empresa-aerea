@@ -10,6 +10,8 @@ import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.saga.dto.reserve.cancel.BuscarReservaRequestDTO;
+import com.ms.saga.dto.reserve.cancel.BuscarReservaResponseDTO;
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 
 @Component
@@ -43,12 +45,12 @@ public class ReserveProducer {
         return (SagaResponse<Void>) reply;
     }
 
-    public SagaResponse<RegisterReserveResponseDTO> sendGetReserve(String reserveCode) {
+    public SagaResponse<BuscarReservaResponseDTO> sendGetReserve(String reserveCode) {
     return rabbitTemplate.convertSendAndReceiveAsType(
         RabbitMQConfig.GET_RESERVE_EXCHANGE,          
         RabbitMQConfig.GET_RESERVE_ROUTING_KEY,       
         reserveCode,                                  
-        new ParameterizedTypeReference<SagaResponse<RegisterReserveResponseDTO>>() {}
+        new ParameterizedTypeReference<SagaResponse<BuscarReservaResponseDTO>>() {}
     );
     }
 
