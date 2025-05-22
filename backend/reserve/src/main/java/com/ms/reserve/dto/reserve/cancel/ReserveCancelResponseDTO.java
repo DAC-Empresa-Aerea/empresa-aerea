@@ -1,4 +1,4 @@
-package com.ms.saga.dto.reserve.cancel;
+package com.ms.reserve.dto.reserve.cancel;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -10,19 +10,12 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-
 @AllArgsConstructor
 @NoArgsConstructor
 @Getter
 @Setter
-public class BuscarReservaResponseDTO {
-    
-    @JsonProperty("encontrada")
-    private boolean encontrada;
-
-    @JsonProperty("mensagem")
-    private String mensagem;
-
+public class ReserveCancelResponseDTO {
+        
 	@JsonProperty("codigo")
 	private String code;
 
@@ -52,4 +45,6 @@ public class BuscarReservaResponseDTO {
 
 	@JsonProperty("codigo_aeroporto_destino")
 	private String destinyAirportCode;
+    
 }
+

@@ -10,9 +10,9 @@ import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
-import com.ms.saga.dto.reserve.cancel.BuscarReservaRequestDTO;
-import com.ms.saga.dto.reserve.cancel.BuscarReservaResponseDTO;
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelRequestDTO;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelResponseDTO;
 
 @Component
 public class ReserveProducer {
@@ -45,15 +45,17 @@ public class ReserveProducer {
         return (SagaResponse<Void>) reply;
     }
 
-    public SagaResponse<BuscarReservaResponseDTO> sendGetReserve(String reserveCode) {
+    //Esta sendo usado para buscar reserva
+    public SagaResponse<ReserveCancelResponseDTO> sendGetReserve(ReserveCancelRequestDTO dto) {
     return rabbitTemplate.convertSendAndReceiveAsType(
         RabbitMQConfig.GET_RESERVE_EXCHANGE,          
         RabbitMQConfig.GET_RESERVE_ROUTING_KEY,       
-        reserveCode,                                  
-        new ParameterizedTypeReference<SagaResponse<BuscarReservaResponseDTO>>() {}
+        dto,                                  
+        new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
     );
     }
 
+    //ainda nao foi implementado
     public SagaResponse<RegisterReserveResponseDTO> sendCanecelReserve(CancelReserveResponseDTO cancelRequest) {
         return rabbitTemplate.convertSendAndReceiveAsType(
                 RabbitMQConfig.CANCEL_RESERVE_EXCHANGE,
@@ -63,6 +65,7 @@ public class ReserveProducer {
         );
     }
 
+    //ainda nao foi implementado
     public void sendRollbackCancelReserve(String reserveCode) {
         rabbitTemplate.convertAndSend(
                 RabbitMQConfig.CANCEL_RESERVE_EXCHANGE,
@@ -71,6 +74,7 @@ public class ReserveProducer {
         );
     }
 
+    //ainda nao foi implementado
     public SagaResponse<Void> updateStatusReserveCancel(CancelReserveResponseDTO dto) {
         Object reply = rabbitTemplate
             .convertSendAndReceive(

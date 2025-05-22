@@ -10,8 +10,9 @@ import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
 import com.ms.saga.dto.flight.updateSeats.rollback.RollbackReserveSeatsDTO;
-import com.ms.saga.dto.reserve.cancel.BuscarReservaRequestDTO;
 import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelRequestDTO;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.saga.dto.reserve.reserveFlight.ReserveFlightRequestDTO;
@@ -20,7 +21,6 @@ import com.ms.saga.exception.BusinessException;
 import com.ms.saga.producer.CustomerProducer;
 import com.ms.saga.producer.FlightProducer;
 import com.ms.saga.producer.ReserveProducer;
-import com.ms.saga.dto.reserve.cancel.BuscarReservaResponseDTO;
 
 @Component
 public class ReserveOrchestrator {
@@ -107,20 +107,20 @@ public class ReserveOrchestrator {
         return reserveFlightResponseDTO;
     }
 
-    public BuscarReservaResponseDTO processCancelReserve(String id) {
+    public ReserveCancelResponseDTO processCancelReserve(String id) {
         System.out.println("Cancelando reserva: " + id);
 
         // 1. Buscar reserva
-        BuscarReservaRequestDTO buscarDto = new BuscarReservaRequestDTO();
+        ReserveCancelRequestDTO buscarDto = new ReserveCancelRequestDTO();
         buscarDto.setReservaId(id);
 
-        SagaResponse<BuscarReservaResponseDTO> reserveResponse = reserveProducer.sendGetReserve(id);
+        SagaResponse<ReserveCancelResponseDTO> reserveResponse = reserveProducer.sendGetReserve(buscarDto);
 
         if (!reserveResponse.isSuccess() || reserveResponse.getData() == null) {
             throw new BusinessException("Reserva não encontrada ou erro ao buscar");
         }
 
-        BuscarReservaResponseDTO reserva = reserveResponse.getData();
+        ReserveCancelResponseDTO reserva = reserveResponse.getData();
 
         return reserva;
     }

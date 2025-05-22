@@ -6,6 +6,7 @@ import org.springframework.stereotype.Component;
 
 import com.ms.reserve.config.RabbitMQConfig;
 import com.ms.reserve.dto.error.SagaResponse;
+import com.ms.reserve.dto.reserve.cancel.ReserveCancelRequestDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.reserve.dto.status.FlightStatusDTO;
@@ -50,6 +51,21 @@ public class ReserveConsumer {
             return SagaResponse.error(e.getMessage(), e.getCode(), e.getStatus());
         } catch (Exception e) {
             return SagaResponse.error("UPDATE_RESERVE_ERROR", e.getMessage(), 500);
+        }
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.GET_RESERVE_QUEUE)
+    public SagaResponse<String> searchReserve(ReserveCancelRequestDTO dto) {
+        String reserve_id = dto.getReservaId();
+        System.out.println("Recebido ID para busca: " + reserve_id);
+        try {
+            reserveService.getReserveById(reserve_id);
+            return SagaResponse.success("GET_RESERVE_SUCESS");
+        }
+        catch (BusinessException e) {
+            return SagaResponse.error(e.getMessage(), e.getCode(), e.getStatus());
+        } catch (Exception e) {
+            return SagaResponse.error("GET_RESERVE_ERROR", e.getMessage(), 400);
         }
     }
     

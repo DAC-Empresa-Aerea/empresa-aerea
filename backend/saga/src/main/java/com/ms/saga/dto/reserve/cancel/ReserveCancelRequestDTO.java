@@ -13,7 +13,7 @@ import lombok.Setter;
 @Getter
 @Setter
 
-public class BuscarReservaRequestDTO {
+public class ReserveCancelRequestDTO {
     
     @JsonProperty("reservaId")
     private String reservaId;

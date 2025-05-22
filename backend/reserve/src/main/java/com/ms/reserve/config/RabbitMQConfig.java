@@ -38,6 +38,10 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_CANCEL_RESERVE_QUEUE = "rollback.cancel.reserve.queue";
     public static final String ROLLBACK_CANCEL_RESERVE_EXCHANGE = "rollback.cancel.reserve.exchange";
     public static final String ROLLBACK_CANCEL_RESERVE_ROUTING_KEY = "rollback.cancel.reserve.routing.key";
+
+    public static final String GET_RESERVE_QUEUE = "get.reserve.queue";
+    public static final String GET_RESERVE_EXCHANGE = "get.reserve.exchange";
+    public static final String GET_RESERVE_ROUTING_KEY = "get.reserve.routing.key";
     
     @Bean
     public Queue reserveStatusUpdatedQueue() {
