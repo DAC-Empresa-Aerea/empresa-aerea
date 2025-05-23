@@ -19,6 +19,7 @@ import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatRequestDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatResponseDTO;
+import com.ms.customer.dto.getMiles.GetMilesResponseDTO;
 import com.ms.customer.dto.refundMiles.RefundMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesRequestDTO;
 import com.ms.customer.dto.updateMiles.UpdateMilesResponseDTO;
@@ -236,6 +237,16 @@ public class CustomerService {
         }
 
         return refundMiles;
+    }
+
+    public GetMilesResponseDTO getMilesById(Long code) {
+        Customer customer = customerRepository.findById(code)
+                .orElseThrow(() -> new BusinessException("CUSTOMER_NOT_FOUND", "Cliente não encontrado.", HttpStatus.NOT_FOUND.value()));
+
+        return new GetMilesResponseDTO(
+            customer.getCode(),
+            customer.getMilesBalance()
+        );
     }
 
 }

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.customer.CustomerRequestDTO;
 import com.ms.saga.dto.customer.CustomerResponseDTO;
+import com.ms.saga.dto.customer.GetMilesRequestDTO;
+import com.ms.saga.dto.customer.GetMilesResponseDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatRequestDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatResponseDTO;
 import com.ms.saga.dto.customer.refundMiles.RefundMilesRequestDTO;
@@ -58,6 +60,15 @@ public class CustomerProducer {
             RabbitMQConfig.REFUND_MILES_ROUTING_KEY,
             dto, 
             new ParameterizedTypeReference<SagaResponse<List<RefundMilesRequestDTO>>>() {}
+        );
+    }
+
+    public SagaResponse<GetMilesResponseDTO> sendGetMiles(GetMilesRequestDTO customer) {
+        return rabbitTemplate.convertSendAndReceiveAsType(
+            RabbitMQConfig.GET_MILES_EXCHANGE,
+            RabbitMQConfig.GET_MILES_ROUTING_KEY,
+            customer,
+            new ParameterizedTypeReference<SagaResponse<GetMilesResponseDTO>>() {}
         );
     }
 
