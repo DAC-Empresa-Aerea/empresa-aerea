@@ -112,6 +112,10 @@ public class CustomerService {
 
     @Transactional
     public UpdateMilesResponseDTO updateMiles(Long id, UpdateMilesRequestDTO requestDTO) {
+        if (requestDTO.getQuantity() == null || requestDTO.getQuantity() <= 0) {
+            throw new BusinessException("INVALID_MILES_QUANTITY", "Quantidade de milhas inválida.", HttpStatus.BAD_REQUEST.value());
+        }
+
         Customer customer = customerRepository.findById(id)
                 .orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado para o ID: " + id));
 
