@@ -7,6 +7,7 @@ import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -26,13 +27,17 @@ import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsResponseDTO;
 import com.ms.flight.dto.flight.reserveSeat.rollback.RollbackReserveSeatsDTO;
 import com.ms.flight.dto.flightStatus.FlightStatusRequestDTO;
 import com.ms.flight.enums.FlightStatusEnum;
+import com.ms.flight.exception.BusinessException;
 import com.ms.flight.model.Airport;
 import com.ms.flight.model.Flight;
 import com.ms.flight.model.FlightStatus;
 import com.ms.flight.repository.FlightRepository;
 import com.ms.flight.util.FlightCodeGenerator;
 
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 
 @Service
 public class FlightService {
@@ -46,11 +51,14 @@ public class FlightService {
     @Autowired
     private FlightStatusService flightStatusService;
 
+    @Autowired
+    private Validator validator;
+
     public FlightResponseDTO registerFlight(RegisterFlightRequestDTO flightRequest) {
 
         Airport origem = airportService.getAirportByCode(flightRequest.getCodigoAeroportoOrigem());
         Airport destino = airportService.getAirportByCode(flightRequest.getCodigoAeroportoDestino());
-        FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(FlightStatusEnum.CONFIRMADO.getCodigo());
+        FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(FlightStatusEnum.CONFIRMED.getCodigo());
 
         if (origem.equals(destino)) {
             throw new IllegalArgumentException("Aeroporto de origem e destino não podem ser iguais.");
@@ -164,15 +172,30 @@ public class FlightService {
         return result;
     }
 
-    public FlightResponseDTO updateFlight(FlightStatusRequestDTO flightRequest) {
-        Flight flight = flightRepository.findById(flightRequest.getFlightCode())
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voo não encontrado."));
-        
-        FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(flightRequest.getStatusCode());
+    public FlightResponseDTO updateFlightStatus(FlightStatusRequestDTO statusRequest) {
+        Set<ConstraintViolation<FlightStatusRequestDTO>> violations = validator.validate(statusRequest);
 
-        if (flightStatus == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Status de voo não encontrado.");
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
         }
+
+        if (FlightStatusEnum.fromCode(statusRequest.getStatusCode()) == null || FlightStatusEnum.fromCode(statusRequest.getStatusCode()).equals(FlightStatusEnum.CONFIRMED)) {
+            throw new BusinessException(
+                "INVALID_FLIGHT_STATUS",
+                "O status do voo deve ser CANCELADO ou REALIZADO.",
+                HttpStatus.BAD_REQUEST.value()
+            );
+        }
+
+        Flight flight = flightRepository.findById(statusRequest.getFlightCode())
+            .orElseThrow(() -> new BusinessException("FLIGHT_NOT_FOUND", "Voo não encontrado.", HttpStatus.NOT_FOUND.value())
+        );
+
+        if(!FlightStatusEnum.CONFIRMED.getCodigo().equals(flight.getEstado().getCodigo())) {
+            throw new BusinessException("FLIGHT_STATUS_NOT_ALLOWED", "O status do voo não pode ser alterado.", HttpStatus.BAD_REQUEST.value());
+        }
+        
+        FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(statusRequest.getStatusCode());
 
         flight.setEstado(flightStatus);
         flightRepository.save(flight);
@@ -194,11 +217,7 @@ public class FlightService {
         Flight flight = flightRepository.findById(flightRequest.getFlightCode())
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voo não encontrado."));
         
-        FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(FlightStatusEnum.CONFIRMADO.getCodigo());
-
-        if (flightStatus == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Status de voo não encontrado.");
-        }
+        FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(FlightStatusEnum.CONFIRMED.getCodigo());
 
         flight.setEstado(flightStatus);
         flightRepository.save(flight);
@@ -214,7 +233,7 @@ public class FlightService {
 
         Flight flight = flightOptional.get();
 
-        if (!FlightStatusEnum.CONFIRMADO.getCodigo().equals(flight.getEstado().getCodigo())) {
+        if (!FlightStatusEnum.CONFIRMED.getCodigo().equals(flight.getEstado().getCodigo())) {
             return SagaResponse.error(
                 "FLIGHT_RESERVE_NOT_ALLOWED",
                 "O voo não pode ser reservado.",

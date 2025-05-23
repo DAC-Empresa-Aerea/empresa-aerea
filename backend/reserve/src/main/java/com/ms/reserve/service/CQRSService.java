@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.ms.reserve.dto.cqrs.RegisteredReserveDTO;
+import com.ms.reserve.dto.cqrs.UpdateStatusDTO;
 import com.ms.reserve.enums.StatusEnum;
 import com.ms.reserve.query.model.ReserveQuery;
 import com.ms.reserve.query.repository.ReserveQueryRepository;
@@ -54,4 +55,14 @@ public class CQRSService {
         reserveQueryRepository.delete(reserveQuery);
     }
     
+    public void rollbackReserveStatus(UpdateStatusDTO dto) {
+        ReserveQuery reserveQuery = reserveQueryRepository.findById(dto.getReserveCode())
+                .orElseThrow(() -> new IllegalArgumentException("Reserve not found with ID: " + dto.getReserveCode()));
+
+        reserveQuery.setStatusCode(dto.getStatus());
+        reserveQuery.setStatusDescription(StatusEnum.fromCode(dto.getStatus()).getDescription());
+        reserveQuery.setStatusAbbreviation(StatusEnum.fromCode(dto.getStatus()).getAbbreviation());
+
+        reserveQueryRepository.save(reserveQuery);
+    }
 }

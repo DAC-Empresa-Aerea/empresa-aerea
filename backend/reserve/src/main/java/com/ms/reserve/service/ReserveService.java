@@ -16,11 +16,14 @@ import com.ms.reserve.command.model.ReserveStatusCommand;
 import com.ms.reserve.command.repository.ReserveCommandRepository;
 import com.ms.reserve.command.repository.ReserveStatusCommandRepository;
 import com.ms.reserve.dto.cqrs.RegisteredReserveDTO;
+import com.ms.reserve.dto.cqrs.UpdateStatusDTO;
 import com.ms.reserve.dto.reserve.ReserveResponseDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.reserve.dto.status.FlightStatusDTO;
+import com.ms.reserve.dto.status.UpdatedReserveStatusDTO;
 import com.ms.reserve.enums.StatusEnum;
+import com.ms.reserve.exception.BusinessException;
 import com.ms.reserve.producer.CQRSProducer;
 import com.ms.reserve.query.model.ReserveQuery;
 import com.ms.reserve.query.repository.ReserveQueryRepository;
@@ -88,9 +91,9 @@ public class ReserveService {
     }
     
     public ReserveResponseDTO getReserveById(String id) {
-        System.out.println("ID: " + id);
-        ReserveQuery reserve = reserveQueryRepository.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva nao encontrada"));
+
+        ReserveQuery reserve = reserveQueryRepository.findById(id).orElseThrow(() -> new BusinessException("RESERVE_NOT_FOUND", "Reserva não encontrada", HttpStatus.NOT_FOUND.value()));
+
         
         ReserveResponseDTO reserveResponseDTO = new ReserveResponseDTO();
         BeanUtils.copyProperties(reserve, reserveResponseDTO);
@@ -99,19 +102,17 @@ public class ReserveService {
     }
 
     public ReserveResponseDTO updateReserveStatusFromUser(String id, String status) {
-        List<StatusEnum> validStatuses = List.of(StatusEnum.CREATED, StatusEnum.CHECK_IN);
+        List<StatusEnum> validDestinies = List.of(StatusEnum.CHECK_IN, StatusEnum.CANCELED, StatusEnum.BOARDED); 
         StatusEnum newStatus = StatusEnum.fromCode(status);
 
-        if (newStatus == null || !validStatuses.contains(newStatus)) {
+        if (newStatus == null || !validDestinies.contains(newStatus)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status inválido");
         }
 
         ReserveQuery reserveQuery = reserveQueryRepository.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
 
-        System.out.println("Reserva encontrada: " + reserveQuery.getStatusCode());
         StatusEnum currentStatus = StatusEnum.fromCode(reserveQuery.getStatusCode());
-        System.out.println("Status atual: " + currentStatus);
 
         if (currentStatus.equals(newStatus)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Reserva já está no status " + newStatus.getCode());
@@ -136,141 +137,67 @@ public class ReserveService {
 
         ReserveResponseDTO reserveResponseDTO = new ReserveResponseDTO();
         BeanUtils.copyProperties(reserveCommand, reserveResponseDTO);
+        reserveResponseDTO.setStatus(newStatus.getCode());
 
         return reserveResponseDTO;
     }
 
-    public List<RegisterReserveResponseDTO> updateStatusReserveWithFlightCode(FlightStatusDTO dto) {
+    public List<UpdatedReserveStatusDTO> updateStatusReserveWithFlightCode(FlightStatusDTO dto) {
         List<ReserveQuery> reserves = reserveQueryRepository.findByFlightCode(dto.getFlightCode());
 
         if(reserves.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada");
+            return new ArrayList<>();
         }
 
-        List<RegisterReserveResponseDTO> responseListDTO = new ArrayList<>();
+        List<UpdatedReserveStatusDTO> responseList = new ArrayList<>();
 
-        if(dto.getStatusCode().equals("CANCELADA_VOO")) {
-            String flightCanceledCode = StatusEnum.FLIGHT_CANCELED.getCode();
-            ReserveStatusCommand statusCanceled = statusCommandRepository.findById(flightCanceledCode)
-                .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Status FLIGHT_CANCELED não cadastrado"));
+        for(ReserveQuery rq : reserves) {
+            StatusEnum current = StatusEnum.fromCode(rq.getStatusCode());
+            if (StatusEnum.canTransfer(current, StatusEnum.fromCode(dto.getStatusCode()))) {
+                ReserveCommand reserveCommand = reserveCommandRepository.findById(rq.getCode())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
+                ReserveStatusCommand status = statusCommandRepository.findById(dto.getStatusCode())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Status não encontrado"));
+                reserveCommand.setStatus(status);
+                reserveCommandRepository.save(reserveCommand);
 
-            for (ReserveQuery rq : reserves) {
-                StatusEnum current = StatusEnum.fromCode(rq.getStatusCode());
+                responseList.add(new UpdatedReserveStatusDTO(rq.getCode()));
 
-                if (StatusEnum.canTransfer(current, StatusEnum.FLIGHT_CANCELED)) {
-                    rq.setStatusCode(statusCanceled.getCode());
-                    rq.setStatusAbbreviation(statusCanceled.getAbbreviation());
-                    rq.setStatusDescription(statusCanceled.getDescription());
+                cqrsProducer.sendStatusUpdate(rq.getCode(), status.getCode());
+            } else if ((current.equals(StatusEnum.CREATED) || current.equals(StatusEnum.CHECK_IN)) && StatusEnum.fromCode(dto.getStatusCode()).equals(StatusEnum.FINISHED)) {
+                ReserveCommand reserveCommand = reserveCommandRepository.findById(rq.getCode())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
+                ReserveStatusCommand status = statusCommandRepository.findById(StatusEnum.NOT_FINISHED.getCode())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Status não encontrado"));
+                reserveCommand.setStatus(status);
+                reserveCommandRepository.save(reserveCommand);
 
-                    reserveQueryRepository.save(rq);
-                    ReserveCommand reserveCommand = new ReserveCommand();
-                    reserveCommand.setCode(rq.getCode());
-                    reserveCommand.setCustomerCode(rq.getCustomerCode());
-                    reserveCommand.setMilesUsed(rq.getMilesUsed());
-                    reserveCommand.setFlightCode(rq.getFlightCode());
-                    reserveCommand.setSeatsQuantity(rq.getSeatsQuantity());
-                    reserveCommand.setValue(rq.getValue());
-                    reserveCommand.setDate(rq.getDate());
-                    reserveCommand.setStatus(statusCanceled);
+                responseList.add(new UpdatedReserveStatusDTO(rq.getCode()));
 
-                    reserveCommandRepository.save(reserveCommand);
-
-                    RegisterReserveResponseDTO response = new RegisterReserveResponseDTO();
-                    response.setReserveCode(rq.getCode());
-                    response.setCustomerCode(rq.getCustomerCode());
-                    response.setDate(rq.getDate());
-                    response.setValue(rq.getValue());
-                    response.setStatus(statusCanceled.getCode());
-                    response.setSeatsQuantity(rq.getSeatsQuantity());
-                    response.setMilesUsed(rq.getMilesUsed());
-
-                    responseListDTO.add(response);
-
-                    cqrsProducer.sendStatusUpdate(rq.getCode(), statusCanceled.getCode());
-                } else if (current.equals(StatusEnum.FLIGHT_CANCELED)) {
-                    continue;
-                } else {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                        "Não é possível transferir do status " + current.getCode() + " para " + flightCanceledCode);
-                }
+                cqrsProducer.sendStatusUpdate(rq.getCode(), status.getCode());
             }
         }
 
-        if(dto.getStatusCode().equals("REALIZADA")) {
-            String flightFinishedCode = StatusEnum.FINISHED.getCode();
-            ReserveStatusCommand statusFinished = statusCommandRepository.findById(flightFinishedCode)
-                .orElseThrow(() -> new ResponseStatusException(
-                    HttpStatus.INTERNAL_SERVER_ERROR, "Status FINISHED não cadastrado"));
-            
-            for(ReserveQuery rq: reserves) {
-                StatusEnum current = StatusEnum.fromCode(rq.getStatusCode());
+        return responseList;
+    }
 
-                if (StatusEnum.canTransfer(current, StatusEnum.FINISHED)) {
-                    rq.setStatusCode(statusFinished.getCode());
-                    rq.setStatusAbbreviation(statusFinished.getAbbreviation());
-                    rq.setStatusDescription(statusFinished.getDescription());
+    public void rollbackStatusReserveWithFlightCode(FlightStatusDTO dto) {
+        List<ReserveQuery> reserves = reserveQueryRepository.findByFlightCode(dto.getFlightCode());
 
-                    reserveQueryRepository.save(rq);
-                    ReserveCommand reserveCommand = new ReserveCommand();
-
-                    reserveCommand.setCustomerCode(rq.getCustomerCode());
-                    reserveCommand.setMilesUsed(rq.getMilesUsed());
-                    reserveCommand.setFlightCode(rq.getFlightCode());
-                    reserveCommand.setSeatsQuantity(rq.getSeatsQuantity());
-                    reserveCommand.setValue(rq.getValue());
-                    reserveCommand.setCode(rq.getCode());
-                    reserveCommand.setDate(rq.getDate());
-                    reserveCommand.setStatus(statusFinished);
-
-                    reserveCommandRepository.save(reserveCommand);
-
-                    RegisterReserveResponseDTO response = new RegisterReserveResponseDTO();
-                    BeanUtils.copyProperties(rq, response);
-                    response.setStatus(statusFinished.getCode());
-                    responseListDTO.add(response);
-
-                    cqrsProducer.sendStatusUpdate(rq.getCode(), rq.getStatusCode());
-                } else if (current.equals(StatusEnum.FINISHED)) {
-                    continue;
-                } else if(StatusEnum.canTransfer(current, StatusEnum.NOT_FINISHED)) {
-                    rq.setStatusCode(StatusEnum.NOT_FINISHED.getCode());
-                    rq.setStatusAbbreviation(StatusEnum.NOT_FINISHED.getAbbreviation());
-                    rq.setStatusDescription(StatusEnum.NOT_FINISHED.getDescription());
-
-                    reserveQueryRepository.save(rq);
-                    ReserveCommand reserveCommand = new ReserveCommand();
-
-                    reserveCommand.setCustomerCode(rq.getCustomerCode());
-                    reserveCommand.setMilesUsed(rq.getMilesUsed());
-                    reserveCommand.setFlightCode(rq.getFlightCode());
-                    reserveCommand.setSeatsQuantity(rq.getSeatsQuantity());
-                    reserveCommand.setValue(rq.getValue());
-                    reserveCommand.setCode(rq.getCode());
-                    reserveCommand.setDate(rq.getDate());
-                    reserveCommand.setStatus(statusFinished);
-
-                    reserveCommandRepository.save(reserveCommand);
-
-                    RegisterReserveResponseDTO response = new RegisterReserveResponseDTO();
-                    BeanUtils.copyProperties(rq, response);
-                    response.setStatus(StatusEnum.NOT_FINISHED.getCode());
-                    responseListDTO.add(response);
-
-                    cqrsProducer.sendStatusUpdate(rq.getCode(), StatusEnum.NOT_FINISHED.getCode());
-                }
-                else if (current.equals(StatusEnum.FLIGHT_CANCELED)) {
-                    continue;
-                }
-                else {
-                    throw new ResponseStatusException(HttpStatus.BAD_REQUEST, 
-                        "Não é possível transferir do status " + current.getCode() + " para " + flightFinishedCode);
-                }
-            }
+        if(reserves.isEmpty()) {
+            return;
         }
 
-        return responseListDTO;
-        
+        for(ReserveQuery rq : reserves) {
+            ReserveCommand reserveCommand = reserveCommandRepository.findById(rq.getCode())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
+            ReserveStatusCommand status = statusCommandRepository.findById(StatusEnum.CREATED.getCode())
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Status não encontrado"));
+            reserveCommand.setStatus(status);
+            reserveCommandRepository.save(reserveCommand);
+
+            cqrsProducer.sendRollbackReserveStatus(new UpdateStatusDTO(rq.getCode(), StatusEnum.CREATED.getCode()));
+        }
     }
 
     public List<ReserveResponseDTO> getReservesByCustomerId(Long clienteId) {

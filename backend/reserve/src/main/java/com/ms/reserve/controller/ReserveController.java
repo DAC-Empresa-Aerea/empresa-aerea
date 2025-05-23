@@ -26,7 +26,7 @@ public class ReserveController {
     private ReserveService reserveService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReserveResponseDTO> getReserve(@PathVariable @Valid String id) {
+    public ResponseEntity<ReserveResponseDTO> getReserve(@PathVariable String id) {
 
         return ResponseEntity.ok(reserveService.getReserveById(id));
     }
@@ -46,7 +46,6 @@ public class ReserveController {
     @PatchMapping("/{id}/estado")
     public ResponseEntity<ReserveResponseDTO> updateReserve(@PathVariable @Valid String id, @RequestBody @Valid StatusDTO status) {
     
-        System.out.println(status.getStatus());
         return ResponseEntity.ok(reserveService.updateReserveStatusFromUser(id, status.getStatus()));
     }
     

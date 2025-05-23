@@ -1,6 +1,5 @@
 package com.ms.auth.service;
 
-import java.util.Date;
 import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,10 +7,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import com.ms.auth.config.JwtProperties;
 import com.ms.auth.dto.LoginAuthRequestDTO;
 import com.ms.auth.dto.LoginAuthResponseDTO;
-import com.ms.auth.dto.LogoutAuthDTO;
 import com.ms.auth.dto.Roles;
 import com.ms.auth.dto.create.CreateAuthRequestDTO;
 import com.ms.auth.dto.create.CreateAuthResponseDTO;
@@ -26,8 +23,6 @@ import com.ms.auth.util.HashUtil;
 import com.ms.auth.util.JWTGeneratorUtil;
 import com.ms.auth.util.PasswordGeneratorUtil;
 
-import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.Jwts;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import jakarta.validation.Validator;
@@ -46,12 +41,6 @@ public class AuthService {
 
     @Autowired
     private JWTGeneratorUtil jwtGeneratorUtil;
-
-    @Autowired
-    private JwtProperties jwtProperties;
-
-    @Autowired
-    private BlacklistService blacklistService;
 
     @Autowired
     private Validator validator;
@@ -173,17 +162,5 @@ public class AuthService {
 
         authRepository.delete(auth);
     }
-
-    // public void logout(LogoutAuthDTO dto) {
-    //     Claims claims = Jwts.parserBuilder()
-    //         .setSigningKey(jwtProperties.getSecret().getBytes())
-    //         .build()
-    //         .parseClaimsJws(dto.getToken())
-    //         .getBody();
-
-    //     String jti = claims.getId();
-    //     Date exp = claims.getExpiration();
-    //     blacklistService.blacklistToken(jti, exp);
-    // }
 
 }

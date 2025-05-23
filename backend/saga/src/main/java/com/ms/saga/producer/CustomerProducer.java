@@ -1,5 +1,7 @@
 package com.ms.saga.producer;
 
+import java.util.List;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -8,6 +10,8 @@ import org.springframework.stereotype.Component;
 import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.customer.CustomerRequestDTO;
 import com.ms.saga.dto.customer.CustomerResponseDTO;
+import com.ms.saga.dto.customer.GetMilesRequestDTO;
+import com.ms.saga.dto.customer.GetMilesResponseDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatRequestDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatResponseDTO;
 import com.ms.saga.dto.customer.refundMiles.RefundMilesRequestDTO;
@@ -50,13 +54,31 @@ public class CustomerProducer {
         
     }
 
-    public void sendRefoudSeat(RefundMilesRequestDTO dto) {
-        rabbitTemplate.convertAndSend(
+    public SagaResponse<List<RefundMilesRequestDTO>> sendRefundMiles(List<RefundMilesRequestDTO> dto) {
+        return rabbitTemplate.convertSendAndReceiveAsType(
             RabbitMQConfig.REFUND_MILES_EXCHANGE,
             RabbitMQConfig.REFUND_MILES_ROUTING_KEY,
-            dto
+            dto, 
+            new ParameterizedTypeReference<SagaResponse<List<RefundMilesRequestDTO>>>() {}
         );
     }
+
+    public SagaResponse<GetMilesResponseDTO> sendGetMiles(GetMilesRequestDTO customer) {
+        return rabbitTemplate.convertSendAndReceiveAsType(
+            RabbitMQConfig.GET_MILES_EXCHANGE,
+            RabbitMQConfig.GET_MILES_ROUTING_KEY,
+            customer,
+            new ParameterizedTypeReference<SagaResponse<GetMilesResponseDTO>>() {}
+        );
+    }
+
+    // public void sendRefoudSeat(RefundMilesRequestDTO dto) {
+    //     rabbitTemplate.convertAndSend(
+    //         RabbitMQConfig.REFUND_MILES_EXCHANGE,
+    //         RabbitMQConfig.REFUND_MILES_ROUTING_KEY,
+    //         dto
+    //     );
+    // }
 
 }
 

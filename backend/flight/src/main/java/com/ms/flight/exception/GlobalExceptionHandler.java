@@ -9,6 +9,9 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
 import com.ms.flight.dto.error.ErrorDTO;
+import com.ms.flight.util.ValidationUtil;
+
+import jakarta.validation.ConstraintViolationException;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
@@ -30,6 +33,14 @@ public class GlobalExceptionHandler {
     public ResponseEntity<ErrorDTO> handleBusinessException(BusinessException ex) {
         ErrorDTO error = new ErrorDTO(ex.getCode(), ex.getMessage(), ex.getStatus());
         return new ResponseEntity<>(error, HttpStatus.valueOf(ex.getStatus()));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorDTO> handleValidationException(ConstraintViolationException ex) {
+        String errors = ValidationUtil.extractMessages(ex);
+
+        ErrorDTO error = new ErrorDTO("VALIDATION_ERROR", errors, HttpStatus.BAD_REQUEST.value());
+        return new ResponseEntity<>(error, HttpStatus.valueOf(error.getStatus()));
     }
 
 }

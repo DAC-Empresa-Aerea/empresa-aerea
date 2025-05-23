@@ -1,4 +1,4 @@
-package com.ms.customer.dto.refundMiles;
+package com.ms.customer.dto.getMiles;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -9,8 +9,10 @@ import lombok.Setter;
 @NoArgsConstructor
 @Getter
 @Setter
-public class RefundMilesRequestDTO {
+public class GetMilesResponseDTO {
     
-    private String reserverCode;
+    private Long customerCode;
     
+    private Integer milesBalance;
+
 }

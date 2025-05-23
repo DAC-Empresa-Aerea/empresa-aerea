@@ -24,7 +24,6 @@ public class UpdateAuthResponseDTO {
     @JsonProperty("email_antigo")
     private String oldEmail;
 
-
     @NotNull
     @NotBlank
     @JsonProperty("role")

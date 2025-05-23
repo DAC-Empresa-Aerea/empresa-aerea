@@ -12,4 +12,5 @@ public interface MilesHistoryRepository extends JpaRepository<MilesHistory, Offs
     List<MilesHistory> findByCustomer(Customer customer);
     List<MilesHistory> findByCustomerAndDateBetween(Customer customer, OffsetDateTime startDate, OffsetDateTime endDate);
     List<MilesHistory> findByCustomerAndType(Customer cliente, String tipo);
+    MilesHistory findByReserveCode(String reserveCode);
 }

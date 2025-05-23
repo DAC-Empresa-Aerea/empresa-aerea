@@ -18,6 +18,7 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
+
     public ResponseEntity<ErrorBody> handle(ResponseStatusException ex) {
         ErrorBody body = new ErrorBody(
                 ex.getStatusCode().value(),
