@@ -80,5 +80,36 @@ public class ReserveConsumer {
             return SagaResponse.error("GET_RESERVE_ERROR", e.getMessage(), 400);
         }
     }
+
+    @RabbitListener(queues = RabbitMQConfig.CANCEL_RESERVE_QUEUE)
+    public SagaResponse<ReserveCancelResponseDTO> cancelReserve(ReserveCancelRequestDTO dto) {
+        try {
+            // 1. Validar entrada
+            if (dto.getReservaId() == null || dto.getReservaId().isEmpty()) {
+                return SagaResponse.error("ID da reserva é obrigatório", "INVALID_INPUT", 400);
+            }
+
+            // 2. Buscar reserva para verificar se existe
+            ReserveResponseDTO reserve = reserveService.getReserveById(dto.getReservaId());
+            
+            // 3. Atualizar status para CANCELADA
+            ReserveResponseDTO updatedReserve = reserveService.cancelReserve(dto.getReservaId());
+
+            // 4. Preparar resposta
+            ReserveCancelResponseDTO response = new ReserveCancelResponseDTO();
+            BeanUtils.copyProperties(updatedReserve, response);
+            response.setCode(updatedReserve.getCode());
+
+            return SagaResponse.success(response);
+        } catch (BusinessException e) {
+            return SagaResponse.error(e.getMessage(), e.getCode(), e.getStatus());
+        } catch (Exception e) {
+            return SagaResponse.error(
+                "Erro ao cancelar reserva: " + e.getMessage(),
+                "CANCEL_RESERVE_ERROR",
+                500
+            );
+        }
+    }
     
 }

@@ -20,6 +20,7 @@ import com.ms.reserve.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.reserve.dto.status.FlightStatusDTO;
 import com.ms.reserve.enums.StatusEnum;
+import com.ms.reserve.exception.BusinessException;
 import com.ms.reserve.producer.CQRSProducer;
 import com.ms.reserve.query.model.ReserveQuery;
 import com.ms.reserve.query.repository.ReserveQueryRepository;
@@ -214,5 +215,56 @@ public class ReserveService {
                 return dto;
             })
             .collect(Collectors.toList());
+    }
+
+    public ReserveResponseDTO cancelReserve(String reserveId) {
+        // 1. Buscar reserva
+        ReserveQuery reserveQuery = reserveQueryRepository.findById(reserveId)
+            .orElseThrow(() -> new BusinessException("Reserva não encontrada", "RESERVE_NOT_FOUND", 404));
+
+        // 2. Verificar se já está cancelada
+        if ("CANCELADA".equals(reserveQuery.getStatusCode())) {
+            throw new BusinessException("Reserva já está cancelada", "ALREADY_CANCELED", 400);
+        }
+
+        // 3. Atualizar no command (escrita)
+        ReserveCommand reserveCommand = new ReserveCommand();
+        // Copiar propriedades do query para o command
+        reserveCommand.setCode(reserveQuery.getCode());
+        reserveCommand.setCustomerCode(reserveQuery.getCustomerCode());
+        reserveCommand.setFlightCode(reserveQuery.getFlightCode());
+        reserveCommand.setDate(reserveQuery.getDate());
+        reserveCommand.setValue(reserveQuery.getValue());
+        reserveCommand.setMilesUsed(reserveQuery.getMilesUsed());
+        reserveCommand.setSeatsQuantity(reserveQuery.getSeatsQuantity());
+        
+        // Definir novo status
+        ReserveStatusCommand statusCommand = statusCommandRepository.findById(StatusEnum.CANCELED.getCode())
+            .orElseThrow(() -> new BusinessException("Status não encontrado", "STATUS_NOT_FOUND", 500));
+        reserveCommand.setStatus(statusCommand);
+        
+        reserveCommandRepository.save(reserveCommand);
+
+        // 4. Atualizar no query (leitura)
+        reserveQuery.setStatusCode(StatusEnum.CANCELED.getCode());
+        reserveQuery.setStatusAbbreviation(statusCommand.getAbbreviation());
+        reserveQuery.setStatusDescription(statusCommand.getDescription());
+        reserveQueryRepository.save(reserveQuery);
+
+        // 5. Publicar evento de cancelamento
+        cqrsProducer.sendStatusUpdate(reserveId, StatusEnum.CANCELED.getCode());
+
+        // 6. Retornar DTO atualizado
+        ReserveResponseDTO response = new ReserveResponseDTO();
+        response.setCode(reserveQuery.getCode());
+        response.setCustomerCode(reserveQuery.getCustomerCode());
+        response.setFlightCode(reserveQuery.getFlightCode());
+        response.setDate(reserveQuery.getDate());
+        response.setValue(reserveQuery.getValue());
+        response.setMilesUsed(reserveQuery.getMilesUsed());
+        response.setSeatsQuantity(reserveQuery.getSeatsQuantity());
+        response.setStatus(reserveQuery.getStatusCode());
+        
+        return response;
     }
 }

@@ -59,14 +59,22 @@ public class ReserveProducer {
         );
     }
 
-    //ainda nao foi implementado
-    public SagaResponse<RegisterReserveResponseDTO> sendCanecelReserve(CancelReserveResponseDTO cancelRequest) {
-        return rabbitTemplate.convertSendAndReceiveAsType(
+    //implementando
+    public SagaResponse<ReserveCancelResponseDTO> sendCancelReserve(ReserveCancelRequestDTO cancelRequest) {
+        try {
+            return rabbitTemplate.convertSendAndReceiveAsType(
                 RabbitMQConfig.CANCEL_RESERVE_EXCHANGE,
                 RabbitMQConfig.CANCEL_RESERVE_ROUTING_KEY,
-            cancelRequest,
-            new ParameterizedTypeReference<SagaResponse<RegisterReserveResponseDTO>>() {}
-        );
+                cancelRequest,
+                new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
+            );
+        } catch (Exception e) {
+            return SagaResponse.error(
+                "Erro na comunicação com o serviço de reservas",
+                "SERVICE_COMMUNICATION_ERROR",
+                503
+            );
+        }
     }
 
     //ainda nao foi implementado

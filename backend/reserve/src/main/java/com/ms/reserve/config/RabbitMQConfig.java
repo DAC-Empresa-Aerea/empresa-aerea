@@ -143,6 +143,22 @@ public class RabbitMQConfig {
                         .to(getReserveExchange())
                         .with(GET_RESERVE_ROUTING_KEY);
     }
-    
+
+    @Bean
+    public Queue cancelReserveQueue() {
+        return new Queue(CANCEL_RESERVE_QUEUE, true);
+    }
+
+    @Bean
+    public TopicExchange cancelReserveExchange() {
+        return new TopicExchange(CANCEL_RESERVE_EXCHANGE);
+    }
+
+    @Bean
+    public Binding cancelReserveBinding() {
+        return BindingBuilder.bind(cancelReserveQueue())
+                        .to(cancelReserveExchange())
+                        .with(CANCEL_RESERVE_ROUTING_KEY);
+    }
 }
 
