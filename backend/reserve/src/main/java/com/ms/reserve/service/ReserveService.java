@@ -23,6 +23,7 @@ import com.ms.reserve.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.reserve.dto.status.FlightStatusDTO;
 import com.ms.reserve.dto.status.UpdatedReserveStatusDTO;
 import com.ms.reserve.enums.StatusEnum;
+import com.ms.reserve.exception.BusinessException;
 import com.ms.reserve.producer.CQRSProducer;
 import com.ms.reserve.query.model.ReserveQuery;
 import com.ms.reserve.query.repository.ReserveQueryRepository;
@@ -90,7 +91,7 @@ public class ReserveService {
     }
     
     public ReserveResponseDTO getReserveById(String id) {
-        ReserveQuery reserve = reserveQueryRepository.findById(id).orElseThrow(() -> new RuntimeException("Reserva não encontrada"));
+        ReserveQuery reserve = reserveQueryRepository.findById(id).orElseThrow(() -> new BusinessException("RESERVE_NOT_FOUND", "Reserva não encontrada", HttpStatus.NOT_FOUND.value()));
         
         ReserveResponseDTO reserveResponseDTO = new ReserveResponseDTO();
         BeanUtils.copyProperties(reserve, reserveResponseDTO);

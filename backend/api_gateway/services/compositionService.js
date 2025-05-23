@@ -57,12 +57,20 @@ exports.getCustomerMilesWithTransitions = async customerId => {
 //-----------------------Reserve-----------------------//
 
 exports.getReservationWithFlight = async codigo => {
-  const { data: reserva } = await axios.get(`${RESERVATION}/reservas/${codigo}`);
-  console.log(reserva);
-  const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.codigo_voo}`);
-  reserva.voo = voo;
-  delete reserva.codigo_voo;
-  return reserva;
+  try {
+    const { data: reserva, status, } = await axios.get(`${RESERVATION}/reservas/${codigo}`);
+    const { data: voo } = await axios.get(`${FLIGHT}/voos/${reserva.codigo_voo}`);
+    reserva.voo = voo;
+    delete reserva.codigo_voo;
+    return reserva;
+  } catch (err) {
+    if (err.response) {
+      const { status, data } = err.response;
+      throw createError(status, data.message || 'Erro ao buscar reserva');
+    }
+
+    throw createError(500, 'Erro interno ao buscar reserva');
+  }
 };
 
 

@@ -26,7 +26,7 @@ public class ReserveController {
     private ReserveService reserveService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReserveResponseDTO> getReserve(@PathVariable @Valid String id) {
+    public ResponseEntity<ReserveResponseDTO> getReserve(@PathVariable String id) {
 
         return ResponseEntity.ok(reserveService.getReserveById(id));
     }
