@@ -70,6 +70,9 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_RESERVE_STATUS_UPDATE_EXCHANGE = "rollback.reserve.status.update.exchange";
     public static final String ROLLBACK_RESERVE_STATUS_UPDATE_ROUTING_KEY = "rollback.reserve.status.update.routing.key";
 
+    public static final String GET_MILES_EXCHANGE = "get.miles.exchange";
+    public static final String GET_MILES_ROUTING_KEY = "get.miles.routing.key";
+
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {
         Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();

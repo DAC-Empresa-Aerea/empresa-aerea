@@ -33,9 +33,9 @@ public class ReserveConsumer {
     }
 
     @RabbitListener(queues = RabbitMQConfig.ROLLBACK_REGISTER_RESERVE_QUEUE)
-    public void receiveRollbackRegisterReserve(String reserveCode) {
+    public void receiveRollbackRegisterReserve(RegisterReserveResponseDTO reserve) {
         try {
-            reserveService.rollbackRegister(reserveCode);
+            reserveService.rollbackRegister(reserve.getReserveCode());
         } catch (BusinessException e) {
             throw new RuntimeException(e.getMessage(), e);
         } catch (Exception e) {

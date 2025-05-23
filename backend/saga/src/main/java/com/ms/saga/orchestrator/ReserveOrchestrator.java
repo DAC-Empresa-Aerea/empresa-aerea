@@ -1,8 +1,11 @@
 package com.ms.saga.orchestrator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.ms.saga.dto.customer.GetMilesRequestDTO;
+import com.ms.saga.dto.customer.GetMilesResponseDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatRequestDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatResponseDTO;
 import com.ms.saga.dto.error.SagaResponse;
@@ -33,6 +36,16 @@ public class ReserveOrchestrator {
     private CustomerProducer customerProducer;
 
     public ReserveFlightResponseDTO processRegisterReserve(ReserveFlightRequestDTO reserveRequest) {
+        SagaResponse<GetMilesResponseDTO> customerResponse = customerProducer.sendGetMiles(new GetMilesRequestDTO(reserveRequest.getCustomerCode()));
+        
+        if(!customerResponse.isSuccess()) {
+            throw new BusinessException(customerResponse.getError());
+        }
+
+        if(customerResponse.getData().getMilesBalance() < reserveRequest.getMilesUsed()) {
+            throw new BusinessException("MILES_INSUFFICIENT", "Saldo de milhas insuficiente", HttpStatus.BAD_REQUEST.value());
+        }
+
         // Validacao do voo e atualizacao de poltronas
         UpdateSeatsRequestDTO seatsRequest = new UpdateSeatsRequestDTO(
             reserveRequest.getFlightCode(), 
@@ -83,13 +96,14 @@ public class ReserveOrchestrator {
         SagaResponse<DebitSeatResponseDTO> debitSeatResponseDTO = customerProducer.sendSeatDebit(seatDebit);
 
         if(!debitSeatResponseDTO.isSuccess()) {
+
             RollbackReserveSeatsDTO rollbackReserveSeatsDTO = new RollbackReserveSeatsDTO(
                 seatsRequest.getFlightCode(), 
                 seatsRequest.getSeatsQuantity()
             );
             flightProducer.sendRollbackReserveSeats(rollbackReserveSeatsDTO);
 
-            reserveProducer.sendRollbackRegisterReserve(registerReserveResponse.getData().getReserveCode());
+            reserveProducer.sendRollbackRegisterReserve(registerReserveResponse.getData());
 
             throw new BusinessException(debitSeatResponseDTO.getError());
         }

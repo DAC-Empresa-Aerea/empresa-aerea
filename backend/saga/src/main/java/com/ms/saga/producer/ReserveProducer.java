@@ -29,11 +29,11 @@ public class ReserveProducer {
         );
     }
 
-    public void sendRollbackRegisterReserve(String reserveCode) {
+    public void sendRollbackRegisterReserve(RegisterReserveResponseDTO reserve) {
         rabbitTemplate.convertAndSend(
             RabbitMQConfig.ROLLBACK_REGISTER_RESERVE_EXCHANGE,
             RabbitMQConfig.ROLLBACK_REGISTER_RESERVE_ROUTING_KEY,
-            reserveCode
+            reserve
         );
     }
 
