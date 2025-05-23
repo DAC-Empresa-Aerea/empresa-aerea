@@ -43,8 +43,6 @@ public class FlightDataInitializer implements DataSeeder {
                     statusEnum.getSigla(),
                     statusEnum.getDescricao()
                 );
-
-                statusRepository.save(status);
             }
         }
 
@@ -61,7 +59,7 @@ public class FlightDataInitializer implements DataSeeder {
             }
         }
 
-        FlightStatus status = statusRepository.findById(FlightStatusEnum.CONFIRMADO.getCodigo())
+        FlightStatus status = statusRepository.findById(FlightStatusEnum.CONFIRMED.getCodigo())
             .orElseThrow(() -> new IllegalStateException("Status 'CONFIRMADO' não encontrado."));
 
         List<Flight> flights = List.of(

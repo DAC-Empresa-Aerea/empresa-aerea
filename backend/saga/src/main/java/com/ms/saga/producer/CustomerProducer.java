@@ -1,5 +1,7 @@
 package com.ms.saga.producer;
 
+import java.util.List;
+
 import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.ParameterizedTypeReference;
@@ -50,13 +52,22 @@ public class CustomerProducer {
         
     }
 
-    public void sendRefoudSeat(RefundMilesRequestDTO dto) {
-        rabbitTemplate.convertAndSend(
+    public SagaResponse<List<RefundMilesRequestDTO>> sendRefundMiles(List<RefundMilesRequestDTO> dto) {
+        return rabbitTemplate.convertSendAndReceiveAsType(
             RabbitMQConfig.REFUND_MILES_EXCHANGE,
             RabbitMQConfig.REFUND_MILES_ROUTING_KEY,
-            dto
+            dto, 
+            new ParameterizedTypeReference<SagaResponse<List<RefundMilesRequestDTO>>>() {}
         );
     }
+
+    // public void sendRefoudSeat(RefundMilesRequestDTO dto) {
+    //     rabbitTemplate.convertAndSend(
+    //         RabbitMQConfig.REFUND_MILES_EXCHANGE,
+    //         RabbitMQConfig.REFUND_MILES_ROUTING_KEY,
+    //         dto
+    //     );
+    // }
 
 }
 

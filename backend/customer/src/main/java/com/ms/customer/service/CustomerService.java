@@ -209,29 +209,33 @@ public class CustomerService {
         customerRepository.deleteById(id);
     }
 
-    public RefundMilesRequestDTO refundMiles(RefundMilesRequestDTO dto) {
-        Optional<Customer> customerOptional = customerRepository.findById(dto.getCustomerCode());
-
-        if (customerOptional.isEmpty()) {
-            throw new BusinessException("CUSTOMER_NOT_FOUND", "Cliente não encontrado.", HttpStatus.NOT_FOUND.value());
+    public List<RefundMilesRequestDTO> refundMiles(List<RefundMilesRequestDTO> refundMiles) {
+        if (refundMiles.isEmpty()) {
+            throw new BusinessException("REFUND_MILES_EMPTY", "Lista de reembolso de milhas vazia.", HttpStatus.BAD_REQUEST.value());
         }
 
-        Customer customer = customerOptional.get();
-        customer.setMilesBalance(customer.getMilesBalance() + dto.getAmount());
+        for (RefundMilesRequestDTO rmq : refundMiles) {
+            if(rmq.getReserverCode() == null || rmq.getReserverCode().isEmpty()) {
+                continue;
+            }
 
-        MilesHistory transaction = new MilesHistory();
-        transaction.setCustomer(customer);
-        transaction.setDate(OffsetDateTime.now());
-        transaction.setAmountInReais(BigDecimal.ZERO);
-        transaction.setReserveCode(dto.getReserverCode());
-        transaction.setMilesQuantity(dto.getAmount());
-        transaction.setDescription(dto.getResonRefund());
-        transaction.setType("ENTRADA");
+            MilesHistory transaction = milesHistoryRepository.findByReserveCode(rmq.getReserverCode());
 
-        milesHistoryRepository.save(transaction);
-        customerRepository.save(customer);
+            if(!(transaction == null)) {
+                Customer customer = transaction.getCustomer();
+                customer.setMilesBalance(customer.getMilesBalance() + transaction.getMilesQuantity());
+                customerRepository.save(customer);
 
-        return dto;
+                MilesHistory transactionToRefund = new MilesHistory();
+                BeanUtils.copyProperties(transaction, transactionToRefund);
+                transactionToRefund.setDescription("VOO CANCELADO");
+                transactionToRefund.setDate(OffsetDateTime.now());
+                transactionToRefund.setType("ENTRADA");
+                milesHistoryRepository.save(transactionToRefund);
+            }
+        }
+
+        return refundMiles;
     }
 
 }
