@@ -190,6 +190,10 @@ public class FlightService {
         Flight flight = flightRepository.findById(statusRequest.getFlightCode())
             .orElseThrow(() -> new BusinessException("FLIGHT_NOT_FOUND", "Voo não encontrado.", HttpStatus.NOT_FOUND.value())
         );
+
+        if(!FlightStatusEnum.CONFIRMED.getCodigo().equals(flight.getEstado().getCodigo())) {
+            throw new BusinessException("FLIGHT_STATUS_NOT_ALLOWED", "O status do voo não pode ser alterado.", HttpStatus.BAD_REQUEST.value());
+        }
         
         FlightStatus flightStatus = flightStatusService.getFlightStatusByCode(statusRequest.getStatusCode());
 
