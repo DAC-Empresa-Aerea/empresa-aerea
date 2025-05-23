@@ -1,5 +1,7 @@
 package com.ms.customer.consumer;
 
+import java.util.List;
+
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -52,9 +54,9 @@ public class CustomerConsumer {
     }
 
     @RabbitListener(queues = RabbitMQConfig.REFUND_MILES_QUEUE)
-    public void receiveRefundMiles(@Payload @Valid RefundMilesRequestDTO dto) {
+    public SagaResponse<List<RefundMilesRequestDTO>> receiveRefundMiles(@Payload List<RefundMilesRequestDTO> dto) {
         try {
-            customerService.refundMiles(dto);
+            return SagaResponse.success(customerService.refundMiles(dto));
         }
         catch (BusinessException e) {
             throw new BusinessException(e.getCode(), e.getMessage(), e.getStatus());

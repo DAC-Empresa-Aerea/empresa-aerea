@@ -10,6 +10,7 @@ import org.springframework.stereotype.Component;
 import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightStatusDTO;
+import com.ms.saga.dto.reserve.UpdatedReserveStatusDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
 
@@ -36,14 +37,22 @@ public class ReserveProducer {
         );
     }
 
-    public SagaResponse<List<RegisterReserveResponseDTO>> updateStatusReserve(FlightStatusDTO dto) {
+    public SagaResponse<List<UpdatedReserveStatusDTO>> updateStatusReserve(FlightStatusDTO dto) {
         return rabbitTemplate
             .convertSendAndReceiveAsType(
-                RabbitMQConfig.RESERVE_STATUS_UPDATE_EXCHAGE,
+                RabbitMQConfig.RESERVE_STATUS_UPDATE_EXCHANGE,
                 RabbitMQConfig.RESERVE_STATUS_UPDATE_ROUTING_KEY,
                 dto,
-                new ParameterizedTypeReference<SagaResponse<List<RegisterReserveResponseDTO>>>() {}
+                new ParameterizedTypeReference<SagaResponse<List<UpdatedReserveStatusDTO>>>() {}
             );
+    }
+
+    public void sendRollbackReserveStatus(FlightStatusDTO dto) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConfig.ROLLBACK_RESERVE_STATUS_UPDATE_EXCHANGE,
+            RabbitMQConfig.ROLLBACK_RESERVE_STATUS_UPDATE_ROUTING_KEY,
+            dto
+        );
     }
 
 }

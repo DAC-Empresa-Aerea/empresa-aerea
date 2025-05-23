@@ -58,7 +58,7 @@ public class FlightDataInitializer {
                     }
                 }
 
-                FlightStatusEnum enumStatus = FlightStatusEnum.CONFIRMADO;
+                FlightStatusEnum enumStatus = FlightStatusEnum.CONFIRMED;
                 FlightStatus status = flightStatusRepository.findById(enumStatus.getCodigo())
                     .orElseThrow(() -> new IllegalStateException("Status 'CONFIRMADO' não encontrado. Execute FlightStatusInitializer primeiro."));
 
