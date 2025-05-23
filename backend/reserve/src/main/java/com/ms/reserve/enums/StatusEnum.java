@@ -16,7 +16,7 @@ public enum StatusEnum {
     FINISHED("REALIZADA", "REA", "Reserva realizada"),
     CANCELED("CANCELADA", "CAN", "Reserva cancelada"),
     FLIGHT_CANCELED("CANCELADA VOO", "CAV", "Reserva cancelada por voo"),
-    NOT_FINISHED("NAO_REALIZADA", "NRE", "Não realizada");
+    NOT_FINISHED("NÃO REALIZADA", "NRE", "Não realizada");
 
     private final String code;
     private final String abbreviation;

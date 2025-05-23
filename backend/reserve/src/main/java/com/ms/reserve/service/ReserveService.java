@@ -90,7 +90,6 @@ public class ReserveService {
     }
     
     public ReserveResponseDTO getReserveById(String id) {
-        System.out.println("ID: " + id);
         ReserveQuery reserve = reserveQueryRepository.findById(id).orElseThrow(() -> new RuntimeException("Reserva não encontrada"));
         
         ReserveResponseDTO reserveResponseDTO = new ReserveResponseDTO();
@@ -100,10 +99,10 @@ public class ReserveService {
     }
 
     public ReserveResponseDTO updateReserveStatusFromUser(String id, String status) {
-        List<StatusEnum> validStatuses = List.of(StatusEnum.CREATED, StatusEnum.CHECK_IN);
+        List<StatusEnum> validDestinies = List.of(StatusEnum.CHECK_IN, StatusEnum.CANCELED, StatusEnum.BOARDED); 
         StatusEnum newStatus = StatusEnum.fromCode(status);
 
-        if (newStatus == null || !validStatuses.contains(newStatus)) {
+        if (newStatus == null || !validDestinies.contains(newStatus)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Status inválido");
         }
 
@@ -155,6 +154,17 @@ public class ReserveService {
                 ReserveCommand reserveCommand = reserveCommandRepository.findById(rq.getCode())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
                 ReserveStatusCommand status = statusCommandRepository.findById(dto.getStatusCode())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Status não encontrado"));
+                reserveCommand.setStatus(status);
+                reserveCommandRepository.save(reserveCommand);
+
+                responseList.add(new UpdatedReserveStatusDTO(rq.getCode()));
+
+                cqrsProducer.sendStatusUpdate(rq.getCode(), status.getCode());
+            } else if (current.equals(StatusEnum.CREATED) && StatusEnum.fromCode(dto.getStatusCode()).equals(StatusEnum.FINISHED)) {
+                ReserveCommand reserveCommand = reserveCommandRepository.findById(rq.getCode())
+                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
+                ReserveStatusCommand status = statusCommandRepository.findById(StatusEnum.NOT_FINISHED.getCode())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Status não encontrado"));
                 reserveCommand.setStatus(status);
                 reserveCommandRepository.save(reserveCommand);
