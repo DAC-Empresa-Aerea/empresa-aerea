@@ -32,7 +32,7 @@ public class FlightWithAirportResponseDTO {
     @JsonProperty("quantidade_poltronas_ocupadas")
     private Integer occupiedSeatsCount;
 
-    @JsonProperty("quantidade_poltronas_disponiveis")
+    @JsonProperty("estado")
     private String status;
     
     @JsonProperty("aeroporto_origem")
