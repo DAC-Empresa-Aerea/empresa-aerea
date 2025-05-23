@@ -1,7 +1,5 @@
 package com.ms.saga.dto.flight.updateSeats;
 
-import java.math.BigDecimal;
-
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import lombok.AllArgsConstructor;
@@ -15,22 +13,11 @@ import lombok.Setter;
 @Setter
 public class UpdateSeatsResponseDTO {
 
-    @JsonProperty("codigo_voo")
-    private String flightCode;
+    @JsonProperty("voo")
+    private FlightWithAirportResponseDTO flight;
 
-    @JsonProperty("quantidade_poltronas")
-    private Integer seatsQuantity;
+    @JsonProperty("informacao")
+    private UpdateSeatsInfoDTO info;
 
-    @JsonProperty("codigo_aerporto_origem")
-    private String originAirportCode;
-
-    @JsonProperty("codigo_aerporto_destino")
-    private String destinyAirportCode;
-
-    @JsonProperty("valor")
-    private BigDecimal value;
-
-    @JsonProperty("milhas_utilizadas")
-    private Integer milesUsed;
-    
 }
+

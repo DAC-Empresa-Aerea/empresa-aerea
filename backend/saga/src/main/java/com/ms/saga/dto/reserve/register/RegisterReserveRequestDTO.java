@@ -26,5 +26,8 @@ public class RegisterReserveRequestDTO {
 
     @JsonProperty("codigo_voo")
     private String flightCode;
+
+    @JsonProperty("quantidade_poltronas")
+    private Integer seatsQuantity;
     
 }

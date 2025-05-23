@@ -30,4 +30,7 @@ public class EmployeeResponseDTO {
     @JsonProperty("telefone")
     private String phoneNumber;
 
+    @JsonProperty("tipo")
+    private String type = "FUNCIONARIO";
+
 }

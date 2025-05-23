@@ -13,13 +13,13 @@ import org.springframework.context.annotation.Configuration;
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String UPDATE_FLIGHT_QUEUE = "update.flight.queue";
-    public static final String UPDATE_FLIGHT_EXCHANGE = "update.flight.exchange";
-    public static final String UPDATE_FLIGHT_ROUTING_KEY = "update.flight.routing.key";
+    public static final String UPDATE_FLIGHT_STATUS_QUEUE = "update.flight.status.queue";
+    public static final String UPDATE_FLIGHT_STATUS_EXCHANGE = "update.flight.status.exchange";
+    public static final String UPDATE_FLIGHT_STATUS_ROUTING_KEY = "update.flight.status.routing.key";
     
-    public static final String ROLLBACK_FLIGHT_QUEUE = "rollback.flight.queue";
-    public static final String ROLLBACK_FLIGHT_EXCHANGE = "rollback.flight.exchange";
-    public static final String ROLLBACK_FLIGHT_ROUTING_KEY = "rollback.flight.routing.key";
+    public static final String ROLLBACK_FLIGHT_STATUS_QUEUE = "rollback.flight.status.queue";
+    public static final String ROLLBACK_FLIGHT_STATUS_EXCHANGE = "rollback.flight.status.exchange";
+    public static final String ROLLBACK_FLIGHT_STATUS_ROUTING_KEY = "rollback.flight.status.routing.key";
 
     public static final String RESERVE_SEAT_QUEUE = "reserve.seat.queue";
     public static final String RESERVE_SEAT_EXCHANGE = "reserve.seat.exchange";
@@ -50,40 +50,58 @@ public class RabbitMQConfig {
     }
     
     @Bean
-    public Queue updateFlightQueue() {
-        return new Queue(UPDATE_FLIGHT_QUEUE, true);
+    public Queue updateFlightStatusQueue() {
+        return new Queue(UPDATE_FLIGHT_STATUS_QUEUE, true);
     }
     
     @Bean
-    public Exchange updateFlightExchange() {
-        return new DirectExchange(UPDATE_FLIGHT_EXCHANGE, true, false);
+    public Exchange updateFlightStatusExchange() {
+        return new DirectExchange(UPDATE_FLIGHT_STATUS_EXCHANGE, true, false);
     }
     
     @Bean
-    public Binding updateFlightBinding(Queue updateFlightQueue, Exchange updateFlightExchange) {
+    public Binding updateFlightStatusBinding(Queue updateFlightStatusQueue, Exchange updateFlightStatusExchange) {
         return BindingBuilder
-        .bind(updateFlightQueue)
-        .to(updateFlightExchange)
-        .with(UPDATE_FLIGHT_ROUTING_KEY)
+        .bind(updateFlightStatusQueue)
+        .to(updateFlightStatusExchange)
+        .with(UPDATE_FLIGHT_STATUS_ROUTING_KEY)
         .noargs();
     }
 
     @Bean
-    public Queue rollbackFlightQueue() {
-        return new Queue(ROLLBACK_FLIGHT_QUEUE, true);
+    public Queue rollbackFlightStatusQueue() {
+        return new Queue(ROLLBACK_FLIGHT_STATUS_QUEUE, true);
     }
 
     @Bean
-    public Exchange rollbackFlightExchange() {
-        return new DirectExchange(ROLLBACK_FLIGHT_EXCHANGE, true, false);
+    public Exchange rollbackFlightStatusExchange() {
+        return new DirectExchange(ROLLBACK_FLIGHT_STATUS_EXCHANGE, true, false);
     }
 
     @Bean
-    public Binding rollbackFlightBinding(Queue rollbackFlightQueue, Exchange rollbackFlightExchange) {
+    public Binding rollbackFlightStatusBinding(Queue rollbackFlightStatusQueue, Exchange rollbackFlightStatusExchange) {
         return BindingBuilder
-                .bind(rollbackFlightQueue)
-                .to(rollbackFlightExchange)
-                .with(ROLLBACK_FLIGHT_ROUTING_KEY)
+                .bind(rollbackFlightStatusQueue)
+                .to(rollbackFlightStatusExchange)
+                .with(ROLLBACK_FLIGHT_STATUS_ROUTING_KEY)
+                .noargs();
+    }
+
+    @Bean
+    public Queue rollbackReserveSeatQueue() {
+        return new Queue(ROLLBACK_RESERVE_SEAT_QUEUE, true);
+    }
+
+    @Bean Exchange rollbackReserveSeatExchange() {
+        return new DirectExchange(ROLLBACK_RESERVE_SEAT_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding rollbackReserveSeatBinding(Queue rollbackReserveSeatQueue, Exchange rollbackReserveSeatExchange) {
+        return BindingBuilder
+                .bind(rollbackReserveSeatQueue)
+                .to(rollbackReserveSeatExchange)
+                .with(ROLLBACK_RESERVE_SEAT_ROUTING_KEY)
                 .noargs();
     }
     

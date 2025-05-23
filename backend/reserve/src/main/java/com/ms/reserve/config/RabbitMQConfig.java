@@ -4,15 +4,20 @@ import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
 import org.springframework.amqp.core.Queue;
 import org.springframework.amqp.core.TopicExchange;
+import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
 public class RabbitMQConfig {
 
-    public static final String RESERVE_STATUS_UPDATED_QUEUE = "reserve.status.updated";
+    public static final String RESERVE_STATUS_UPDATED_QUEUE = "reserve.status.updated.queue";
     public static final String RESERVE_STATUS_UPDATED_EXCHANGE = "reserve.status.updated.exchange";
-    public static final String RESERVE_STATUS_UPDATED_ROUTING_KEY = "reserve.status.updated";
+    public static final String RESERVE_STATUS_UPDATED_ROUTING_KEY = "reserve.status.updated.routing.key";
+
+    public static final String RESERVE_STATUS_UPDATE_QUEUE = "reserve.status.update.queue";
+    public static final String RESERVE_STATUS_UPDATE_EXCHANGE = "reserve.status.update.exchange";
+    public static final String RESERVE_STATUS_UPDATE_ROUTING_KEY = "reserve.status.update.routing.key";
 
     public static final String RESERVE_CREATED_QUEUE = "reserve.created.queue";
     public static final String RESERVE_CREATED_EXCHANGE = "reserve.created.exchange";
@@ -29,6 +34,10 @@ public class RabbitMQConfig {
     public static final String DELETE_RESERVE_QUEUE = "delete.reserve.queue";
     public static final String DELETE_RESERVE_EXCHANGE = "delete.reserve.exchange";
     public static final String DELETE_RESERVE_ROUTING_KEY = "delete.reserve.routing.key";
+
+    public static final String ROLLBACK_RESERVE_STATUS_QUEUE = "rollback.reserve.status.queue";
+    public static final String ROLLBACK_RESERVE_STATUS_UPDATE_EXCHANGE = "rollback.reserve.status.update.exchange";
+    public static final String ROLLBACK_RESERVE_STATUS_UPDATE_ROUTING_KEY = "rollback.reserve.status.update.routing.key";
     
     @Bean
     public Queue reserveStatusUpdatedQueue() {
@@ -43,6 +52,21 @@ public class RabbitMQConfig {
     @Bean
     public Binding reserveStatusUpdatedBinding(Queue reserveStatusUpdatedQueue, TopicExchange reserveStatusUpdatedExchange) {
         return BindingBuilder.bind(reserveStatusUpdatedQueue).to(reserveStatusUpdatedExchange).with(RESERVE_STATUS_UPDATED_ROUTING_KEY);
+    }
+
+    @Bean
+    public Queue reserveStatusUpdateQueue() {
+        return new Queue(RESERVE_STATUS_UPDATE_QUEUE, true);
+    }
+
+    @Bean
+    public TopicExchange reserveStatusUpdateExchange() {
+        return new TopicExchange(RESERVE_STATUS_UPDATE_EXCHANGE);
+    }
+
+    @Bean
+    public Binding reserveStatusUpdateBinding(Queue reserveStatusUpdateQueue, TopicExchange reserveStatusUpdateExchange) {
+        return BindingBuilder.bind(reserveStatusUpdateQueue).to(reserveStatusUpdateExchange).with(RESERVE_STATUS_UPDATE_ROUTING_KEY);
     }
 
     @Bean
@@ -102,7 +126,34 @@ public class RabbitMQConfig {
 
     @Bean
     public Binding deleteReserveBinding(Queue deleteReserveQueue, TopicExchange deleteReserveExchange) {
-        return BindingBuilder.bind(deleteReserveQueue).to(deleteReserveExchange).with(DELETE_RESERVE_ROUTING_KEY);
+        return BindingBuilder
+                .bind(deleteReserveQueue)
+                .to(deleteReserveExchange)
+                .with(DELETE_RESERVE_ROUTING_KEY);
+    }
+
+    @Bean
+    public Queue rollbackReserveStatusQueue() {
+        return new Queue(ROLLBACK_RESERVE_STATUS_QUEUE, true);
+    }
+
+    @Bean
+    public TopicExchange rollbackReserveStatusUpdateExchange() {
+        return new TopicExchange(ROLLBACK_RESERVE_STATUS_UPDATE_EXCHANGE);
+    }
+
+    @Bean
+    public Binding rollbackReserveStatusUpdateBinding(Queue rollbackReserveStatusQueue, TopicExchange rollbackReserveStatusUpdateExchange) {
+        return BindingBuilder
+                .bind(rollbackReserveStatusQueue)
+                .to(rollbackReserveStatusUpdateExchange)
+                .with(ROLLBACK_RESERVE_STATUS_UPDATE_ROUTING_KEY);
+    }
+
+    @Bean
+    public Jackson2JsonMessageConverter messageConverter() {
+        Jackson2JsonMessageConverter converter = new Jackson2JsonMessageConverter();
+        return converter;
     }
     
 }

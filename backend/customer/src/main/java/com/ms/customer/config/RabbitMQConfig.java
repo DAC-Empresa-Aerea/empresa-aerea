@@ -16,13 +16,25 @@ public class RabbitMQConfig {
     public static final String CREATE_CUSTOMER_EXCHANGE = "create.customer.exchange";
     public static final String CREATE_CUSTOMER_ROUTING_KEY = "create.customer.routing.key";
 
-    public static final String ROLLBACK_CUSTOMER_QUEUE = "rollback.customer.queue";
-    public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.customer.exchange";
-    public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.customer.routing.key";
+    public static final String ROLLBACK_CUSTOMER_QUEUE = "rollback.create.customer.queue";
+    public static final String ROLLBACK_CUSTOMER_EXCHANGE = "rollback.create.customer.exchange";
+    public static final String ROLLBACK_CUSTOMER_ROUTING_KEY = "rollback.create.customer.routing.key";
 
     public static final String DEBIT_SEAT_QUEUE = "debit.seat.queue";
     public static final String DEBIT_SEAT_EXCHANGE = "debit.seat.exchange";
     public static final String DEBIT_SEAT_ROUTING_KEY = "debit.seat.routing.key";
+
+    public static final String REFUND_MILES_QUEUE = "refund.miles.queue";
+    public static final String REFUND_MILES_EXCHANGE = "refund.miles.exchange";
+    public static final String REFUND_MILES_ROUTING_KEY = "refund.miles.routing.key";
+
+    public static final String ROLLBACK_RESERVE_SEAT_QUEUE = "rollback.debit.seat.queue";
+    public static final String ROLLBACK_RESERVE_SEAT_EXCHANGE = "rollback.debit.seat.exchange";
+    public static final String ROLLBACK_RESERVE_SEAT_ROUTING_KEY = "rollback.debit.seat.routing.key";
+
+    public static final String GET_MILES_QUEUE = "get.miles.queue";
+    public static final String GET_MILES_EXCHANGE = "get.miles.exchange";
+    public static final String GET_MILES_ROUTING_KEY = "get.miles.routing.key";
 
     @Bean
     public Queue createCustomerQueue() {
@@ -76,6 +88,44 @@ public class RabbitMQConfig {
                 .bind(debitSeatQueue)
                 .to(debitSeatExchange)
                 .with(DEBIT_SEAT_ROUTING_KEY)
+                .noargs();
+    }
+
+    @Bean
+    public Queue refundMilesQueue() {
+        return new Queue(REFUND_MILES_QUEUE, true);
+    }
+
+    @Bean
+    public Exchange refundMilesExchange() {
+        return new DirectExchange(REFUND_MILES_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding refundMilesBinding(Queue refundMilesQueue, Exchange refundMilesExchange) {
+        return BindingBuilder
+                .bind(refundMilesQueue)
+                .to(refundMilesExchange)
+                .with(REFUND_MILES_ROUTING_KEY)
+                .noargs();
+    }
+
+    @Bean
+    public Queue getMilesQueue() {
+        return new Queue(GET_MILES_QUEUE, true);
+    }
+
+    @Bean
+    public Exchange getMilesExchange() {
+        return new DirectExchange(GET_MILES_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding getMilesBinding(Queue getMilesQueue, Exchange getMilesExchange) {
+        return BindingBuilder
+                .bind(getMilesQueue)
+                .to(getMilesExchange)
+                .with(GET_MILES_ROUTING_KEY)
                 .noargs();
     }
 

@@ -37,4 +37,12 @@ public class CQRSProducer {
             reserveCode
         );
     }
+
+    public void sendRollbackReserveStatus(UpdateStatusDTO dto) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConfig.ROLLBACK_RESERVE_STATUS_UPDATE_EXCHANGE, 
+            RabbitMQConfig.ROLLBACK_RESERVE_STATUS_UPDATE_ROUTING_KEY, 
+            dto
+        );
+    }
 }

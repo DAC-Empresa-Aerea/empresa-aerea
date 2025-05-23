@@ -25,9 +25,14 @@ public class CQRSConsumer {
         cqrsService.createReserve(reserveRequest);
     }
 
-    @RabbitListener(queues = RabbitMQConfig.DELETE_RESERVE_EXCHANGE)
+    @RabbitListener(queues = RabbitMQConfig.DELETE_RESERVE_QUEUE)
     public void receiveReserveDelete(String reserveCode) {
         cqrsService.deleteReserve(reserveCode);
+    }
+
+    @RabbitListener(queues = RabbitMQConfig.ROLLBACK_RESERVE_STATUS_QUEUE)
+    public void receiveRollbackReserveStatus(UpdateStatusDTO dto) {
+        cqrsService.rollbackReserveStatus(dto);
     }
 
 }

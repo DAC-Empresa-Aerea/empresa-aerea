@@ -1,7 +1,7 @@
 package com.ms.customer.dto;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -16,18 +16,22 @@ import lombok.Setter;
 @Setter
 public class TransitionDTO {
 
-    private LocalDateTime data;
+    @JsonProperty("data")
+    private OffsetDateTime date;
 
     @JsonProperty("valor_reais")
-    private BigDecimal valorReais;
+    private BigDecimal amountInReais;
 
     @JsonProperty("quantidade_milhas")
-    private Integer quantidadeMilhas;
+    private Integer milesQuantity;
 
-    private String descricao;
+    @JsonProperty("descricao")
+    private String description;
 
     @JsonProperty("codigo_reserva")
-    private String codigoReserva;
+    private String reserveCode;
 
-    private String tipo;
+    @JsonProperty("tipo")
+    private String type;
+
 }

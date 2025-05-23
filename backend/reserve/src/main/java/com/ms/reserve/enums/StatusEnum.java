@@ -10,13 +10,13 @@ import lombok.Getter;
 @Getter
 public enum StatusEnum {
 
-    CREATED("CRIADA", "CRI", "Reserva criada"),
+    CREATED("CRIADA", "CON", "Reserva criada"),
     CHECK_IN("CHECK-IN", "CKI", "Check-in realizado"),
     BOARDED("EMBARCADA", "EMB", "Passageiro embarcado"),
     FINISHED("REALIZADA", "REA", "Reserva realizada"),
     CANCELED("CANCELADA", "CAN", "Reserva cancelada"),
-    FLIGHT_CANCELED("CANCELADA_VOO", "CAV", "Reserva cancelada por voo"),
-    NOT_FINISHED("NAO_REALIZADA", "NRE", "Não realizada");
+    FLIGHT_CANCELED("CANCELADA VOO", "CAV", "Reserva cancelada por voo"),
+    NOT_FINISHED("NÃO REALIZADA", "NRE", "Não realizada");
 
     private final String code;
     private final String abbreviation;
@@ -31,7 +31,7 @@ public enum StatusEnum {
     public static boolean canTransfer(StatusEnum origin, StatusEnum destiny) {
         return switch (origin) {
             case CREATED -> destiny == CHECK_IN || destiny == CANCELED || destiny == FLIGHT_CANCELED || destiny == NOT_FINISHED;
-            case CHECK_IN -> destiny == BOARDED || destiny == FLIGHT_CANCELED;
+            case CHECK_IN -> destiny == BOARDED || destiny == FLIGHT_CANCELED || destiny == NOT_FINISHED;
             case BOARDED -> destiny == FINISHED || destiny == FLIGHT_CANCELED;
             default -> false;
         };

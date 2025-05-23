@@ -37,12 +37,20 @@ public class FlightProducer {
         );
     }
 
-    public SagaResponse<FlightResponseDTO> sendUpdateFlightCommand(FlightStatusDTO flightDTO) {;
+    public SagaResponse<FlightResponseDTO> sendUpdateFlightStatus(FlightStatusDTO flightDTO) {;
         return rabbitTemplate.convertSendAndReceiveAsType(
-            RabbitMQConfig.UPDATE_FLIGHT_EXCHANGE,
-            RabbitMQConfig.UPDATE_FLIGHT_ROUTING_KEY,
+            RabbitMQConfig.UPDATE_FLIGHT_STATUS_EXCHANGE,
+            RabbitMQConfig.UPDATE_FLIGHT_STATUS_ROUTING_KEY,
             flightDTO,
             new ParameterizedTypeReference<SagaResponse<FlightResponseDTO>>() {}
+        );
+    }
+
+    public void sendRollbackFlightStatus(FlightStatusDTO dto) {
+        rabbitTemplate.convertAndSend(
+            RabbitMQConfig.ROLLBACK_FLIGHT_STATUS_EXCHANGE,
+            RabbitMQConfig.ROLLBACK_FLIGHT_STATUS_ROUTING_KEY,
+            dto
         );
     }
 

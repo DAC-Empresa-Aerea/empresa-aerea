@@ -30,11 +30,11 @@ public class CustomerOrchestrator {
         }
 
         SagaResponse<CreateAuthResponseDTO> authResponse = authProducer.sendCreateAuth(
-            new CreateAuthRequestDTO(customerRequest.getEmail(), Roles.CUSTOMER)
+            new CreateAuthRequestDTO(customerRequest.getEmail(), null, Roles.CUSTOMER)
         );
 
         if (!authResponse.isSuccess()) {
-            customerProducer.sendRollbackCreateCustomer(customerResponse.getData().getCodigo());
+            customerProducer.sendRollbackCreateCustomer(customerResponse.getData().getCode());
 
             throw new BusinessException(authResponse.getError());
         }

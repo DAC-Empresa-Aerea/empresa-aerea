@@ -1,9 +1,10 @@
 package com.ms.saga.dto.reserve.reserveFlight;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.ms.saga.dto.flight.updateSeats.FlightWithAirportResponseDTO;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -20,7 +21,7 @@ public class ReserveFlightResponseDTO {
 	private String code;
 
 	@JsonProperty("data")
-	private LocalDateTime date;
+	private OffsetDateTime date;
 
 	@JsonProperty("valor")
 	private BigDecimal value;
@@ -32,18 +33,12 @@ public class ReserveFlightResponseDTO {
 	private Integer seatsQuantity;
 
 	@JsonProperty("codigo_cliente")
-	private String clientCode;
+	private Long customerCode;
 
 	@JsonProperty("estado")
 	private String status;
 
-	@JsonProperty("codigo_voo")
-	private String flightCode;
-
-	@JsonProperty("codigo_aeroporto_origem")
-	private String airportOriginCode;
-
-	@JsonProperty("codigo_aeroporto_destino")
-	private String destinyAirportCode;
+	@JsonProperty("voo")
+	private FlightWithAirportResponseDTO flight;
     
 }

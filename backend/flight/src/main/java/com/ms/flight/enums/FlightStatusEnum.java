@@ -10,9 +10,9 @@ import lombok.Getter;
 @Getter
 public enum FlightStatusEnum {
 
-    CONFIRMADO("CONFIRMADO", "CON", "Voo confirmado"),
-    REALIZADO("REALIZADO", "REA", "Voo realizado"),
-    CANCELADO("CANCELADO", "CAN", "Voo cancelada");
+    CONFIRMED("CONFIRMADO", "CON", "Voo confirmado"),
+    REALIZED("REALIZADO", "REA", "Voo realizado"),
+    CANCELED("CANCELADO", "CAN", "Voo cancelada");
 
     private final String codigo;
     private final String sigla;

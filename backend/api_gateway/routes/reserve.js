@@ -1,12 +1,28 @@
 const express = require('express');
 const reservationController = require('../controllers/reserveController');
+const authenticateJWT = require('../middleware/auth');
+const authorizeRoles = require('../middleware/authorize');
 
 const router = express.Router();
 
-// proxy simples: GET /reservas/:codigo
-router.get('/:codigo', reservationController.proxyGetByCode);
+router.post(
+  '/',
+  authenticateJWT,
+  authorizeRoles('CLIENTE'),
+  reservationController.proxyToSagas
+);
 
-// composição: (se precisar)
-// router.get('/:codigo/detalhes', reservationController.getReservationWithFlight);
+router.patch(
+  '/:id/estado',
+  authenticateJWT,
+  reservationController.proxyGetByCode
+);
+
+
+router.get(
+  '/:id',
+  authenticateJWT,
+  reservationController.getReservationWithFlight
+);
 
 module.exports = router;
