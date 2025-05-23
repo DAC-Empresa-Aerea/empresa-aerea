@@ -15,6 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.ms.customer.dto.AddressDTO;
 import com.ms.customer.dto.CheckMileResponseDTO;
 import com.ms.customer.dto.TransitionDTO;
+import com.ms.customer.dto.cancelReserve.ReserveCancelResponseDTO;
 import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatRequestDTO;
@@ -203,6 +204,37 @@ public class CustomerService {
         return debitResponse;
     }
 
+    @Transactional
+    public ReserveCancelResponseDTO cancelReserveMilesReturn(ReserveCancelResponseDTO reserve) {
+        Customer customer = customerRepository.findById(reserve.getCustomerCode())
+                .orElseThrow(() -> new CustomerNotFoundException("Cliente não encontrado para o ID: " + reserve.getCustomerCode()));
+
+        Integer newBalance = customer.getMilesBalance() + reserve.getMilesUsed();
+        customer.setMilesBalance(newBalance);
+
+        customerRepository.save(customer);
+
+        MilesHistory milesHistory = new MilesHistory();
+        BigDecimal amountInReais =
+        BigDecimal.valueOf(reserve.getMilesUsed())
+                .multiply(BigDecimal.valueOf(5));
+
+        milesHistory.setAmountInReais(amountInReais);
+        milesHistory.setCustomer(customer);
+        milesHistory.setDate(LocalDateTime.now());
+        milesHistory.setDescription("Retorno de milhas por cancelamento de reserva: " + reserve.getCode());
+        milesHistory.setMilesQuantity(reserve.getMilesUsed());
+        milesHistory.setReserveCode(reserve.getCode());
+        milesHistory.setType("ENTRADA");
+
+        milesHistoryRepository.save(milesHistory);
+
+        UpdateMilesResponseDTO response = new UpdateMilesResponseDTO();
+        response.setCode(customer.getCode());
+        response.setMilesBalance(customer.getMilesBalance());
+
+        return reserve;
+    }
 
     public void deleteById(Long id) {
         customerRepository.deleteById(id);

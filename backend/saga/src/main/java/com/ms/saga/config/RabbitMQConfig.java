@@ -57,6 +57,12 @@ public class RabbitMQConfig {
 
     public static final String GET_RESERVE_EXCHANGE = "get.reserve.exchange";
     public static final String GET_RESERVE_ROUTING_KEY = "get.reserve.routing.key";
+
+    public static final String CANCEL_RESERVE_MILES_EXCHANGE = "cancel.reserve.miles.exchange";
+    public static final String CANCEL_RESERVE_MILES_ROUTING_KEY = "cancel.reserve.miles.routing.key";
+
+    public static final String ROLLBACK_CANCEL_RESERVE_MILES_EXCHANGE = "rollback.cancel.reserve.miles.exchange";
+    public static final String ROLLBACK_CANCEL_RESERVE_MILES_ROUTING_KEY = "rollback.cancel.reserve.miles.routing.key";
         
 
     @Bean

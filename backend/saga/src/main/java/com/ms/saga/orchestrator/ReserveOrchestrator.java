@@ -128,7 +128,13 @@ public class ReserveOrchestrator {
                 throw new BusinessException(cancelResponse.getError());
             }
 
-            return cancelResponse.getData();
+            SagaResponse<ReserveCancelResponseDTO> cancelResponseMiles = reserveProducer.returnsMilesToCustomer(cancelResponse.getData());
+
+            if (!cancelResponseMiles.isSuccess()) {
+                throw new BusinessException(cancelResponseMiles.getError());
+            }
+
+            return cancelResponseMiles.getData();
             } catch (BusinessException e) {
                 throw e;
             } catch (Exception e) {

@@ -45,12 +45,7 @@ public class ReserveProducer {
         return (SagaResponse<Void>) reply;
     }
 
-    //Esta sendo usado para buscar reserva
     public SagaResponse<ReserveCancelResponseDTO> sendGetReserve(ReserveCancelRequestDTO dto) {
-        System.out.println("Enviando mensagem para fila de reserva");
-        System.out.println("Enviando para exchange: " + RabbitMQConfig.GET_RESERVE_EXCHANGE);
-        System.out.println("Com routing key: " + RabbitMQConfig.GET_RESERVE_ROUTING_KEY);
-        System.out.println("Payload: " + dto);
         return rabbitTemplate.convertSendAndReceiveAsType(
             RabbitMQConfig.GET_RESERVE_EXCHANGE,          
             RabbitMQConfig.GET_RESERVE_ROUTING_KEY,       
@@ -59,12 +54,28 @@ public class ReserveProducer {
         );
     }
 
-    //implementando
     public SagaResponse<ReserveCancelResponseDTO> sendCancelReserve(ReserveCancelRequestDTO cancelRequest) {
         try {
             return rabbitTemplate.convertSendAndReceiveAsType(
                 RabbitMQConfig.CANCEL_RESERVE_EXCHANGE,
                 RabbitMQConfig.CANCEL_RESERVE_ROUTING_KEY,
+                cancelRequest,
+                new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
+            );
+        } catch (Exception e) {
+            return SagaResponse.error(
+                "Erro na comunicação com o serviço de reservas",
+                "SERVICE_COMMUNICATION_ERROR",
+                503
+            );
+        }
+    }
+
+    public SagaResponse<ReserveCancelResponseDTO> returnsMilesToCustomer(ReserveCancelResponseDTO cancelRequest) {
+        try {
+            return rabbitTemplate.convertSendAndReceiveAsType(
+                RabbitMQConfig.CANCEL_RESERVE_MILES_EXCHANGE,
+                RabbitMQConfig.CANCEL_RESERVE_MILES_ROUTING_KEY,
                 cancelRequest,
                 new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
             );
@@ -84,17 +95,6 @@ public class ReserveProducer {
                 RabbitMQConfig.CANCEL_RESERVE_ROUTING_KEY,
             reserveCode
         );
-    }
-
-    //ainda nao foi implementado
-    public SagaResponse<Void> updateStatusReserveCancel(CancelReserveResponseDTO dto) {
-        Object reply = rabbitTemplate
-            .convertSendAndReceive(
-                RabbitMQConfig.CANCEL_RESERVE_EXCHANGE,
-                RabbitMQConfig.CANCEL_RESERVE_ROUTING_KEY,
-                dto
-            );
-        return (SagaResponse<Void>) reply;
     }
 }
 
