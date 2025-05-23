@@ -1,12 +1,15 @@
 package com.ms.reserve.consumer;
 
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import com.ms.reserve.config.RabbitMQConfig;
 import com.ms.reserve.dto.error.SagaResponse;
+import com.ms.reserve.dto.reserve.ReserveResponseDTO;
 import com.ms.reserve.dto.reserve.cancel.ReserveCancelRequestDTO;
+import com.ms.reserve.dto.reserve.cancel.ReserveCancelResponseDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.reserve.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.reserve.dto.status.FlightStatusDTO;
@@ -55,14 +58,23 @@ public class ReserveConsumer {
     }
 
     @RabbitListener(queues = RabbitMQConfig.GET_RESERVE_QUEUE)
-    public SagaResponse<String> searchReserve(ReserveCancelRequestDTO dto) {
-        String reserve_id = dto.getReservaId();
-        System.out.println("Recebido ID para busca: " + reserve_id);
-        try {
-            reserveService.getReserveById(reserve_id);
-            return SagaResponse.success("GET_RESERVE_SUCESS");
+    public SagaResponse<ReserveCancelResponseDTO> searchReserve(ReserveCancelRequestDTO dto) {
+        String reserveId = dto.getReservaId();
+        System.out.println("Entrou no consumer: " + reserveId);
+        if (reserveId == null || reserveId.isEmpty()) {
+            return SagaResponse.error("RESERVE_ID_NOT_FOUND", "ReservaId não pode ser nulo ou vazio", 400);
         }
-        catch (BusinessException e) {
+        try {
+            ReserveResponseDTO reserve = reserveService.getReserveById(reserveId);
+            
+            // Converter ReserveResponseDTO → ReserveCancelResponseDTO o service retorna ReserveResponseDTO
+            // e o consumer espera ReserveCancelResponseDTO
+            ReserveCancelResponseDTO response = new ReserveCancelResponseDTO();
+            BeanUtils.copyProperties(reserve, response);
+            response.setCode(reserve.getCode());
+            
+            return SagaResponse.success(response);
+        } catch (BusinessException e) {
             return SagaResponse.error(e.getMessage(), e.getCode(), e.getStatus());
         } catch (Exception e) {
             return SagaResponse.error("GET_RESERVE_ERROR", e.getMessage(), 400);

@@ -127,5 +127,22 @@ public class RabbitMQConfig {
         return converter;
     }
     
+    @Bean
+    public Queue getReserveQueue() {
+        return new Queue(GET_RESERVE_QUEUE, true);
+    }
+
+    @Bean
+    public TopicExchange getReserveExchange() {
+        return new TopicExchange(GET_RESERVE_EXCHANGE);
+    }
+
+    @Bean
+    public Binding getReserveBinding() {
+        return BindingBuilder.bind(getReserveQueue())
+                        .to(getReserveExchange())
+                        .with(GET_RESERVE_ROUTING_KEY);
+    }
+    
 }
 

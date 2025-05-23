@@ -47,12 +47,16 @@ public class ReserveProducer {
 
     //Esta sendo usado para buscar reserva
     public SagaResponse<ReserveCancelResponseDTO> sendGetReserve(ReserveCancelRequestDTO dto) {
-    return rabbitTemplate.convertSendAndReceiveAsType(
-        RabbitMQConfig.GET_RESERVE_EXCHANGE,          
-        RabbitMQConfig.GET_RESERVE_ROUTING_KEY,       
-        dto,                                  
-        new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
-    );
+        System.out.println("Enviando mensagem para fila de reserva");
+        System.out.println("Enviando para exchange: " + RabbitMQConfig.GET_RESERVE_EXCHANGE);
+        System.out.println("Com routing key: " + RabbitMQConfig.GET_RESERVE_ROUTING_KEY);
+        System.out.println("Payload: " + dto);
+        return rabbitTemplate.convertSendAndReceiveAsType(
+            RabbitMQConfig.GET_RESERVE_EXCHANGE,          
+            RabbitMQConfig.GET_RESERVE_ROUTING_KEY,       
+            dto,                                  
+            new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
+        );
     }
 
     //ainda nao foi implementado

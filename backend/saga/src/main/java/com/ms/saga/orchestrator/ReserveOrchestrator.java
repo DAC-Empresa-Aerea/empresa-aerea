@@ -108,21 +108,24 @@ public class ReserveOrchestrator {
     }
 
     public ReserveCancelResponseDTO processCancelReserve(String id) {
-        System.out.println("Cancelando reserva: " + id);
+        try {
+            ReserveCancelRequestDTO buscarDto = new ReserveCancelRequestDTO();
+            buscarDto.setReservaId(id);
 
-        // 1. Buscar reserva
-        ReserveCancelRequestDTO buscarDto = new ReserveCancelRequestDTO();
-        buscarDto.setReservaId(id);
+            SagaResponse<ReserveCancelResponseDTO> reserveResponse = reserveProducer.sendGetReserve(buscarDto);
 
-        SagaResponse<ReserveCancelResponseDTO> reserveResponse = reserveProducer.sendGetReserve(buscarDto);
+            if (reserveResponse == null) {
+                throw new BusinessException("Falha na comunicação com o serviço de reservas", "SERVICE_UNAVAILABLE", 503);
+            }
 
-        if (!reserveResponse.isSuccess() || reserveResponse.getData() == null) {
-            throw new BusinessException("Reserva não encontrada ou erro ao buscar");
+            if (!reserveResponse.isSuccess()) {
+                throw new BusinessException(reserveResponse.getError());
+            }
+
+            return reserveResponse.getData();
+        } catch (Exception e) {
+            throw new BusinessException("Erro ao processar cancelamento: " + e.getMessage(), "PROCESSING_ERROR", 500);
         }
-
-        ReserveCancelResponseDTO reserva = reserveResponse.getData();
-
-        return reserva;
     }
 
     // Update status reserve because the flight status changed

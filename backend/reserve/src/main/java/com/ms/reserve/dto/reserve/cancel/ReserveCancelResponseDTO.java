@@ -39,12 +39,5 @@ public class ReserveCancelResponseDTO {
 
 	@JsonProperty("codigo_voo")
 	private String flightCode;
-
-	@JsonProperty("codigo_aeroporto_origem")
-	private String originAirportCode;
-
-	@JsonProperty("codigo_aeroporto_destino")
-	private String destinyAirportCode;
-    
 }
 
