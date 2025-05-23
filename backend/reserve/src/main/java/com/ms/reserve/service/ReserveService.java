@@ -162,7 +162,7 @@ public class ReserveService {
                 responseList.add(new UpdatedReserveStatusDTO(rq.getCode()));
 
                 cqrsProducer.sendStatusUpdate(rq.getCode(), status.getCode());
-            } else if (current.equals(StatusEnum.CREATED) && StatusEnum.fromCode(dto.getStatusCode()).equals(StatusEnum.FINISHED)) {
+            } else if ((current.equals(StatusEnum.CREATED) || current.equals(StatusEnum.CHECK_IN)) && StatusEnum.fromCode(dto.getStatusCode()).equals(StatusEnum.FINISHED)) {
                 ReserveCommand reserveCommand = reserveCommandRepository.findById(rq.getCode())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Reserva não encontrada"));
                 ReserveStatusCommand status = statusCommandRepository.findById(StatusEnum.NOT_FINISHED.getCode())
