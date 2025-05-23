@@ -16,13 +16,7 @@ const TransactionConfirmation: React.FC<TransactionConfirmationProps> = ({
   onNewPurchase,
 }) => {
   const transactionDate = transaction?.data
-  ? new Date(transaction.data).toLocaleString("pt-BR", {
-      day: "2-digit",
-      month: "long",
-      year: "numeric",
-      hour: "2-digit",
-      minute: "2-digit",
-    })
+  ? transaction.data
   : "Data indisponível";
   const milesAmount = transaction?.quantidade_milhas ? transaction.quantidade_milhas.toLocaleString() : "0";
   const amountInReais = formatCurrency(transaction?.valor_reais || 0);

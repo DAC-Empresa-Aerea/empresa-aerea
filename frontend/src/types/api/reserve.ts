@@ -1,13 +1,14 @@
 import { FlightWithAirports } from "./flight";
 
 export enum ReserveStatus {
+  CRIADA = "CRIADA", 
   CONFIRMADO = "CONFIRMADO",
   CHECKIN = "CHECK-IN",
   EMBARCADO = "EMBARCADA",
 }
 
 export interface Reserve {
-  codigo: number;
+  codigo: string;
   data: number;
   valor: number;
   milhas_utilizadas: number;

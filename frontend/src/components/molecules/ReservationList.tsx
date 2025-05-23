@@ -1,12 +1,12 @@
 import TableItem from "../atoms/TableItem";
-import Reserve from "../../types/Reserve";
+import { ReserveWithFlight } from "../../types/api/reserve";
 
 interface ReservationListProps {
   title: string;
-  reserves: Reserve[];
+  reserves: ReserveWithFlight[];
   buttonText: string;
-  onFlightClick: (reserve: Reserve) => void;
-  cancelFlightClick?: (reserve: Reserve) => void;
+  onFlightClick: (reserve: ReserveWithFlight) => void;
+  cancelFlightClick?: (reserve: ReserveWithFlight) => void;
 }
 
 function ReservationList({

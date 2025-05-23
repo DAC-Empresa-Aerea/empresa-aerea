@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/loginContext";
-import { updateCustomerMiles, createMilesTransaction } from "../../services/milesService";
 import { getCustomerByCpf } from "../../services/customerService";
 
 import MilesPurchaseHeader from "../../components/organisms/milesOrganisms/MilesPurchaseHeader";
@@ -9,14 +9,25 @@ import MilesOptionsSelector from "../../components/molecules/milesMolecules/Mile
 import MilesSlider from "../../components/molecules/milesMolecules/MilesSlider";
 import PriceSummary from "../../components/molecules/milesMolecules/PriceSummary";
 import TransactionConfirmation from "../../components/organisms/milesOrganisms/TransactionConfirmation";
+import { useUpdateMiles } from "../../hooks/customers/useUptadeMiles";
+import { useCustomer } from "../../hooks/customers/useCustomer";
 
 const BuyMiles: React.FC = () => {
+
   const { user, setUser } = useAuth();
   const [milesAmount, setMilesAmount] = useState<number>(1000);
   const [priceInReais, setPriceInReais] = useState<number>(0);
   const [showConfirmation, setShowConfirmation] = useState<boolean>(false);
   const [transaction, setTransaction] = useState<any | null>(null);
   const [isProcessing, setIsProcessing] = useState<boolean>(false);
+  const navigate = useNavigate();
+
+  const buyMiles = useUpdateMiles(user?.codigo || 0);
+  const getCustomer = useCustomer(user?.codigo || 0);
+
+  const goToStatement = () => {
+    navigate("/customer/consultStatement");
+  };
 
   const MILES_PRICE_RATIO = 5.0;
 
@@ -32,32 +43,39 @@ const BuyMiles: React.FC = () => {
 
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user || !("codigo" in user)) return;
+    if (!user) return;
 
     setIsProcessing(true);
 
     try {
-      const result = await updateCustomerMiles(user.codigo, milesAmount);
-
-      const newTransaction = await createMilesTransaction({
-        codigo_cliente: user.codigo.toString(),
-        valor_reais: priceInReais,
-        quantidade_milhas: milesAmount,
-        descricao: "COMPRA DE MILHAS",
+      await buyMiles.mutateAsync({
+        quantidade: milesAmount,
       });
-
-      setTransaction(newTransaction);
+      setTransaction({
+        quantidade_milhas: milesAmount,
+        valor_reais: priceInReais,
+        data: new Date().toLocaleString("pt-BR", {
+          day: "2-digit",
+          month: "long",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+        }),
+        descricao: "Compra de milhas",
+      });
       setShowConfirmation(true);
     } catch (err) {
       alert("Erro ao processar a compra de milhas.");
     } finally {
       setIsProcessing(false);
-
       try {
-        const response = await getCustomerByCpf(user.cpf);
-        const updatedUser = response;
-        setUser(updatedUser);
-        localStorage.setItem("user", JSON.stringify(updatedUser));
+        const { data: updatedUser } = await getCustomer.refetch();
+        if (updatedUser) {
+          setUser(updatedUser);
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+        } else {
+          console.error("Erro ao atualizar os dados do usuário: updatedUser is undefined");
+        }
       } catch (error) {
         console.error("Erro ao atualizar os dados do usuário:", error);
       }
@@ -132,6 +150,15 @@ const BuyMiles: React.FC = () => {
                   formatCurrency={formatCurrency}
                 />
               </form>
+              {/* Botão de ir para o extrato */}
+              <div className="flex justify-end mb-4">
+                <button
+                  onClick={goToStatement}
+                  className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition"
+                >
+                  Ver Extrato
+                </button>
+              </div>
             </div>
           </div>
         )}

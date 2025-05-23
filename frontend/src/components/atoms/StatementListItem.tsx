@@ -1,4 +1,4 @@
-import { MilesTransaction } from "../../types/Miles";
+import { MilesTransaction } from "../../types/api/miles";
 
 interface StatementListItemInfoProps {
     statement: MilesTransaction;
@@ -22,12 +22,6 @@ function StatementListItem({ statement, onClick, buttonText }: StatementListItem
                 </div>
                 <p className="text-sm font-medium text-gray-700"><span className="uppercase text-blue-600">{statement.descricao}</span></p>
             </article>
-            <button
-                className="px-4 py-2 bg-blue-600 text-white font-medium rounded-md shadow-md hover:bg-blue-700 transition"
-                onClick={onClick}
-            >
-                {buttonText}
-            </button>
         </li>
     );
 }

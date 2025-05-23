@@ -18,10 +18,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ResponseStatusException.class)
-    public ResponseEntity<ErrorDTO> handleResponseStatusException(ResponseStatusException ex) {
-        ErrorDTO error = new ErrorDTO("BAD_REQUEST", ex.getReason(), HttpStatus.BAD_REQUEST.value());
-        return new ResponseEntity<>(error, HttpStatus.BAD_REQUEST);
+
+    public ResponseEntity<ErrorBody> handle(ResponseStatusException ex) {
+        ErrorBody body = new ErrorBody(
+                ex.getStatusCode().value(),
+                ex.getReason());
+        return ResponseEntity.status(ex.getStatusCode()).body(body);
     }
+
+    public record ErrorBody(int status, String message) {}
 
 }
 

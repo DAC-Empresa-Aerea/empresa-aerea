@@ -1,86 +1,122 @@
-import React, { createContext, useContext, useState, ReactNode, useEffect } from "react";
-import { loginService } from "../services/loginService";
+// src/contexts/AuthContext.tsx
+import {
+  createContext,
+  useContext,
+  useState,
+  useEffect,
+  ReactNode,
+} from "react";
+import Cookies from "js-cookie";
+import { queryClient} from "../App"; 
+import { useLogin } from "../hooks/useLogin";
+import { useLogout } from "../hooks/useLogout";
 import Customer from "../types/Customer";
 import Employee from "../types/Employee";
 
-// União dos dois tipos possíveis de usuário
+// -------------------------------------------------------------------------
+// TYPES
+// -------------------------------------------------------------------------
 type User = Customer | Employee;
 
+type SignInResult = {
+  tipo: "CLIENTE" | "FUNCIONARIO";
+  usuario: User;
+};
 interface AuthContextType {
   isAuthenticated: boolean;
   user: User | null;
-  setUser: (user: User | null) => void;
-  userType: string | null;
   loading: boolean;
-  login: (credentials: { login: string; senha: string }) => Promise<any>;
-  logout: () => void;
+  signIn: (login: string, senha: string) => Promise<SignInResult>;
+  signOut: () => Promise<void>;
+  setUser: (user: User | null) => void;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
-interface AuthProviderProps {
-  children: ReactNode;
-}
-
 export const useAuth = () => {
-  const context = useContext(AuthContext);
-  if (!context) {
-    throw new Error("useAuth must be used within an AuthProvider");
-  }
-  return context;
+  const ctx = useContext(AuthContext);
+  if (!ctx) throw new Error("useAuth must be used within AuthProvider");
+  return ctx;
 };
 
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+// -------------------------------------------------------------------------
+// PROVIDER
+// -------------------------------------------------------------------------
+export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
-  const [userType, setUserType] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
+  const loginMutation = useLogin();     // hook de mutation
+  const logoutMutation = useLogout();
+
+  /* --------------------------------------------------------
+   *  1) Restaura sessão caso exista cookie/token salvo
+   * ------------------------------------------------------*/
   useEffect(() => {
-    const storedUser = localStorage.getItem("user");
-    const storedType = localStorage.getItem("userType");
-
-    if (storedUser && storedType) {
-      setUser(JSON.parse(storedUser));
-      setUserType(storedType);
-      setIsAuthenticated(true);
+    const token = Cookies.get("token");
+    const cachedUser = Cookies.get("user");
+    if (token && cachedUser) {
+      try {
+        setUser(JSON.parse(cachedUser));
+      } catch {
+        /* se falhar parsing, ignora */
+      }
     }
-
     setLoading(false);
   }, []);
 
-  const login = async ({ login, senha }: { login: string; senha: string }) => {
+  /* --------------------------------------------------------
+   *  2) Faz login
+   * ------------------------------------------------------*/
+  const signIn = async (login: string, senha: string) => {
     setLoading(true);
     try {
-      const response = await loginService({ login, senha });
+      const data = await loginMutation.mutateAsync({ login, senha });
 
-      setIsAuthenticated(true);
-      setUser(response.usuario as User);
-      setUserType(response.tipo);
+      Cookies.set("token", data.access_token, { sameSite: "strict" });
+      Cookies.set("user", JSON.stringify(data.usuario), { sameSite: "strict" });
 
-      localStorage.setItem("user", JSON.stringify(response.usuario));
-      localStorage.setItem("userType", response.tipo);
+      setUser(data.usuario as User);
 
+      return {                          //  <-- devolvemos só o que a tela precisa
+        tipo: data.tipo,
+        usuario: data.usuario,
+      };
+    } finally {
       setLoading(false);
-      return response;
-    } catch (error) {
-      setLoading(false);
-      throw error;
     }
   };
 
-  const logout = () => {
-    setIsAuthenticated(false);
-    setUser(null);
-    setUserType(null);
-
-    localStorage.removeItem("user");
-    localStorage.removeItem("userType");
+  /* --------------------------------------------------------
+   *  3) Faz logout
+   * ------------------------------------------------------*/
+  const signOut = async () => {
+    setLoading(true);
+    try {
+      await logoutMutation.mutateAsync({ login: "" });
+    } catch {
+    } finally {
+      Cookies.remove("token");
+      Cookies.remove("user");
+      setUser(null);
+      queryClient.clear();
+      setLoading(false);
+    }
   };
 
+  /* --------------------------------------------------------
+   *  4) Valor do Context
+   * ------------------------------------------------------*/
   return (
     <AuthContext.Provider
-      value={{ isAuthenticated, user, setUser, userType, loading, login, logout }}
+      value={{
+        isAuthenticated: !!user,
+        user,
+        loading,
+        signIn,
+        signOut,
+        setUser,
+      }}
     >
       {children}
     </AuthContext.Provider>

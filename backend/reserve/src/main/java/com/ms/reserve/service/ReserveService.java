@@ -91,7 +91,9 @@ public class ReserveService {
     }
     
     public ReserveResponseDTO getReserveById(String id) {
+
         ReserveQuery reserve = reserveQueryRepository.findById(id).orElseThrow(() -> new BusinessException("RESERVE_NOT_FOUND", "Reserva não encontrada", HttpStatus.NOT_FOUND.value()));
+
         
         ReserveResponseDTO reserveResponseDTO = new ReserveResponseDTO();
         BeanUtils.copyProperties(reserve, reserveResponseDTO);

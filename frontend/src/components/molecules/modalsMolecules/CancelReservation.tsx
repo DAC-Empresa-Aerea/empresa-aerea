@@ -1,12 +1,13 @@
-import Reserve from "../../../types/Reserve";
 import { FaTimes } from "react-icons/fa";
 import { UpdateReserve } from "../../../services/reserveService";
+import { ReserveWithFlight } from "../../../types/api/reserve";
+import { useCancelReserve } from "../../../hooks/reserves/useCancelReserve";
 
 interface CancelReservationProps {
   cancelisOpen: boolean;
   cancelClose: () => void;
   canceltitle: string;
-  selectedReserve: Reserve;
+  selectedReserve: ReserveWithFlight;
   onUpdate: () => void; 
 }
 
@@ -18,18 +19,16 @@ function CancelReservation({
   onUpdate,
 }: CancelReservationProps) {
   if (!cancelisOpen) return null;
+  const { mutateAsync: cancelReserve } = useCancelReserve();
 
   const handleCancel = async () => {
     try {
-      await UpdateReserve(selectedReserve.codigo, {
-        ...selectedReserve,
-        estado: "CANCELADA",
-      });
+      await cancelReserve(selectedReserve.codigo);
       onUpdate();
       cancelClose();
     } catch (error) {
       console.error("Erro ao cancelar a reserva:", error);
-      setErrorMessage("Não foi possível cancelar a reserva. Tente novamente mais tarde.");
+    }
   };
 
   return (

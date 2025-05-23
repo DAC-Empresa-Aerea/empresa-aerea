@@ -1,4 +1,4 @@
-import { MilesTransaction } from "../../../types/Miles";
+import { MilesTransaction } from "../../../types/api/miles";
 import StatementList from "../../molecules/StatementList";
 
 const statementDataExample: Array<MilesTransaction> = [

@@ -20,7 +20,7 @@ const BookingConfirmation: React.FC<BookingConfirmationProps> = ({ bookingCode }
       </div>
       <p className="mb-6">Guarde este código para check-in e embarque.</p>
       <button 
-        onClick={() => navigate('/minhas-reservas')} 
+        onClick={() => navigate('/customer/home')} 
         className="bg-blue-600 text-white py-2 px-6 rounded hover:bg-blue-700"
       >
         Ver minhas reservas

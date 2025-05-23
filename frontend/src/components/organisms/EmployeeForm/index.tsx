@@ -9,17 +9,17 @@ interface EmployeeFormProps {
 }
 
 function EmployeeForm({
-  employee = {} as Employee,
+  employee,
   onConfirm,
 }: EmployeeFormProps) {
   const [employeeData, setEmployeeData] = useState<Employee>(
-    employee ?? ({} as Employee)
+    employee || ({} as Employee)
   );
 
   const [isNew] = useState<boolean>(!employee?.codigo);
 
   return (
-    <div className="flex flex-col gap-4 p-4 bg-white rounded-lg shadow-md justify-between">
+    <div className="flex flex-col gap-4 bg-white rounded-lg justify-between">
       <EmployeeInputs
         employee={employeeData}
         setEmployee={setEmployeeData}
@@ -29,7 +29,7 @@ function EmployeeForm({
         text="Salvar"
         onClick={() => {
           if (employeeData.nome && employeeData.telefone && employeeData.email)
-            onConfirm && onConfirm(employeeData);
+            onConfirm(employeeData);
           else alert("Preencha todos os campos!");
         }}
       />

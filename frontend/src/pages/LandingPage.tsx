@@ -1,8 +1,15 @@
 import React from "react";
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { CustomerRoutesEnum, Routes } from "../routes/routes.enum";
+import { useAuth } from "../contexts/loginContext";
 
 const LandingPage: React.FC = () => {
+
+  const { isAuthenticated, signOut } = useAuth();
+  useEffect(() => {
+    signOut();
+  }, []);
 
   const singles = [
     "John F. Kennedy International (JFK)",
@@ -25,7 +32,7 @@ const LandingPage: React.FC = () => {
     "Paris Charles de Gaulle (CDG)",
     "Madrid Barajas (MAD)",
     "Mumbai Chhatrapati Shivaji Maharaj International (BOM)"
-];
+  ];
 
   const navigate = useNavigate();
 
@@ -54,13 +61,13 @@ const LandingPage: React.FC = () => {
             </p>
             <div className="flex flex-wrap gap-4">
               <button
-                onClick={() => navigate(CustomerRoutesEnum.SEARCH_FLIGHTS)}
+                onClick={() => navigate("/login")}
                 className="px-6 py-3 bg-black hover:bg-gray-900 text-white font-bold rounded-lg transition-colors shadow-lg"
               >
                 Buscar Voos
               </button>
               <button
-                onClick={() => navigate("/customer-home")}
+                onClick={() => navigate("/login")}
                 className="px-6 py-3 bg-white hover:bg-gray-100 text-blue-800 font-bold rounded-lg transition-colors shadow-lg"
               >
                 Minhas Reservas
@@ -69,7 +76,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
-
+      {/* Comentando pois no momento nao faz sentido ter isso aqui  
       <section className="bg-white py-8 shadow-md -mt-10 rounded-lg max-w-5xl mx-auto z-20 px-8">
         <h2 className="text-2xl font-bold text-gray-800 mb-4">
           Encontre seu próximo destino
@@ -113,7 +120,7 @@ const LandingPage: React.FC = () => {
           </div>
         </div>
       </section>
-
+        */}
       <section className="py-16 bg-gray-50">
         <div className="container mx-auto px-4">
           <h2 className="text-3xl font-bold text-center mb-12 text-gray-800">
@@ -251,7 +258,7 @@ const LandingPage: React.FC = () => {
 
           <div className="text-center mt-8">
             <button
-              onClick={() => navigate(CustomerRoutesEnum.SEARCH_FLIGHTS)}
+              onClick={() => navigate("/login")}
               className="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white font-medium rounded-lg transition-colors"
             >
               Ver todos os destinos
@@ -269,7 +276,7 @@ const LandingPage: React.FC = () => {
           </p>
           <div className="flex flex-wrap justify-center gap-4">
             <button
-              onClick={() => navigate(CustomerRoutesEnum.SEARCH_FLIGHTS)}
+              onClick={() => navigate("/login")}
               className="px-6 py-3 bg-black hover:bg-gray-900 text-white font-bold rounded-lg transition-colors shadow-lg"
             >
               Buscar Voos

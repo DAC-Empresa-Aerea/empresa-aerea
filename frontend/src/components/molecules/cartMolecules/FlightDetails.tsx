@@ -1,37 +1,34 @@
 import React from "react";
-import { SelectedFlight } from "../../../types/flightTypes";
+import Flight from "../../../types/Flight";
 
 interface FlightDetailsProps {
-  flight: SelectedFlight;
+  flight: Flight;
 }
 
 const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
-  // Formatar data para exibição
-  const formatDate = (dateString: string) => {
-    const date = new Date(dateString);
-    return new Intl.DateTimeFormat("pt-BR", {
-      day: "2-digit",
-      month: "short",
-      year: "numeric",
-    }).format(date);
-  };
 
   return (
     <div className="mb-8">
       <div className="flex items-center justify-between mb-6">
         <div className="flex items-center">
           <div className="h-10 w-10 rounded-full flex items-center justify-center text-white font-bold mr-3">
-            {flight.airline.substring(0, 2)}
+            {flight.codigo.substring(0, 2)}
           </div>
           <div>
-            <h3 className="font-medium text-slate-900">{flight.airline}</h3>
-            <p className="text-sm text-slate-500">Voo {flight.flightNumber}</p>
+            <h3 className="font-medium text-slate-900">{flight.codigo}</h3>
+            <p className="text-sm text-slate-500">Voo {flight.codigo}</p>
           </div>
         </div>
         <div className="text-right">
           <p className="text-sm text-slate-500">Data</p>
           <p className="font-medium text-slate-900">
-            {formatDate(flight.departureDate)}
+            {new Date(flight.data).toLocaleString("pt-BR", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+              hour: "2-digit",
+              minute: "2-digit",
+            })}
           </p>
         </div>
       </div>
@@ -40,14 +37,11 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
         {/* Coluna Origem */}
         <div className="text-center w-1/3">
           <div className="h-4 w-4 rounded-full absolute left-0 top-1/2 -mt-2 border-4 border-white"></div>
-          <p className="text-2xl font-semibold text-slate-900">
-            {flight.departureTime}
-          </p>
           <p className="text-sm font-medium mt-1 text-slate-700">
-            {flight.origin.split("(")[0].trim()}
+            {flight.aeroporto_origem.cidade}
           </p>
           <p className="text-xs text-slate-500 mt-0.5">
-            {flight.origin.match(/\(([^)]+)\)/)?.[1]}
+            {flight.aeroporto_origem.codigo}
           </p>
         </div>
 
@@ -57,7 +51,7 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
             <div className="border-t-2 border-slate-200 w-full absolute top-1/2"></div>
             <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 bg-white px-2 text-xs font-medium text-slate-500 whitespace-nowrap">
               Voo direto •{" "}
-              {calculateDuration(flight.departureTime, flight.arrivalTime)}
+
             </div>
           </div>
         </div>
@@ -65,14 +59,11 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
         {/* Coluna Destino */}
         <div className="text-center w-1/3">
           <div className="bg-emerald-500 h-4 w-4 rounded-full absolute right-0 top-1/2 -mt-2 border-4 border-white"></div>
-          <p className="text-2xl font-semibold text-slate-900">
-            {flight.arrivalTime}
-          </p>
           <p className="text-sm font-medium mt-1 text-slate-700">
-            {flight.destination.split("(")[0].trim()}
+            {flight.aeroporto_destino.cidade}
           </p>
           <p className="text-xs text-slate-500 mt-0.5">
-            {flight.destination.match(/\(([^)]+)\)/)?.[1]}
+            {flight.aeroporto_destino.codigo}
           </p>
         </div>
       </div>
@@ -81,7 +72,7 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
         <div>
           <p className="text-sm text-slate-500">Preço por assento</p>
           <p className="font-semibold text-slate-900">
-            R$ {flight.seatPrice.toFixed(2)}
+            R$ {flight.valor_passagem.toFixed(2).replace(".", ",")}
           </p>
         </div>
         <div className="flex items-center">
@@ -99,14 +90,13 @@ const FlightDetails: React.FC<FlightDetailsProps> = ({ flight }) => {
   );
 };
 
-// Função para calcular duração do voo
+// Função para calcular duração do voo  NAO UTILIZADA DEVIDO A FALTA DE INFORMAÇÃO NO BACKEND
 const calculateDuration = (departure: string, arrival: string): string => {
   const [depHours, depMinutes] = departure.split(":").map(Number);
   const [arrHours, arrMinutes] = arrival.split(":").map(Number);
 
   let totalMinutes = arrHours * 60 + arrMinutes - (depHours * 60 + depMinutes);
 
-  // Se for negativo, significa que o voo chega no dia seguinte
   if (totalMinutes < 0) {
     totalMinutes += 24 * 60;
   }

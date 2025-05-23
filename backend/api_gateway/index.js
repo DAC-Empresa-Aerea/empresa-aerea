@@ -1,5 +1,5 @@
 require('dotenv').config();
-
+const cors = require('cors');
 const express = require('express');
 const app = express();
 
@@ -10,6 +10,7 @@ const { flightRoutes, airportRoutes, getFlightRoute } = require('./routes/flight
 const employeeRoutes = require('./routes/employee');
 
 app.use(express.json());
+app.use(cors());
 
 app.use('/login', loginRouter);
 app.use('/logout', logoutRouter);

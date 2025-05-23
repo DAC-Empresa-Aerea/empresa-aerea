@@ -1,8 +1,8 @@
 // loginService.ts
 import axios from "axios";
-import CustomerRoutes  from "../routes/CustomerRoutes"; // Ajuste o caminho conforme necessário
+import CustomerRoutes from "../routes/CustomerRoutes"; // Ajuste o caminho conforme necessário
 
-const API_URL = "http://localhost:3001";
+const API_URL = "http://localhost:3010";
 
 interface LoginPayload {
   login: string;
@@ -12,6 +12,7 @@ interface LoginPayload {
 export const loginService = async ({ login, senha }: LoginPayload) => {
   console.log("Rotas carregadas:", CustomerRoutes);
   try {
+    // Buscar funcionário
     const employeeResponse = await axios.get(`${API_URL}/Employee`, {
       params: {
         email: login,
@@ -21,10 +22,17 @@ export const loginService = async ({ login, senha }: LoginPayload) => {
 
     if (employeeResponse.data.length > 0) {
       const usuario = employeeResponse.data[0];
-      return { tipo: "FUNCIONARIO", usuario };
+      // Simular token
+      const access_token = btoa(`${usuario.email}:${Date.now()}`);
+      return {
+        tipo: "FUNCIONARIO",
+        usuario,
+        access_token,
+        token_type: "bearer" as const,
+      };
     }
 
-    // Se não encontrou, tenta acessar o cliente
+    // Buscar cliente
     const customerResponse = await axios.get(`${API_URL}/Customer`, {
       params: {
         email: login,
@@ -34,12 +42,18 @@ export const loginService = async ({ login, senha }: LoginPayload) => {
 
     if (customerResponse.data.length > 0) {
       const usuario = customerResponse.data[0];
-      return { tipo: "CLIENTE", usuario };
+      // Simular token
+      const access_token = btoa(`${usuario.email}:${Date.now()}`);
+      return {
+        tipo: "CLIENTE",
+        usuario,
+        access_token,
+        token_type: "bearer" as const,
+      };
     }
 
-    // Se não encontrar nenhum, lança um erro
     throw new Error("Usuário ou senha inválidos.");
-  } catch (error) {
+  } catch {
     throw new Error("Erro na requisição de login.");
   }
 };

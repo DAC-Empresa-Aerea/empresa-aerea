@@ -6,7 +6,7 @@ import MaskedInput from "../../components/atoms/inputs/MaskedInput";
 import { fetchAddressByCep } from "../../utils/ViaCep";
 import SubmitButton from "../../components/atoms/buttons/SubmitButton";
 //import { register } from "../../services/authService";
-import { registerCustomer } from "../../services/customerService";
+import { useCreateCustomer } from "../../hooks/customers/useCreateCustomer";
 
 const SelfRegistration = () => {
   const [name, setName] = useState("");
@@ -24,18 +24,20 @@ const SelfRegistration = () => {
   const [loading, setLoading] = useState(false);
 
   const navigate = useNavigate();
+  const { mutateAsync: registerCustomer } = useCreateCustomer();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
     setSuccess("");
     setLoading(true);
-  
+
     try {
       await registerCustomer({
         cpf,
         email,
         nome: name,
+        saldo_milhas: 0,
         endereco: {
           cep,
           uf: state,
@@ -43,18 +45,20 @@ const SelfRegistration = () => {
           rua: street,
           numero: number,
           complemento: complement,
+          bairro: ""
         }
       });
-  
+
       setSuccess("Cadastro realizado com sucesso! Uma senha será enviada por e-mail.");
-  
+
       setTimeout(() => {
         navigate("/login");
       }, 2000);
-  
+
     } catch (err: any) {
+      console.error(err);
       const errorMessage =
-        err?.response?.data?.message ||
+        err?.response?.data?.erro ||
         (err instanceof Error ? err.message : "Erro ao registrar. Tente novamente.");
       setError(errorMessage);
     } finally {
@@ -84,11 +88,11 @@ const SelfRegistration = () => {
           FlyHigh
         </h1>
         <div className="flex justify-center items-center cursor-default">
-          <h2 className="text-gray-800">Welcome to Fly</h2>
+          <h2 className="text-gray-800">Bem-vindo ao Fly</h2>
           <h2 className="font-bold text-gray-800">High</h2>
         </div>
         <h2 className="mb-4 text-center text-2xl text-gray-800 cursor-default">
-          Self Registration
+          Auto cadastro
         </h2>
 
         {error && (
@@ -108,7 +112,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={name}
-              placeholder="Name"
+              placeholder="Nome"
               onChange={(e) => setName(e.target.value)}
               required
             />
@@ -150,7 +154,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={state}
-              placeholder="State"
+              placeholder="Estado"
               onChange={(e) => setState(e.target.value)}
               required
               disabled
@@ -159,7 +163,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={city}
-              placeholder="City"
+              placeholder="Cidade"
               onChange={(e) => setCity(e.target.value)}
               required
               disabled
@@ -171,7 +175,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={street}
-              placeholder="Street"
+              placeholder="Rua"
               onChange={(e) => setStreet(e.target.value)}
               required
               disabled
@@ -181,7 +185,7 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={number}
-              placeholder="Number"
+              placeholder="Número"
               onChange={(e) => setNumber(e.target.value)}
               required
               width="w-3/10"
@@ -192,19 +196,19 @@ const SelfRegistration = () => {
             <BasicInput
               type="text"
               value={complement}
-              placeholder="Complement"
+              placeholder="Complemento"
               onChange={(e) => setComplement(e.target.value)}
             />
           </div>
 
-          <SubmitButton text={loading ? "Registering..." : "Register"} />
+          <SubmitButton text={loading ? "Registrando..." : "Enviar"} />
 
           <p className="mt-4 text-center text-sm text-gray-800 cursor-default">
-            Your password will be sent to your email.
+            Sua senha será enviada para o seu e-mail.
           </p>
 
           <p className="mt-2 text-center text-sm text-gray-600 cursor-default">
-            Already have an account?{" "}
+            Já tem uma conta?{" "}
             <a href="/login" className="text-blue-500 hover:underline">
               Login
             </a>

@@ -1,10 +1,11 @@
 import Reserve from "../../../types/Reserve";
+import { ReserveWithFlight } from "../../../types/api/reserve";
 import ReservationList from "../../molecules/ReservationList";
 
 interface ReservationTableProps {
-  reserves: Array<Reserve>;
-  onFlightClick: (reserve: Reserve) => void;
-  cancelFlightClick?: (reserve: Reserve) => void;
+  reserves: Array<ReserveWithFlight>;
+  onFlightClick: (reserve: ReserveWithFlight) => void;
+  cancelFlightClick?: (reserve: ReserveWithFlight) => void;
 }
 
 function ReservationTable({ reserves, onFlightClick , cancelFlightClick}: ReservationTableProps) {
