@@ -10,7 +10,6 @@ import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
 import com.ms.saga.dto.flight.updateSeats.rollback.RollbackReserveSeatsDTO;
-import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.cancel.ReserveCancelRequestDTO;
 import com.ms.saga.dto.reserve.cancel.ReserveCancelResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
@@ -134,7 +133,13 @@ public class ReserveOrchestrator {
                 throw new BusinessException(cancelResponseMiles.getError());
             }
 
-            return cancelResponseMiles.getData();
+            SagaResponse<ReserveCancelResponseDTO> cancelResponseSeats = reserveProducer.returnsSeatsToFlight(cancelResponse.getData());
+
+            if (!cancelResponseSeats.isSuccess()) {
+                throw new BusinessException(cancelResponseSeats.getError());
+            }
+
+            return cancelResponseSeats.getData();
             } catch (BusinessException e) {
                 throw e;
             } catch (Exception e) {

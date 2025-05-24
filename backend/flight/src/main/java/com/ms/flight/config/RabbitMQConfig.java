@@ -2,9 +2,9 @@ package com.ms.flight.config;
 
 import org.springframework.amqp.core.Binding;
 import org.springframework.amqp.core.BindingBuilder;
+import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.core.Exchange;
 import org.springframework.amqp.core.Queue;
-import org.springframework.amqp.core.DirectExchange;
 import org.springframework.amqp.support.converter.Jackson2JsonMessageConverter;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -28,6 +28,14 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_RESERVE_SEAT_QUEUE = "rollback.reserve.seat.queue";
     public static final String ROLLBACK_RESERVE_SEAT_EXCHANGE = "rollback.reserve.seat.exchange";
     public static final String ROLLBACK_RESERVE_SEAT_ROUTING_KEY = "rollback.reserve.seat.routing.key";
+
+    public static final String CANCEL_RESERVE_SEAT_QUEUE = "cancel.reserve.seat.queue";
+    public static final String CANCEL_RESERVE_SEAT_EXCHANGE = "cancel.reserve.seat.exchange";
+    public static final String CANCEL_RESERVE_SEAT_ROUTING_KEY = "cancel.reserve.seat.routing.key";
+
+    public static final String ROLLBACK_CANCEL_RESERVE_SEAT_QUEUE = "rollback.cancel.reserve.seat.queue";
+    public static final String ROLLBACK_CANCEL_RESERVE_SEAT_EXCHANGE = "rollback.cancel.reserve.seat.exchange";
+    public static final String ROLLBACK_CANCEL_RESERVE_SEAT_ROUTING_KEY = "rollback.cancel.reserve.seat.routing.key";
 
 
     @Bean
@@ -104,6 +112,26 @@ public class RabbitMQConfig {
                 .with(ROLLBACK_RESERVE_SEAT_ROUTING_KEY)
                 .noargs();
     }
+
+    @Bean
+    public Queue cancelReserveSeatQueue() {
+        return new Queue(CANCEL_RESERVE_SEAT_QUEUE, true);
+    }
+
+    @Bean
+    public Exchange cancelReserveSeatExchange() {
+        return new DirectExchange(CANCEL_RESERVE_SEAT_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding cancelReserveSeatBinding(Queue cancelReserveSeatQueue, Exchange cancelReserveSeatExchange) {
+        return BindingBuilder
+                .bind(cancelReserveSeatQueue)
+                .to(cancelReserveSeatExchange)
+                .with(CANCEL_RESERVE_SEAT_ROUTING_KEY)
+                .noargs();
+    }
+    
     
     @Bean
     public Jackson2JsonMessageConverter messageConverter() {

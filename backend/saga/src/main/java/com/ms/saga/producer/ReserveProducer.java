@@ -10,7 +10,6 @@ import com.ms.saga.dto.error.SagaResponse;
 import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
-import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
 import com.ms.saga.dto.reserve.cancel.ReserveCancelRequestDTO;
 import com.ms.saga.dto.reserve.cancel.ReserveCancelResponseDTO;
 
@@ -54,6 +53,7 @@ public class ReserveProducer {
         );
     }
 
+    //implementar roolback
     public SagaResponse<ReserveCancelResponseDTO> sendCancelReserve(ReserveCancelRequestDTO cancelRequest) {
         try {
             return rabbitTemplate.convertSendAndReceiveAsType(
@@ -71,6 +71,7 @@ public class ReserveProducer {
         }
     }
 
+    //implementar roolback
     public SagaResponse<ReserveCancelResponseDTO> returnsMilesToCustomer(ReserveCancelResponseDTO cancelRequest) {
         try {
             return rabbitTemplate.convertSendAndReceiveAsType(
@@ -81,20 +82,29 @@ public class ReserveProducer {
             );
         } catch (Exception e) {
             return SagaResponse.error(
-                "Erro na comunicação com o serviço de reservas",
+                "Erro na comunicação com o serviço de customer",
                 "SERVICE_COMMUNICATION_ERROR",
                 503
             );
         }
     }
 
-    //ainda nao foi implementado
-    public void sendRollbackCancelReserve(String reserveCode) {
-        rabbitTemplate.convertAndSend(
-                RabbitMQConfig.CANCEL_RESERVE_EXCHANGE,
-                RabbitMQConfig.CANCEL_RESERVE_ROUTING_KEY,
-            reserveCode
-        );
+    //implementar roolback
+    public SagaResponse<ReserveCancelResponseDTO> returnsSeatsToFlight(ReserveCancelResponseDTO cancelRequest) {
+        try {
+            return rabbitTemplate.convertSendAndReceiveAsType(
+                RabbitMQConfig.CANCEL_RESERVE_SEAT_EXCHANGE,
+                RabbitMQConfig.CANCEL_RESERVE_SEAT_ROUTING_KEY,
+                cancelRequest,
+                new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
+            );
+        } catch (Exception e) {
+            return SagaResponse.error(
+                "Erro na comunicação com o serviço de voos",
+                "SERVICE_COMMUNICATION_ERROR",
+                503
+            );
+        }
     }
 }
 

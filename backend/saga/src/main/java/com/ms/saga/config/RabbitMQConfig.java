@@ -63,6 +63,12 @@ public class RabbitMQConfig {
 
     public static final String ROLLBACK_CANCEL_RESERVE_MILES_EXCHANGE = "rollback.cancel.reserve.miles.exchange";
     public static final String ROLLBACK_CANCEL_RESERVE_MILES_ROUTING_KEY = "rollback.cancel.reserve.miles.routing.key";
+
+    public static final String CANCEL_RESERVE_SEAT_EXCHANGE = "cancel.reserve.seat.exchange";
+    public static final String CANCEL_RESERVE_SEAT_ROUTING_KEY = "cancel.reserve.seat.routing.key";
+
+    public static final String ROLLBACK_CANCEL_RESERVE_SEAT_EXCHANGE = "rollback.cancel.reserve.seat.exchange";
+    public static final String ROLLBACK_CANCEL_RESERVE_SEAT_ROUTING_KEY = "rollback.cancel.reserve.seat.routing.key";
         
 
     @Bean

@@ -22,6 +22,7 @@ import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsRequestDTO;
 import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsResponseDTO;
 import com.ms.flight.dto.flight.reserveSeat.rollback.RollbackReserveSeatsDTO;
 import com.ms.flight.dto.flightStatus.FlightStatusRequestDTO;
+import com.ms.flight.dto.reserve.cancel.ReserveCancelResponseDTO;
 import com.ms.flight.enums.FlightStatusEnum;
 import com.ms.flight.model.Airport;
 import com.ms.flight.model.Flight;
@@ -246,5 +247,17 @@ public class FlightService {
 
         flight.setPoltronasOcupadas(flight.getPoltronasOcupadas() - reserveSeats.getSeatsQuantity());
         flightRepository.save(flight);
+    }
+
+    public ReserveCancelResponseDTO cancelReserveSeats(@Valid ReserveCancelResponseDTO reserve) {
+
+        Flight flight = flightRepository.findById(reserve.getFlightCode())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voo não encontrado."));
+
+        flight.setPoltronasOcupadas(flight.getPoltronasOcupadas() - reserve.getSeatsQuantity());
+        flightRepository.save(flight);
+
+        return reserve;
+    
     }
 }
