@@ -28,7 +28,7 @@ const Cart: React.FC = () => {
   const location = useLocation();
   const selectedFlight = location.state?.flight;
 
-  const { user } = useAuth() as { user: Customer, setUser: (user: Customer) => void };
+  const { user } = useAuth();
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [milesToUse, setMilesToUse] = useState(0);
 
@@ -66,7 +66,8 @@ const Cart: React.FC = () => {
   };
 
   const handleMilesToUseChange = (value: number) => {
-    if (value >= 0 && value <= user.saldo_milhas) {
+    if (!user) return;
+    if ("saldo_milhas" in user && value >= 0 && value <= user.saldo_milhas) {
       setMilesToUse(value);
     }
   };
@@ -75,7 +76,7 @@ const Cart: React.FC = () => {
 
     const newBookingCode = generateBookingCode();
     setBookingCode(newBookingCode);
-
+    if (!user) return;
     const newReserve: Reserve = {
       codigo: newBookingCode,
       data: new Date(),
@@ -137,7 +138,7 @@ const Cart: React.FC = () => {
                   milesToUse={milesToUse}
                   milesDiscount={milesDiscount}
                   finalPrice={finalPrice}
-                  user={user}
+                  user={user as Customer}
                   onConfirmPurchase={handleConfirmPurchase}
                   onMilesChange={handleMilesToUseChange}
                 />

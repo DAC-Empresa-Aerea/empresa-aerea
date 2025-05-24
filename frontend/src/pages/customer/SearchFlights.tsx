@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
+
 import SearchAvailables from "../../components/organisms/SearchAvailables";
-import { getFlights } from "../../services/flightsService";
+import { useGetFlightsByDate } from "../../hooks/flights/useGetFlightsByDate";
 
 function SearchFlights() {
-  const [flightsList, setFlightsList] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const hoje = new Date();
+  const data = hoje.toISOString().split("T")[0];
 
-  useEffect(() => {
-    getFlights()
-      .then((data) => {
-        setFlightsList(data);
-        setLoading(false);
-      })
-      .catch((error) => {
-        setLoading(false);
-      });
-  }, []);
+  const futuro = new Date(hoje);
+  futuro.setFullYear(futuro.getFullYear() + 3);
+  const dataFim = futuro.toISOString().split("T")[0];
 
-  if (loading) return <p>Carregando voos...</p>;
+  const {
+    data: flightsList = { voos: [] },
+    isLoading,
+    isError,
+    error,
+  } = useGetFlightsByDate(data, dataFim);
+  if (isLoading) return <p>Carregando voos...</p>;
+  if (isError) return <p>Erro ao buscar voos: {error?.message}</p>;
 
-  return <SearchAvailables flightsList={flightsList} />;
+  return <SearchAvailables flightsList={flightsList?.voos} />;
 }
 
 export default SearchFlights;

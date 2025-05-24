@@ -5,7 +5,6 @@ const flightController = require('../controllers/flightController');
 
 const airportRoutes = express.Router();
 airportRoutes.use(authenticateJWT);
-airportRoutes.use(authorizeRoles('FUNCIONARIO'));
 
 airportRoutes.use('/', flightController.proxyToAirports);
 

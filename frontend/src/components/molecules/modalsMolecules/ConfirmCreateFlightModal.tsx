@@ -14,9 +14,9 @@ function ConfirmCreateFlightModal({ flight, isOpen, onClose }: ConfirmCreateFlig
   const navigate = useNavigate();
   const [status, setStatus] = useState<"loading" | "success" | "error" | null>(null);
 
-  if (!isOpen) return null;
-
   const { mutateAsync: createFlight } = useCreateFlight();
+
+  if (!isOpen) return null;
 
   const handleCreateFlight = async () => {
     setStatus("loading");

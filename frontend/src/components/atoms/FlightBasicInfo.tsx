@@ -1,8 +1,7 @@
 import { useState } from "react";
-import Flight from "../../types/Flight";
-
+import { FlightWithAirports } from "../../types/api/flight";
 interface FlightBasicInfoProps {
-  flight: Flight;
+  flight: Array<FlightWithAirports>[number];
   onClick: () => void;
   buttonText: string;
 }

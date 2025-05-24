@@ -1,12 +1,11 @@
 import FlightBasicInfo from "../../atoms/FlightBasicInfo";
-import Flight  from "../../../types/Flight";
-
+import { FlightWithAirports } from "../../../types/api/flight";
 
 interface FlightListProps {
   title: string;
-  flights: Flight[];
+  flights: Array<FlightWithAirports>;
   buttonText: string;
-  onFlightClick: (flight: Flight) => void;
+  onFlightClick: (flight: FlightWithAirports) => void;
   onViewMoreClick: () => void;
 }
 

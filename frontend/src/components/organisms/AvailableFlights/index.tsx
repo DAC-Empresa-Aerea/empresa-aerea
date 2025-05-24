@@ -1,14 +1,14 @@
-import Flight from "../../../types/Flight";
 import FlightList from "../../molecules/flight/FlightList";
 import { useNavigate } from "react-router-dom";
+import { FlightWithAirports } from "../../../types/api/flight";
 
 interface AvailableFlightsProps {
-  flights: Array<Flight>;
+  flights: Array<FlightWithAirports>;
 }
 
 function AvailableFlights({ flights }: AvailableFlightsProps) {
   const navigate = useNavigate();
-  const handleFlightClick = (flight: Flight) => {
+  const handleFlightClick = (flight: Array<FlightWithAirports>[number]) => {
     navigate("/customer/cart", { state: { flight } });
   };
   return (
