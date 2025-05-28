@@ -40,6 +40,11 @@ export interface FlightToCreate extends BaseFlight {
   codigo_aeroporto_origem: string;
   codigo_aeroporto_destino: string;
 }
+export interface FlightsInIntervalTimeDTOApiResponse {
+  inicio: string;
+  fim: string;
+  voos: Array<FlightWithAirports>;
+}
 
 //------------------------------------------------------------------------
 
@@ -66,7 +71,7 @@ export type GetFlightRequest = {
 
 // NO REQUEST BODY
 
-export type GetFlightByDateResponse = Array<FlightWithAirports>;
+export type GetFlightByDateResponse = FlightsInIntervalTimeDTOApiResponse;
 
 //------------------------------------------------------------------------
 

@@ -31,11 +31,11 @@ const Login = () => {
 
     return {
       isValid:
-        hasMinLength &&
-        hasNumber,
+        hasMinLength, //&&
+       // hasNumber,
       requirements: {
         hasMinLength,
-        hasNumber,
+      // hasNumber,
       },
     };
   };
@@ -60,7 +60,7 @@ const Login = () => {
 
       if (!requirements.hasMinLength)
         missingRequirements.push("4 caracteres");
-      if (!requirements.hasNumber) missingRequirements.push("um número");
+     // if (!requirements.hasNumber) missingRequirements.push("um número");
 
       setPasswordError(
         `A senha deve conter: ${missingRequirements.join(", ")}`
