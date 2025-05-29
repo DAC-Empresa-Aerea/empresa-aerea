@@ -33,7 +33,9 @@ const Cart: React.FC = () => {
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [milesToUse, setMilesToUse] = useState(0);
 
-  const [totalPrice, setValor_passagem] = useState(selectedFlight.valor_passagem);
+  const [totalPrice, setValor_passagem] = useState(
+    selectedFlight.valor_passagem
+  );
   const [requiredMiles, setRequiredMiles] = useState(0);
   const [finalPrice, setFinalPrice] = useState(selectedFlight.valor_passagem);
   const [milesDiscount, setMilesDiscount] = useState(0);
@@ -75,7 +77,7 @@ const Cart: React.FC = () => {
   const handleConfirmPurchase = async () => {
     const newBookingCode = generateBookingCode();
     if (!user) return;
-    
+
     try {
       const reserveRequest: CreateReserveRequest = {
         codigo_cliente: user.codigo,
@@ -86,7 +88,7 @@ const Cart: React.FC = () => {
         codigo_aeroporto_origem: selectedFlight.aeroporto_origem.codigo,
         codigo_aeroporto_destino: selectedFlight.aeroporto_destino.codigo,
       };
-      
+
       await createReserveAsync(reserveRequest);
       setBookingCode(newBookingCode);
       console.log("Compra confirmada!", reserveRequest);
@@ -95,7 +97,6 @@ const Cart: React.FC = () => {
       alert("Erro ao finalizar a reserva. Tente novamente.");
     }
   };
-
 
   return (
     <div className="bg-slate-50 min-h-screen pb-16">

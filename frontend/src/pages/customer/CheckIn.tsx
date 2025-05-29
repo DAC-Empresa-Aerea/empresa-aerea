@@ -21,14 +21,17 @@ function CheckIn() {
           const now = new Date();
           const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
-          const filteredReserves = response.data.filter((reserve: ReserveWithFlight) => {
-            const reserveDate = new Date(reserve.data);
-            return (
-              (reserve.estado === "CRIADA" || reserve.estado === "CHECK-IN") &&
-              reserveDate >= now &&
-              reserveDate <= next48h
-            );
-          });
+          const filteredReserves = response.data.filter(
+            (reserve: ReserveWithFlight) => {
+              const reserveDate = new Date(reserve.data);
+              return (
+                (reserve.estado === "CRIADA" ||
+                  reserve.estado === "CHECK-IN") &&
+                reserveDate >= now &&
+                reserveDate <= next48h
+              );
+            }
+          );
 
           setReserves(filteredReserves);
         }
@@ -62,7 +65,9 @@ function CheckIn() {
       {reserves.length > 0 ? (
         <CheckInTable reserves={reserves} onCheckInClick={handleCheckIn} />
       ) : (
-        <p className="text-xl font-bold mb-4 text-center">Nenhuma reserva disponível para check-in.</p>
+        <p className="text-xl font-bold mb-4 text-center">
+          Nenhuma reserva disponível para check-in.
+        </p>
       )}
     </div>
   );

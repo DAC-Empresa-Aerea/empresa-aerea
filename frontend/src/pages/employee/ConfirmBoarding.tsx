@@ -14,10 +14,12 @@ function ConfirmBoarding({ flightCode }: { flightCode: string }) {
 
   // Fetch reserves by flight code using React Query
   const { data: flightReserves = [] } = useReservesByFlightCode(flightCode);
-  
+
   // Get boarding codes from flight reserves
-  const boardingCodes = flightReserves.map((reserve: Reserve) => reserve.codigo);
-  
+  const boardingCodes = flightReserves.map(
+    (reserve: Reserve) => reserve.codigo
+  );
+
   // Hook for updating reserve to embarked status
   const { mutateAsync: updateToEmbarked } = useUpdateReserveToEmbarked();
 
@@ -26,7 +28,7 @@ function ConfirmBoarding({ flightCode }: { flightCode: string }) {
   };
 
   const verifyCode = (code: string) => {
-    return /^[A-Z]{3}\d{3}$/.test(code) && boardingCodes.includes(code); 
+    return /^[A-Z]{3}\d{3}$/.test(code) && boardingCodes.includes(code);
   };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -46,7 +48,7 @@ function ConfirmBoarding({ flightCode }: { flightCode: string }) {
     }
   };
 
-    return (
+  return (
     <>
       <BasicModal
         open={{ onClose: () => setModalVisible(false), isOpen: modalVisible }}
