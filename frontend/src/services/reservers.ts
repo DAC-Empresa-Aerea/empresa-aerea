@@ -24,13 +24,13 @@ export const deleteReserve = (codigo: string) =>
 
 /** PATCH /reservas/{codigo}/estado  → CHECK-IN */
 export const setReserveCheckIn = (
-  codigo: number,
+  codigo: string,
   body: UpdateToCheckInReserveRequest
 ) => api.patch<UpdateToCheckInReserveResponse>(`/reservas/${codigo}/estado`, body);
 
 /** PATCH /reservas/{codigo}/estado  → EMBARCADO */
 export const setReserveEmbarked = (
-  codigo: number,
+  codigo: string,
   body: UpdateToEmbarkedReserveRequest
 ) =>
   api.patch<UpdateToEmbarkedReserveResponse>(

@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { FaPlaneDeparture, FaPlaneArrival } from "react-icons/fa";
-import Reserve from "../../types/Reserve";
+import { ReserveWithFlight } from "../../types/api/reserve";
 
 interface CheckInItemProps {
-    reserve: Reserve;
+    reserve: ReserveWithFlight;
     onCheckInConfirm: () => void;
 }
 
@@ -14,7 +14,6 @@ function CheckInItem({ reserve, onCheckInConfirm }: CheckInItemProps) {
         onCheckInConfirm();
         setConfirmOpen(false);
     };
-
 
     return (
         <>

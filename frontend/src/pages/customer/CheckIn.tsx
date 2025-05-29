@@ -1,36 +1,40 @@
 import CheckInTable from "../../components/organisms/CheckInTable";
 import { useEffect, useState } from "react";
-import Reserve from "../../types/Reserve";
-import { getReservesByCustomerCode } from "../../services/reserveService";
 import { useAuth } from "../../contexts/loginContext";
-import { UpdateReserve } from "../../services/reserveService";
+import { useCustomerReserves } from "../../hooks/customers/useCustomerReserves";
+import { useUpdateReserveToCheckIn } from "../../hooks/reserves/useUpdateReserveStatus";
+import { ReserveWithFlight } from "../../types/api/reserve";
 
 function CheckIn() {
   const { user, isAuthenticated, loading } = useAuth();
-  const [reserves, setReserves] = useState<Reserve[]>([]);
+  const [reserves, setReserves] = useState<ReserveWithFlight[]>([]);
   const [error, setError] = useState<string>("");
+
+  const getReserves = useCustomerReserves(user?.codigo || 0, !loading);
+  const { mutateAsync: updateToCheckIn } = useUpdateReserveToCheckIn();
 
   const fetchReserves = async () => {
     if (isAuthenticated && user && user.codigo) {
       try {
-        const response = await getReservesByCustomerCode(user.codigo.toString());
+        const response = await getReserves.refetch();
+        if (response.data) {
+          const now = new Date();
+          const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
-        const now = new Date();
-        const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+          const filteredReserves = response.data.filter((reserve: ReserveWithFlight) => {
+            const reserveDate = new Date(reserve.data);
+            return (
+              (reserve.estado === "CRIADA" || reserve.estado === "CHECK-IN") &&
+              reserveDate >= now &&
+              reserveDate <= next48h
+            );
+          });
 
-        const filteredReserves = response.filter((reserve: Reserve) => {
-          const reserveDate = new Date(reserve.data);
-          return (
-            reserve.estado === "CRIADA" || reserve.estado === "CHECK-IN" &&
-            reserveDate >= now &&
-            reserveDate <= next48h
-          );
-        });
-
-        setReserves(filteredReserves);
-
+          setReserves(filteredReserves);
+        }
       } catch (err) {
         setError("Erro ao buscar reservas do cliente.");
+        console.error(err);
       }
     }
   };
@@ -39,23 +43,22 @@ function CheckIn() {
     if (!loading) {
       fetchReserves();
     }
-  }, [isAuthenticated, user, loading]);
+  }, [isAuthenticated, user, loading, fetchReserves]);
 
-  const handleCheckIn = async (reserve: Reserve) => {
+  const handleCheckIn = async (reserve: ReserveWithFlight) => {
     try {
-      await UpdateReserve(reserve.codigo, {
-        ...reserve,
-        estado: "CHECK-IN",
-      });
+      await updateToCheckIn(reserve.codigo);
       console.log("Check-in confirmado para:", reserve.codigo);
       fetchReserves();
     } catch (error) {
-      console.error("Erro ao checkin:", error);
-    };
+      console.error("Erro ao fazer check-in:", error);
+      setError("Erro ao realizar check-in. Tente novamente.");
+    }
   };
 
   return (
     <div>
+      {error && <p className="text-red-500 mb-4">{error}</p>}
       {reserves.length > 0 ? (
         <CheckInTable reserves={reserves} onCheckInClick={handleCheckIn} />
       ) : (

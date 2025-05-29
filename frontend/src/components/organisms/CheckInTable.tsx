@@ -1,9 +1,9 @@
 import CheckInList from "../molecules/CheckInList";
-import Reserve from "../../types/Reserve";
+import { ReserveWithFlight } from "../../types/api/reserve";
 
 interface CheckInTableProps {
-  reserves: Array<Reserve>;
-  onCheckInClick: (reserve: Reserve) => void;
+  reserves: Array<ReserveWithFlight>;
+  onCheckInClick: (reserve: ReserveWithFlight) => void;
 }
 
 function CheckInTable({ reserves, onCheckInClick }: CheckInTableProps) {

@@ -6,10 +6,11 @@ import PurchaseSummary from "../../components/molecules/cartMolecules/PurchaseSu
 import BookingConfirmation from "../../components/molecules/cartMolecules/BookingConfirmation";
 import { useAuth } from "../../contexts/loginContext";
 import Customer from "../../types/Customer";
-import Reserve from "../../types/Reserve";
-import { createReserve } from "../../services/reserveService";
+import { useCreateReserve } from "../../hooks/reserves/useCreateReserve";
+import { CreateReserveRequest } from "../../types/api/reserve";
 
 const Cart: React.FC = () => {
+  const { mutateAsync: createReserveAsync } = useCreateReserve();
 
   const generateBookingCode = (): string => {
     const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
@@ -71,24 +72,28 @@ const Cart: React.FC = () => {
       setMilesToUse(value);
     }
   };
-
-  const handleConfirmPurchase = () => {
-
+  const handleConfirmPurchase = async () => {
     const newBookingCode = generateBookingCode();
-    setBookingCode(newBookingCode);
     if (!user) return;
-    const newReserve: Reserve = {
-      codigo: newBookingCode,
-      data: new Date(),
-      valor: finalPrice,
-      milhas_utilizadas: milesToUse,
-      quantidade_poltronas: ticketQuantity,
-      codigo_cliente: user.codigo,
-      estado: "CRIADA",
-      voo: selectedFlight,
-    };
-    createReserve(newReserve)
-    console.log("Compra confirmada!", newReserve);
+    
+    try {
+      const reserveRequest: CreateReserveRequest = {
+        codigo_cliente: user.codigo,
+        valor: finalPrice,
+        milhas_utilizadas: milesToUse,
+        quantidade_poltronas: ticketQuantity,
+        codigo_voo: selectedFlight.codigo,
+        codigo_aeroporto_origem: selectedFlight.aeroporto_origem.codigo,
+        codigo_aeroporto_destino: selectedFlight.aeroporto_destino.codigo,
+      };
+      
+      await createReserveAsync(reserveRequest);
+      setBookingCode(newBookingCode);
+      console.log("Compra confirmada!", reserveRequest);
+    } catch (error) {
+      console.error("Erro ao criar reserva:", error);
+      alert("Erro ao finalizar a reserva. Tente novamente.");
+    }
   };
 
 
