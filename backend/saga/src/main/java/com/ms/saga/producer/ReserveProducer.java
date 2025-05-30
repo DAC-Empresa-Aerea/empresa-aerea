@@ -65,7 +65,6 @@ public class ReserveProducer {
         );
     }
 
-    //implementar roolback
     public SagaResponse<ReserveCancelResponseDTO> sendCancelReserve(ReserveCancelRequestDTO cancelRequest) {
         try {
             return rabbitTemplate.convertSendAndReceiveAsType(
@@ -83,7 +82,14 @@ public class ReserveProducer {
         }
     }
 
-    //implementar roolback
+    public void sendRollbackCancelReserve(ReserveCancelRequestDTO payload) {
+        System.out.println("MOCK: Enviando rollback para cancelamento de reserva: " + payload.getReservaId());
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.ROLLBACK_CANCEL_RESERVE_EXCHANGE,
+                RabbitMQConfig.ROLLBACK_CANCEL_RESERVE_ROUTING_KEY,
+                payload);
+    }
+
     public SagaResponse<ReserveCancelResponseDTO> returnsMilesToCustomer(ReserveCancelResponseDTO cancelRequest) {
         try {
             return rabbitTemplate.convertSendAndReceiveAsType(
@@ -101,7 +107,14 @@ public class ReserveProducer {
         }
     }
 
-    //implementar roolback
+    public void sendRollbackCancelReserveMiles(ReserveCancelResponseDTO payload) {
+        System.out.println("MOCK: Enviando rollback para devolução de milhas da reserva: " + payload.getCode());
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.ROLLBACK_CANCEL_RESERVE_MILES_EXCHANGE,
+                RabbitMQConfig.ROLLBACK_CANCEL_RESERVE_MILES_ROUTING_KEY,
+                payload);
+    }
+
     public SagaResponse<ReserveCancelFlightResponse> returnsSeatsToFlight(ReserveCancelResponseDTO cancelRequest) {
         try {
             return rabbitTemplate.convertSendAndReceiveAsType(
@@ -117,6 +130,14 @@ public class ReserveProducer {
                 503
             );
         }
+    }
+
+    public void sendRollbackCancelReserveSeat(ReserveCancelResponseDTO payload) {
+        System.out.println("MOCK: Enviando rollback para devolução de assentos da reserva: " + payload.getCode() + " para voo: " + payload.getFlightCode());
+        rabbitTemplate.convertAndSend(
+                RabbitMQConfig.ROLLBACK_CANCEL_RESERVE_SEAT_EXCHANGE,
+                RabbitMQConfig.ROLLBACK_CANCEL_RESERVE_SEAT_ROUTING_KEY,
+                payload);
     }
 }
 
