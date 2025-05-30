@@ -13,7 +13,9 @@ import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsRequestDTO;
 import com.ms.saga.dto.flight.updateSeats.UpdateSeatsResponseDTO;
 import com.ms.saga.dto.flight.updateSeats.rollback.RollbackReserveSeatsDTO;
-import com.ms.saga.dto.reserve.cancel.CancelReserveResponseDTO;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelFlightResponse;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelRequestDTO;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelResponseDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
 import com.ms.saga.dto.reserve.reserveFlight.ReserveFlightRequestDTO;
@@ -26,7 +28,7 @@ import com.ms.saga.producer.ReserveProducer;
 @Component
 public class ReserveOrchestrator {
 
-    @Autowired 
+    @Autowired
     private ReserveProducer reserveProducer;
 
     @Autowired
@@ -121,24 +123,54 @@ public class ReserveOrchestrator {
         return reserveFlightResponseDTO;
     }
 
-    public CancelReserveResponseDTO processCancelReserve(String id) {
-        // Validar existencia de reserva e se pode ser cancelada (estado = criada, checkin)
-            // Se erro, retorna 404
-        // Cancelar a reserva
-        // Retornar valor da reserva
-            // Se erro, rollback
-        // Atualiza poltronas do voo
-            // Se erro, rollback
-        // Retorna valor
+    public ReserveCancelFlightResponse processCancelReserve(String id) {
+        try {
+            ReserveCancelRequestDTO buscarDto = new ReserveCancelRequestDTO();
+            buscarDto.setReservaId(id);
 
-        // Lembrar de usar o ErrorDTO e SagaResponse
-        
-        return new CancelReserveResponseDTO();
+            SagaResponse<ReserveCancelResponseDTO> getReserveResponse = reserveProducer.sendGetReserve(buscarDto);
+
+            if (getReserveResponse == null) {
+                throw new BusinessException("Falha na comunicação com o serviço de reservas", "SERVICE_UNAVAILABLE", 503);
+            }
+
+            if (!getReserveResponse.isSuccess()) {
+                throw new BusinessException(getReserveResponse.getError());
+            }
+
+            SagaResponse<ReserveCancelResponseDTO> cancelResponse = reserveProducer.sendCancelReserve(buscarDto);
+
+            if (!cancelResponse.isSuccess()) {
+                throw new BusinessException(cancelResponse.getError());
+            }
+
+            SagaResponse<ReserveCancelResponseDTO> cancelResponseMiles = reserveProducer.returnsMilesToCustomer(cancelResponse.getData());
+
+            if (!cancelResponseMiles.isSuccess()) {
+                throw new BusinessException(cancelResponseMiles.getError());
+            }
+
+            SagaResponse<ReserveCancelFlightResponse> cancelResponseSeats = reserveProducer.returnsSeatsToFlight(cancelResponse.getData());
+
+            if (!cancelResponseSeats.isSuccess()) {
+                throw new BusinessException(cancelResponseSeats.getError());
+            }
+
+            return cancelResponseSeats.getData();
+            } catch (BusinessException e) {
+                throw e;
+            } catch (Exception e) {
+                throw new BusinessException(
+                    "Erro ao processar cancelamento: " + e.getMessage(),
+                    "CANCEL_PROCESSING_ERROR",
+                    500
+                );
+            }
     }
 
-    //Update status reserve because the flight status changed
+    // Update status reserve because the flight status changed
     public void updateStatusReserve(FlightStatusDTO dto) {
         reserveProducer.updateStatusReserve(dto);
     }
-    
+
 }

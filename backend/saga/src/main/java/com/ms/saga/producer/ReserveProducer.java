@@ -13,37 +13,38 @@ import com.ms.saga.dto.flight.FlightStatusDTO;
 import com.ms.saga.dto.reserve.UpdatedReserveStatusDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveRequestDTO;
 import com.ms.saga.dto.reserve.register.RegisterReserveResponseDTO;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelFlightResponse;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelRequestDTO;
+import com.ms.saga.dto.reserve.cancel.ReserveCancelResponseDTO;
 
 @Component
 public class ReserveProducer {
-    
+
     @Autowired
     private RabbitTemplate rabbitTemplate;
 
     public SagaResponse<RegisterReserveResponseDTO> sendCreateReserve(RegisterReserveRequestDTO registerRequest) {
         return rabbitTemplate.convertSendAndReceiveAsType(
-            RabbitMQConfig.REGISTER_RESERVE_EXCHANGE,
-            RabbitMQConfig.REGISTER_RESERVE_ROUTING_KEY,
-            registerRequest,
-            new ParameterizedTypeReference<SagaResponse<RegisterReserveResponseDTO>>() {}
-        );
+                RabbitMQConfig.REGISTER_RESERVE_EXCHANGE,
+                RabbitMQConfig.REGISTER_RESERVE_ROUTING_KEY,
+                registerRequest,
+                new ParameterizedTypeReference<SagaResponse<RegisterReserveResponseDTO>>() {
+                });
     }
 
     public void sendRollbackRegisterReserve(RegisterReserveResponseDTO reserve) {
         rabbitTemplate.convertAndSend(
-            RabbitMQConfig.ROLLBACK_REGISTER_RESERVE_EXCHANGE,
-            RabbitMQConfig.ROLLBACK_REGISTER_RESERVE_ROUTING_KEY,
-            reserve
-        );
+                RabbitMQConfig.ROLLBACK_REGISTER_RESERVE_EXCHANGE,
+                RabbitMQConfig.ROLLBACK_REGISTER_RESERVE_ROUTING_KEY,
+                reserve);
     }
 
     public SagaResponse<List<UpdatedReserveStatusDTO>> updateStatusReserve(FlightStatusDTO dto) {
         return rabbitTemplate
-            .convertSendAndReceiveAsType(
-                RabbitMQConfig.RESERVE_STATUS_UPDATE_EXCHANGE,
-                RabbitMQConfig.RESERVE_STATUS_UPDATE_ROUTING_KEY,
-                dto,
-                new ParameterizedTypeReference<SagaResponse<List<UpdatedReserveStatusDTO>>>() {}
+                .convertSendAndReceiveAsType(
+                        RabbitMQConfig.RESERVE_STATUS_UPDATE_EXCHANGE,
+                        RabbitMQConfig.RESERVE_STATUS_UPDATE_ROUTING_KEY,
+                        dto,    new ParameterizedTypeReference<SagaResponse<List<UpdatedReserveStatusDTO>>>() {}
             );
     }
 
@@ -55,4 +56,67 @@ public class ReserveProducer {
         );
     }
 
+    public SagaResponse<ReserveCancelResponseDTO> sendGetReserve(ReserveCancelRequestDTO dto) {
+        return rabbitTemplate.convertSendAndReceiveAsType(
+            RabbitMQConfig.GET_RESERVE_EXCHANGE,          
+            RabbitMQConfig.GET_RESERVE_ROUTING_KEY,       
+            dto,                                  
+            new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
+        );
+    }
+
+    //implementar roolback
+    public SagaResponse<ReserveCancelResponseDTO> sendCancelReserve(ReserveCancelRequestDTO cancelRequest) {
+        try {
+            return rabbitTemplate.convertSendAndReceiveAsType(
+                RabbitMQConfig.CANCEL_RESERVE_EXCHANGE,
+                RabbitMQConfig.CANCEL_RESERVE_ROUTING_KEY,
+                cancelRequest,
+                new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
+            );
+        } catch (Exception e) {
+            return SagaResponse.error(
+                "Erro na comunicação com o serviço de reservas",
+                "SERVICE_COMMUNICATION_ERROR",
+                503
+            );
+        }
+    }
+
+    //implementar roolback
+    public SagaResponse<ReserveCancelResponseDTO> returnsMilesToCustomer(ReserveCancelResponseDTO cancelRequest) {
+        try {
+            return rabbitTemplate.convertSendAndReceiveAsType(
+                RabbitMQConfig.CANCEL_RESERVE_MILES_EXCHANGE,
+                RabbitMQConfig.CANCEL_RESERVE_MILES_ROUTING_KEY,
+                cancelRequest,
+                new ParameterizedTypeReference<SagaResponse<ReserveCancelResponseDTO>>() {}
+            );
+        } catch (Exception e) {
+            return SagaResponse.error(
+                "Erro na comunicação com o serviço de customer",
+                "SERVICE_COMMUNICATION_ERROR",
+                503
+            );
+        }
+    }
+
+    //implementar roolback
+    public SagaResponse<ReserveCancelFlightResponse> returnsSeatsToFlight(ReserveCancelResponseDTO cancelRequest) {
+        try {
+            return rabbitTemplate.convertSendAndReceiveAsType(
+                RabbitMQConfig.CANCEL_RESERVE_SEAT_EXCHANGE,
+                RabbitMQConfig.CANCEL_RESERVE_SEAT_ROUTING_KEY,
+                cancelRequest,
+                new ParameterizedTypeReference<SagaResponse<ReserveCancelFlightResponse>>() {}
+            );
+        } catch (Exception e) {
+            return SagaResponse.error(
+                "Erro na comunicação com o serviço de voos",
+                "SERVICE_COMMUNICATION_ERROR",
+                503
+            );
+        }
+    }
 }
+
