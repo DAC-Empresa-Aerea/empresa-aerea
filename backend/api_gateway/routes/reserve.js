@@ -25,4 +25,10 @@ router.get(
   reservationController.getReservationWithFlight
 );
 
+router.delete(
+  '/:id',
+  authenticateJWT,
+  reservationController.proxyToSagas
+);
+
 module.exports = router;

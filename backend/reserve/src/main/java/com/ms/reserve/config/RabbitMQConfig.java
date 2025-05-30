@@ -38,6 +38,18 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_RESERVE_STATUS_QUEUE = "rollback.reserve.status.queue";
     public static final String ROLLBACK_RESERVE_STATUS_UPDATE_EXCHANGE = "rollback.reserve.status.update.exchange";
     public static final String ROLLBACK_RESERVE_STATUS_UPDATE_ROUTING_KEY = "rollback.reserve.status.update.routing.key";
+
+    public static final String CANCEL_RESERVE_QUEUE = "cancel.reserve.queue";
+    public static final String CANCEL_RESERVE_EXCHANGE = "cancel.reserve.exchange";
+    public static final String CANCEL_RESERVE_ROUTING_KEY = "cancel.reserve.routing.key";
+
+    public static final String ROLLBACK_CANCEL_RESERVE_QUEUE = "rollback.cancel.reserve.queue";
+    public static final String ROLLBACK_CANCEL_RESERVE_EXCHANGE = "rollback.cancel.reserve.exchange";
+    public static final String ROLLBACK_CANCEL_RESERVE_ROUTING_KEY = "rollback.cancel.reserve.routing.key";
+
+    public static final String GET_RESERVE_QUEUE = "get.reserve.queue";
+    public static final String GET_RESERVE_EXCHANGE = "get.reserve.exchange";
+    public static final String GET_RESERVE_ROUTING_KEY = "get.reserve.routing.key";
     
     @Bean
     public Queue reserveStatusUpdatedQueue() {
@@ -156,5 +168,38 @@ public class RabbitMQConfig {
         return converter;
     }
     
+    @Bean
+    public Queue getReserveQueue() {
+        return new Queue(GET_RESERVE_QUEUE, true);
+    }
+
+    @Bean
+    public TopicExchange getReserveExchange() {
+        return new TopicExchange(GET_RESERVE_EXCHANGE);
+    }
+
+    @Bean
+    public Binding getReserveBinding() {
+        return BindingBuilder.bind(getReserveQueue())
+                        .to(getReserveExchange())
+                        .with(GET_RESERVE_ROUTING_KEY);
+    }
+
+    @Bean
+    public Queue cancelReserveQueue() {
+        return new Queue(CANCEL_RESERVE_QUEUE, true);
+    }
+
+    @Bean
+    public TopicExchange cancelReserveExchange() {
+        return new TopicExchange(CANCEL_RESERVE_EXCHANGE);
+    }
+
+    @Bean
+    public Binding cancelReserveBinding() {
+        return BindingBuilder.bind(cancelReserveQueue())
+                        .to(cancelReserveExchange())
+                        .with(CANCEL_RESERVE_ROUTING_KEY);
+    }
 }
 

@@ -9,6 +9,7 @@ import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.stereotype.Component;
 
 import com.ms.customer.config.RabbitMQConfig;
+import com.ms.customer.dto.cancelReserve.ReserveCancelResponseDTO;
 import com.ms.customer.dto.customer.CustomerRequestDTO;
 import com.ms.customer.dto.customer.CustomerResponseDTO;
 import com.ms.customer.dto.debitSeat.DebitSeatRequestDTO;
@@ -78,4 +79,15 @@ public class CustomerConsumer {
         }
     }
     
+
+    @RabbitListener(queues = RabbitMQConfig.CANCEL_RESERVE_MILES_QUEUE)
+    public SagaResponse<ReserveCancelResponseDTO> cancelReserveReturnMiles(ReserveCancelResponseDTO reserve) {
+        try {
+            return SagaResponse.success(customerService.cancelReserveMilesReturn(reserve));
+        } catch (BusinessException e) {
+            return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
+        } catch (Exception e) {
+            return SagaResponse.error("DEBIT_SEAT_ERROR", e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR.value());
+        }
+    }
 }
