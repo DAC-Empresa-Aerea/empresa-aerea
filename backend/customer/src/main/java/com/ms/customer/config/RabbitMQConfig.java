@@ -36,6 +36,14 @@ public class RabbitMQConfig {
     public static final String GET_MILES_EXCHANGE = "get.miles.exchange";
     public static final String GET_MILES_ROUTING_KEY = "get.miles.routing.key";
 
+    public static final String CANCEL_RESERVE_MILES_QUEUE = "cancel.reserve.miles.queue";
+    public static final String CANCEL_RESERVE_MILES_EXCHANGE = "cancel.reserve.miles.exchange";
+    public static final String CANCEL_RESERVE_MILES_ROUTING_KEY = "cancel.reserve.miles.routing.key";
+
+    public static final String ROLLBACK_CANCEL_RESERVE_MILES_QUEUE = "rollback.cancel.reserve.miles.queue";
+    public static final String ROLLBACK_CANCEL_RESERVE_MILES_EXCHANGE = "rollback.cancel.reserve.miles.exchange";
+    public static final String ROLLBACK_CANCEL_RESERVE_MILES_ROUTING_KEY = "rollback.cancel.reserve.miles.routing.key";
+
     @Bean
     public Queue createCustomerQueue() {
         return new Queue(CREATE_CUSTOMER_QUEUE, true);
@@ -126,6 +134,25 @@ public class RabbitMQConfig {
                 .bind(getMilesQueue)
                 .to(getMilesExchange)
                 .with(GET_MILES_ROUTING_KEY)
+                .noargs();
+    }
+
+    @Bean
+    public Queue cancelReserveQueue() {
+        return new Queue(CANCEL_RESERVE_MILES_QUEUE, true);
+    }
+
+    @Bean
+    public Exchange cancelReserveExchange() {
+        return new DirectExchange(CANCEL_RESERVE_MILES_EXCHANGE, true, false);
+    }
+
+    @Bean 
+    public Binding cancelReserveBinding(Queue cancelReserveQueue, Exchange cancelReserveExchange) {
+        return BindingBuilder
+                .bind(cancelReserveQueue)
+                .to(cancelReserveExchange)
+                .with(CANCEL_RESERVE_MILES_ROUTING_KEY)
                 .noargs();
     }
 

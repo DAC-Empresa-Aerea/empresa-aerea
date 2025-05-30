@@ -3,6 +3,7 @@ package com.ms.flight.service;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
@@ -26,6 +27,8 @@ import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsRequestDTO;
 import com.ms.flight.dto.flight.reserveSeat.UpdateSeatsResponseDTO;
 import com.ms.flight.dto.flight.reserveSeat.rollback.RollbackReserveSeatsDTO;
 import com.ms.flight.dto.flightStatus.FlightStatusRequestDTO;
+import com.ms.flight.dto.reserve.cancel.ReserveCancelFlightResponse;
+import com.ms.flight.dto.reserve.cancel.ReserveCancelResponseDTO;
 import com.ms.flight.enums.FlightStatusEnum;
 import com.ms.flight.exception.BusinessException;
 import com.ms.flight.model.Airport;
@@ -297,5 +300,39 @@ public class FlightService {
 
         flight.setPoltronasOcupadas(flight.getPoltronasOcupadas() - reserveSeats.getSeatsQuantity());
         flightRepository.save(flight);
+    }
+
+    public ReserveCancelFlightResponse cancelReserveSeats(@Valid ReserveCancelResponseDTO reserve) {
+
+        Flight flight = flightRepository.findById(reserve.getFlightCode())
+            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Voo não encontrado."));
+
+        flight.setPoltronasOcupadas(flight.getPoltronasOcupadas() - reserve.getSeatsQuantity());
+        flightRepository.save(flight);
+
+        ReserveCancelFlightResponse reserveWithFlight = new ReserveCancelFlightResponse();
+        reserveWithFlight.setCode(reserve.getCode());
+        LocalDateTime localReserveDate = reserve.getDate();
+        if (localReserveDate != null) {
+            reserveWithFlight.setDate(localReserveDate.atOffset(ZoneOffset.UTC));
+        }
+        reserveWithFlight.setValue(reserve.getValue());
+        reserveWithFlight.setMilesUsed(reserve.getMilesUsed());
+        reserveWithFlight.setSeatsQuantity(reserve.getSeatsQuantity());
+        reserveWithFlight.setCustomerCode(reserve.getCustomerCode());
+        reserveWithFlight.setStatus(reserve.getStatus());
+        reserveWithFlight.setFlight(new FlightWithAirportResponseDTO(
+            flight.getCodigo(),
+            flight.getData(),
+            flight.getValor(),
+            flight.getPoltronasTotais(),
+            flight.getPoltronasOcupadas(),
+            flight.getEstado().getCodigo(),
+            new AirportResponseDTO(flight.getOrigem().getCodigo(), flight.getOrigem().getNome(), flight.getOrigem().getCidade(), flight.getOrigem().getUF()),
+            new AirportResponseDTO(flight.getDestino().getCodigo(), flight.getDestino().getNome(), flight.getDestino().getCidade(), flight.getDestino().getUF())
+        ));
+
+        return reserveWithFlight;
+    
     }
 }
