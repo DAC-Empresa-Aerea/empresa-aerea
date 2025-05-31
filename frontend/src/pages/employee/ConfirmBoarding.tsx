@@ -27,21 +27,20 @@ function ConfirmBoarding({ flightCode }: { flightCode: string }) {
     setBoardingCode(event.target.value.toUpperCase());
   };
 
-  const verifyCode = (code: string) => {
-    return /^[A-Z]{3}\d{3}$/.test(code) && boardingCodes.includes(code);
-  };
   const handleSubmit = async (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (verifyCode(boardingCode)) {
+    if (boardingCode) {
       try {
-        // Update reserve to embarked status using React Query
         await updateToEmbarked(boardingCode);
         setLastAdd(boardingCode);
         setBoardingCode("");
         console.log("Reserva atualizada para estado: EMBARCADO");
-      } catch (error) {
-        console.error("Erro ao atualizar o estado da reserva:", error);
+      } catch (error: any) {
+        if(error.response && error.response.status === 404) {
+          console.error("Reserva não encontrada ou já embarcada.");
+          setModalVisible(true);
+        }
       }
     } else {
       setModalVisible(true);
@@ -54,7 +53,7 @@ function ConfirmBoarding({ flightCode }: { flightCode: string }) {
         open={{ onClose: () => setModalVisible(false), isOpen: modalVisible }}
       >
         <div className="flex-1 w-full flex items-center justify-center text-lg">
-          Nenhuma reserva correspondente para este voo!
+          Nenhuma voo correspondente para esta reserva!
         </div>
       </BasicModal>
 

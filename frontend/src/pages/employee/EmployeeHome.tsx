@@ -1,14 +1,14 @@
-import { useEffect, useState } from "react";
-import Flight from "../../types/Flight";
+import { use, useEffect, useState } from "react";
 import EmployeeFlightList from "../../components/molecules/flight/EmployeeFlightList";
-import { getFlights } from "../../services/flightsService";
+import { useGetFlightsByDate } from "../../hooks/flights/useGetFlightsByDate";
+import { FlightWithAirports } from "../../types/api/flight";
 
 interface EmployeeHomeProps {
   title: string;
   onViewMoreClick: () => void;
 }
 
-function sortFlightsByDate(flights: Flight[]) {
+function sortFlightsByDate(flights: FlightWithAirports[]) {
   return flights.sort((a, b) => {
     return new Date(a.data).getTime() - new Date(b.data).getTime();
   });
@@ -18,28 +18,25 @@ function EmployeeHome({
   title,
   onViewMoreClick,
 }: EmployeeHomeProps) {
-  const [sortedFlights, setSortedFlights] = useState<Array<Flight>>([]);
+  const [sortedFlights, setSortedFlights] = useState<Array<FlightWithAirports>>([]);
 
-  const fetchFlights = async () => {
-    try {
-      const data = await getFlights();
-      const now = new Date();
-      const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
-
-      const flightsNext48Hours = data.filter((flight: any) => {
-        const flightDate = new Date(flight.data);
-        return flightDate >= now && flightDate <= next48h;
-      });
-
-      setSortedFlights(sortFlightsByDate(flightsNext48Hours));
-    } catch (error) {
-      console.error("Erro ao buscar voos:", error);
-    }
-  };
+  const { data: flightsData } = useGetFlightsByDate(
+    new Date().toISOString().split("T")[0],
+    new Date(Date.now() + 1000 * 48 * 60 * 60 * 100).toISOString().split("T")[0],
+    true
+  );
 
   useEffect(() => {
-    fetchFlights();
-  }, []);
+    if (flightsData) {
+      console.log("Dados de voos recebidos:", flightsData);
+      setSortedFlights(flightsData.voos);
+      console.log("Voos ordenados:", sortedFlights);
+    }
+  }, [flightsData]);
+
+  const fetchFlights = () => {
+    console.log("Fetching flights...");
+  };
 
   return (
     <EmployeeFlightList

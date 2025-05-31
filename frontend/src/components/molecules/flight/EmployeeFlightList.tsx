@@ -1,9 +1,10 @@
 import EmployeeFlight from "../../atoms/EmployeeFlight";
-import  Flight  from "../../../types/Flight";
+import { FlightWithAirports } from "../../../types/api/flight";
+import { useEffect } from "react";
 
 interface FlightListProps {
   title: string;
-  flights: Flight[];
+  flights: FlightWithAirports[];
   onViewMoreClick: () => void;
   onUpdate: () => void;
 }
@@ -14,6 +15,7 @@ function EmployeeFlightList({
   onViewMoreClick,
   onUpdate,
 }: FlightListProps) {
+
   return (
     <section>
       <h2>{title}</h2>

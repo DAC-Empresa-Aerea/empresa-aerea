@@ -1,6 +1,7 @@
 
 import SearchAvailables from "../../components/organisms/SearchAvailables";
 import { useGetFlightsByDate } from "../../hooks/flights/useGetFlightsByDate";
+import { FlightStatus } from "../../types/api/flight";
 
 function SearchFlights() {
   const hoje = new Date();
@@ -19,7 +20,11 @@ function SearchFlights() {
   if (isLoading) return <p>Carregando voos...</p>;
   if (isError) return <p>Erro ao buscar voos: {error?.message}</p>;
 
-  return <SearchAvailables flightsList={flightsList?.voos} />;
+  return (
+    <SearchAvailables
+      flightsList={flightsList?.voos.filter((flight) => flight.estado == FlightStatus.CONFIRMADO)}
+    />
+  );
 }
 
 export default SearchFlights;

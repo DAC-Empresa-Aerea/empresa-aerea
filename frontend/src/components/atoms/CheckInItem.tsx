@@ -19,7 +19,7 @@ function CheckInItem({ reserve, onCheckInConfirm }: CheckInItemProps) {
     <>
       <li className="border border-gray-light p-4 flex justify-between items-center rounded-lg shadow-md bg-white hover:bg-gray-100 transition">
         <article className="font-roboto flex-1 flex flex-col gap-2">
-          <h3 className="font-semibold text-lg">Voo {reserve.codigo}</h3>
+          <h3 className="font-semibold text-lg">Reserva {reserve.codigo}</h3>
           <div className="flex items-center gap-2">
             <FaPlaneDeparture className="text-blue-500" />
             <span className="font-medium">
@@ -27,7 +27,7 @@ function CheckInItem({ reserve, onCheckInConfirm }: CheckInItemProps) {
             </span>
             <span className="text-sm text-gray-500">
               (
-              {new Date(reserve.data).toLocaleString("pt-BR", {
+              {new Date(reserve.voo.data).toLocaleString("pt-BR", {
                 day: "2-digit",
                 month: "2-digit",
                 year: "numeric",
@@ -66,7 +66,7 @@ function CheckInItem({ reserve, onCheckInConfirm }: CheckInItemProps) {
             <h2 className="text-lg font-bold mb-4">Confirmar Check-In</h2>
             <p>
               Deseja confirmar o check-in para o voo{" "}
-              <strong>{reserve.codigo}</strong>?
+              <strong>{reserve.voo.codigo}</strong>?
             </p>
             <div className="mt-6 flex gap-4">
               <button

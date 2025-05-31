@@ -12,7 +12,8 @@ function TableItem({ reserve, moreInfoClick, cancelClick ,buttonText }: TableIte
     return (
         <li className="border border-gray-light p-4 flex justify-between items-center rounded-lg shadow-md bg-white hover:bg-gray-100 transition">
             <article className="font-roboto flex-1 flex flex-col gap-2">
-                <h3 className="font-semibold text-lg">Voo {reserve.codigo}</h3>
+                <h2 className="font-semibold text-lg"> Reserva {reserve.codigo} </h2>
+                <h4 className="font-semibold text-base">Voo {reserve.voo.codigo} </h4>
                 <div className="flex items-center gap-2">
                     <FaPlaneDeparture className="text-blue-500" />
                     <span className="font-medium">{reserve.voo.aeroporto_origem.cidade}</span>

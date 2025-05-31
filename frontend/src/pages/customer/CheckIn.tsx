@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { useAuth } from "../../contexts/loginContext";
 import { useCustomerReserves } from "../../hooks/customers/useCustomerReserves";
 import { useUpdateReserveToCheckIn } from "../../hooks/reserves/useUpdateReserveStatus";
-import { ReserveWithFlight } from "../../types/api/reserve";
+import { ReserveStatus, ReserveWithFlight } from "../../types/api/reserve";
 
 function CheckIn() {
   const { user, isAuthenticated, loading } = useAuth();
@@ -17,16 +17,17 @@ function CheckIn() {
     if (isAuthenticated && user && user.codigo) {
       try {
         const response = await getReserves.refetch();
+        console.log("Reservas do cliente:", response.data);
         if (response.data) {
           const now = new Date();
           const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
 
           const filteredReserves = response.data.filter(
             (reserve: ReserveWithFlight) => {
-              const reserveDate = new Date(reserve.data);
+              const reserveDate = new Date(reserve.voo.data);
               return (
-                (reserve.estado === "CRIADA" ||
-                  reserve.estado === "CHECK-IN") &&
+                (reserve.estado == ReserveStatus.CRIADA ||
+                  reserve.estado == ReserveStatus.CHECKIN) &&
                 reserveDate >= now &&
                 reserveDate <= next48h
               );
@@ -46,7 +47,7 @@ function CheckIn() {
     if (!loading) {
       fetchReserves();
     }
-  }, [isAuthenticated, user, loading, fetchReserves]);
+  }, [isAuthenticated, user, loading]);
 
   const handleCheckIn = async (reserve: ReserveWithFlight) => {
     try {
