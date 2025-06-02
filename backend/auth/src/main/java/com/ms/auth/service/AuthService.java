@@ -110,8 +110,23 @@ public class AuthService {
             );
         }
 
-        String salt = HashUtil.generateSalt();
-        String hashedPassword = HashUtil.hashPassword(authRequest.getPassword(), salt);
+        String salt = null;
+        String hashedPassword = null;
+
+        if(authRequest.getPassword() != null && !authRequest.getPassword().isEmpty()) {
+            if(authRequest.getPassword().length() != 4) {
+                throw new BusinessException(
+                    "PASSWORD_NOT_ALLOWED", 
+                    "Password invalid for the given role", 
+                    HttpStatus.BAD_REQUEST.value()
+                );
+            }
+            salt = HashUtil.generateSalt();
+            hashedPassword = HashUtil.hashPassword(authRequest.getPassword(), salt);
+        } else {
+            salt = auth.getSalt();
+            hashedPassword = auth.getPassword();
+        }
 
         auth.setLogin(authRequest.getNewEmail());
         auth.setPassword(hashedPassword);
