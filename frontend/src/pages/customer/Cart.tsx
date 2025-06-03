@@ -63,7 +63,7 @@ const Cart: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = parseInt(e.target.value);
-    if (value > 0 && value <= 10) {
+    if (value > 0 && value <= (selectedFlight.quantidade_poltronas_total - selectedFlight.quantidade_poltronas_ocupadas)) {
       setTicketQuantity(value);
     }
   };
@@ -91,7 +91,6 @@ const Cart: React.FC = () => {
 
       await createReserveAsync(reserveRequest);
       setBookingCode(newBookingCode);
-      console.log("Compra confirmada!", reserveRequest);
     } catch (error) {
       console.error("Erro ao criar reserva:", error);
       alert("Erro ao finalizar a reserva. Tente novamente.");
@@ -129,6 +128,7 @@ const Cart: React.FC = () => {
                 <TicketQuantitySelector
                   quantity={ticketQuantity}
                   onChange={handleTicketQuantityChange}
+                  maxQuantity={selectedFlight.quantidade_poltronas_total - selectedFlight.quantidade_poltronas_ocupadas}
                 />
               </div>
 
