@@ -5,7 +5,6 @@ import { FlightWithAirports } from "../../types/api/flight";
 
 interface EmployeeHomeProps {
   title: string;
-  onViewMoreClick: () => void;
 }
 
 function sortFlightsByDate(flights: FlightWithAirports[]) {
@@ -16,7 +15,6 @@ function sortFlightsByDate(flights: FlightWithAirports[]) {
 
 function EmployeeHome({
   title,
-  onViewMoreClick,
 }: EmployeeHomeProps) {
   const [sortedFlights, setSortedFlights] = useState<Array<FlightWithAirports>>([]);
 
@@ -39,12 +37,10 @@ function EmployeeHome({
   return (
     <EmployeeFlightList
       title={title}
-      onViewMoreClick={onViewMoreClick}
       flights={sortedFlights}
       onUpdate={fetchFlights}
     />
   );
 }
-
 
 export default EmployeeHome;

@@ -75,6 +75,9 @@ function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
             minute: "2-digit",
           })}
         </p>
+        <p>
+          Origem: {flight.aeroporto_origem.codigo} - Destino: {flight.aeroporto_destino.codigo}
+        </p>
         <p>Status: {flight.estado}</p>
       </article>
       <div className="flex gap-4">

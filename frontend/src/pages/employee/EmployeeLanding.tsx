@@ -25,7 +25,6 @@ function fixDateFormat(dateString: string): string {
 const EmployeeLandingPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [flightsList, setFlightsList] = useState([]);
 
   const { data: flightsData } = useGetFlightsByDate(
     new Date().toISOString().split("T")[0], 
@@ -115,7 +114,6 @@ const EmployeeLandingPage = () => {
 
       <EmployeeHome
         title="Voos nas próximas 48 horas"
-        onViewMoreClick={() => alert("Ver mais voos nas próximas 48 horas")}
       />
     </div>
   );
