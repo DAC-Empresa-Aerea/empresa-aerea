@@ -1,7 +1,7 @@
 import React from "react";
 import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { CustomerRoutesEnum, Routes } from "../routes/routes.enum";
+import { Routes } from "../routes/routes.enum";
 import { useAuth } from "../contexts/loginContext";
 
 const LandingPage: React.FC = () => {
@@ -10,29 +10,6 @@ const LandingPage: React.FC = () => {
   useEffect(() => {
     signOut();
   }, []);
-
-  const singles = [
-    "John F. Kennedy International (JFK)",
-    "Los Angeles International (LAX)",
-    "O'Hare International (ORD)",
-    "Hartsfield-Jackson Atlanta International (ATL)",
-    "Dallas/Fort Worth International (DFW)",
-    "Denver International (DEN)",
-    "San Francisco International (SFO)",
-    "McCarran International (LAS)",
-    "Seattle-Tacoma International (SEA)",
-    "Miami International (MIA)",
-    "Curitiba (CWB)",
-    "Rio de Janeiro Galeão International (GIG)",
-    "São Paulo Guarulhos International (GRU)",
-    "Santiago International (SCL)",
-    "Mexico City International (MEX)",
-    "Frankfurt International (FRA)",
-    "London Heathrow (LHR)",
-    "Paris Charles de Gaulle (CDG)",
-    "Madrid Barajas (MAD)",
-    "Mumbai Chhatrapati Shivaji Maharaj International (BOM)"
-  ];
 
   const navigate = useNavigate();
 

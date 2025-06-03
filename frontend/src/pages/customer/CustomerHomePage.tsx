@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import ReservationTable from "../../components/organisms/ReservationTable";
 import SeeReservation from "../../components/molecules/modalsMolecules/SeeReservation";
 import CancelReservation from "../../components/molecules/modalsMolecules/CancelReservation";
-import Reserve from "../../types/Reserve";
 import { useCustomerReserves } from "../../hooks/customers/useCustomerReserves";
 import { useAuth } from "../../contexts/loginContext";
 import { ReserveWithFlight } from "../../types/api/reserve";

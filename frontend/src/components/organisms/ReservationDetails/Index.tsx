@@ -1,5 +1,5 @@
 import { FaCalendar, FaDollarSign, FaCheckCircle, FaTimesCircle } from "react-icons/fa";
-import { Reserve } from "../../atoms/TableItem";
+import Reserve from "../../../types/Reserve";
 
 interface ReservationDetailsProps {
     reservation: Reserve

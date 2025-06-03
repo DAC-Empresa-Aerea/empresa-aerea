@@ -17,7 +17,7 @@ function TableItem({ reserve, moreInfoClick, cancelClick ,buttonText }: TableIte
                 <div className="flex items-center gap-2">
                     <FaPlaneDeparture className="text-blue-500" />
                     <span className="font-medium">{reserve.voo.aeroporto_origem.cidade}</span>
-                    <span className="text-sm text-gray-500">({new Date(reserve.data).toLocaleString()})</span>
+                    <span className="text-sm text-gray-500">({new Date(reserve.voo.data).toLocaleString()})</span>
                 </div>
                 <div className="flex items-center gap-2">
                     <FaPlaneArrival className="text-green-500" />

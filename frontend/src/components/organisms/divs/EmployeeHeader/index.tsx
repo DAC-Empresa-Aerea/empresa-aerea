@@ -25,7 +25,7 @@ const Header = () => {
         {/* DESKTOP */}
         <div className="hidden md:flex justify-between items-center">
           <div className="flex items-center">
-            <a className="flex items-center">
+            <a className="flex items-center" href={Routes.HOME}>
               <img
                 src="/icon/favicon/favicon.ico"
                 alt="Logo"

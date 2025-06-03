@@ -16,7 +16,8 @@ function SeeReservation({ moreInfoisOpen, moreInfoonClose, moreInfotitle, select
         <h2 className="text-xl font-bold mb-4">{moreInfotitle}</h2>
         <div>
           <p><strong>Código da Reserva:</strong> {selectedReserve.codigo}</p>
-          <p><strong>Data/Hora:</strong> {new Date(selectedReserve.data).toLocaleString()}</p>
+          <p><strong>Data/Hora reserva:</strong> {new Date(selectedReserve.data).toLocaleString()}</p>
+          <p><strong>Data/Hora voo:</strong> {new Date(selectedReserve.voo.data).toLocaleString()}</p>
           <p><strong>Origem:</strong> {selectedReserve.voo.aeroporto_origem.cidade}</p>
           <p><strong>Destino:</strong> {selectedReserve.voo.aeroporto_destino.cidade}</p>
           <p><strong>Valor Gasto (R$):</strong> {selectedReserve.valor.toFixed(2)}</p>

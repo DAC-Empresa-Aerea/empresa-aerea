@@ -8,12 +8,14 @@ import CityDetails from "../../components/molecules/flight/CityDetails";
 import FlightDetails from "../../components/organisms/FlightDetails/Index";
 import { useNavigate } from "react-router-dom";
 import { useReserves } from "../../hooks/reserves/useReserves";
+import CheckinReservation from "../../components/molecules/modalsMolecules/CheckInReservation";
 
 
 const ConsultarReserva = () => {
   const [codigoReserva, setCodigoReserva] = useState("");
   const [selectedReserve, setSelectedReserve] = useState<ReserveWithFlight | undefined>();
   const [error, setError] = useState<string>("");
+  const [isModalCheckInOpen, setIsModalCheckInOpen] = useState(false);
   const [isModalCancelOpen, setIsModalCancelOpen] = useState(false);
   const navigate = useNavigate();
 
@@ -85,6 +87,19 @@ const ConsultarReserva = () => {
               airportCode={selectedReserve.voo.aeroporto_destino.codigo}
             />
           </div>
+          {selectedReserve.estado === "CRIADA" &&
+            new Date(selectedReserve.voo.data) > new Date() &&
+            new Date(selectedReserve.voo.data) <=
+              new Date(Date.now() + 48 * 60 * 60 * 1000) && (
+              <div className="mt-4">
+                <button
+                  onClick={() => setIsModalCheckInOpen(true)}
+                  className="bg-green-500 text-white px-4 py-2 rounded w-full"
+                >
+                  Check-in
+                </button>
+              </div>
+          )}
 
           {(selectedReserve.estado === "CRIADA" ||
             selectedReserve.estado === "CHECK-IN") && (
@@ -97,9 +112,21 @@ const ConsultarReserva = () => {
                 </button>
               </div>
             )}
+
         </div>
       )}
-
+      {
+        selectedReserve && isModalCheckInOpen && (
+          <CheckinReservation 
+            checkinIsOpen={isModalCheckInOpen}
+            checkinClose={() => setIsModalCheckInOpen(false)}
+            checkinTitle={`Confirmar Check-in da Reserva #${selectedReserve.codigo}`}
+            selectedReserve={selectedReserve}
+            onUpdate={goToCustomerHome}
+          />
+        )
+      }
+      
       {selectedReserve && isModalCancelOpen && (
         <CancelReservation
           cancelisOpen={isModalCancelOpen}

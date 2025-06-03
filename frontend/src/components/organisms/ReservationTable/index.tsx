@@ -1,4 +1,3 @@
-import Reserve from "../../../types/Reserve";
 import { ReserveWithFlight } from "../../../types/api/reserve";
 import ReservationList from "../../molecules/ReservationList";
 

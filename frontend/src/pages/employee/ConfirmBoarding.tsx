@@ -4,21 +4,12 @@ import LogoImage from "../../components/atoms/images/LogoImage";
 import MaskedInput from "../../components/atoms/inputs/MaskedInput";
 import BasicModal from "../../components/atoms/modals/_BasicModal";
 import { useUpdateReserveToEmbarked } from "../../hooks/reserves/useUpdateReserveStatus";
-import { useReservesByFlightCode } from "../../hooks/reserves/useReservesByFlightCode";
-import { Reserve } from "../../types/api/reserve";
 
 function ConfirmBoarding({ flightCode }: { flightCode: string }) {
   const [boardingCode, setBoardingCode] = useState("");
   const [lastAdd, setLastAdd] = useState("");
   const [modalVisible, setModalVisible] = useState(false);
-
-  // Fetch reserves by flight code using React Query
-  const { data: flightReserves = [] } = useReservesByFlightCode(flightCode);
-
-  // Get boarding codes from flight reserves
-  const boardingCodes = flightReserves.map(
-    (reserve: Reserve) => reserve.codigo
-  );
+  const [error, setError] = useState(false);
 
   // Hook for updating reserve to embarked status
   const { mutateAsync: updateToEmbarked } = useUpdateReserveToEmbarked();
@@ -37,6 +28,10 @@ function ConfirmBoarding({ flightCode }: { flightCode: string }) {
         setBoardingCode("");
         console.log("Reserva atualizada para estado: EMBARCADO");
       } catch (error: any) {
+        if(error.response && error.response.status === 400) {
+          console.error("Código de embarque inválido ou já utilizado.");
+          setError(true);
+        }
         if(error.response && error.response.status === 404) {
           console.error("Reserva não encontrada ou já embarcada.");
           setModalVisible(true);
@@ -53,7 +48,14 @@ function ConfirmBoarding({ flightCode }: { flightCode: string }) {
         open={{ onClose: () => setModalVisible(false), isOpen: modalVisible }}
       >
         <div className="flex-1 w-full flex items-center justify-center text-lg">
-          Nenhuma voo correspondente para esta reserva!
+          Nenhum voo correspondente para esta reserva!
+        </div>
+      </BasicModal>
+      <BasicModal
+        open={{ onClose: () => setError(false), isOpen: error }}
+      >
+        <div className="flex-1 w-full flex items-center justify-center text-lg">
+          Ocorreu um erro ao confirmar o embarque.
         </div>
       </BasicModal>
 

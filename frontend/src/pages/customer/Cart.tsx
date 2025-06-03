@@ -11,21 +11,7 @@ import { CreateReserveRequest } from "../../types/api/reserve";
 
 const Cart: React.FC = () => {
   const { mutateAsync: createReserveAsync } = useCreateReserve();
-
-  const generateBookingCode = (): string => {
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let code = "";
-
-    for (let i = 0; i < 3; i++) {
-      code += letters.charAt(Math.floor(Math.random() * letters.length));
-    }
-
-    for (let i = 0; i < 3; i++) {
-      code += Math.floor(Math.random() * 10);
-    }
-
-    return code;
-  };
+  
   const location = useLocation();
   const selectedFlight = location.state?.flight;
 
@@ -75,7 +61,6 @@ const Cart: React.FC = () => {
     }
   };
   const handleConfirmPurchase = async () => {
-    const newBookingCode = generateBookingCode();
     if (!user) return;
 
     try {
@@ -89,8 +74,8 @@ const Cart: React.FC = () => {
         codigo_aeroporto_destino: selectedFlight.aeroporto_destino.codigo,
       };
 
-      await createReserveAsync(reserveRequest);
-      setBookingCode(newBookingCode);
+      const reserveResponse = await createReserveAsync(reserveRequest);
+      setBookingCode(reserveResponse.codigo);
     } catch (error) {
       console.error("Erro ao criar reserva:", error);
       alert("Erro ao finalizar a reserva. Tente novamente.");
