@@ -13,16 +13,16 @@ function sortFlightsByDate(flights: FlightWithAirports[]) {
   });
 }
 
-function EmployeeHome({
-  title,
-}: EmployeeHomeProps) {
+function EmployeeHome({ title }: EmployeeHomeProps) {
   const [sortedFlights, setSortedFlights] = useState<Array<FlightWithAirports>>([]);
 
-  const { data: flightsData } = useGetFlightsByDate(
-    new Date().toISOString().split("T")[0],
-    new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
-    true
-  );
+  const startDate = new Date().toISOString().split("T")[0];
+  const endDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
+
+  const {
+    data: flightsData,
+    refetch,
+  } = useGetFlightsByDate(startDate, endDate, true);
 
   useEffect(() => {
     if (flightsData) {
@@ -30,8 +30,11 @@ function EmployeeHome({
     }
   }, [flightsData]);
 
-  const fetchFlights = () => {
-    console.log("Fetching flights...");
+  const fetchFlights = async () => {
+    const { data: updatedFlightsData } = await refetch();
+    if (updatedFlightsData) {
+      setSortedFlights(() => sortFlightsByDate(updatedFlightsData.voos));
+    }
   };
 
   return (

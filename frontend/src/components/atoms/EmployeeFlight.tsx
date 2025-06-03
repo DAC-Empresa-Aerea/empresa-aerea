@@ -90,7 +90,9 @@ function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
         isOpen={isModalCancelOpen}
         onClose={() => {
           setIsModalCancelOpen(false);
-          refreshFlights();
+          setTimeout(() => {
+            refreshFlights();
+          }, 1000);
         }}
       />
 
@@ -99,7 +101,9 @@ function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
         isOpen={isModalRealizeOpen}
         onClose={() => {
           setIsModalRealizeOpen(false);
-          refreshFlights();
+          setTimeout(() => {
+            refreshFlights();
+          }, 1000);
         }}
       />
     </li>
