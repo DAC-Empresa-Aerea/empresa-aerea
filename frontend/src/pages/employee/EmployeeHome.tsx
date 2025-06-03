@@ -1,4 +1,4 @@
-import { use, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import EmployeeFlightList from "../../components/molecules/flight/EmployeeFlightList";
 import { useGetFlightsByDate } from "../../hooks/flights/useGetFlightsByDate";
 import { FlightWithAirports } from "../../types/api/flight";
@@ -22,15 +22,13 @@ function EmployeeHome({
 
   const { data: flightsData } = useGetFlightsByDate(
     new Date().toISOString().split("T")[0],
-    new Date(Date.now() + 1000 * 48 * 60 * 60 * 100).toISOString().split("T")[0],
+    new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
     true
   );
 
   useEffect(() => {
     if (flightsData) {
-      console.log("Dados de voos recebidos:", flightsData);
-      setSortedFlights(flightsData.voos);
-      console.log("Voos ordenados:", sortedFlights);
+      setSortedFlights(() => sortFlightsByDate(flightsData.voos));
     }
   }, [flightsData]);
 
