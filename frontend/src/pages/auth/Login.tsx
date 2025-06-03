@@ -26,7 +26,7 @@ const Login = () => {
   };
 
   const validatePassword = (password: string) => {
-    const hasMinLength = password.length >= 4;
+    const hasMinLength = password.length == 4;
     //const hasNumber = /[0-9]/.test(password);
 
     return {
@@ -147,7 +147,8 @@ const Login = () => {
               value={password}
               placeholder="Senha"
               onChange={(e) => {
-                setPassword(e.target.value);
+                const value = e.target.value.slice(0, 4);
+                setPassword(value);
                 setPasswordError("");
               }}
               required

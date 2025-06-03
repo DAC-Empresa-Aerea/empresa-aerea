@@ -32,7 +32,7 @@ function ConfirmCreateFlightModal({ flight, isOpen, onClose }: ConfirmCreateFlig
         navigate("/employee/home");
         onClose();
       }, 1000);
-    } catch (error) {
+    } catch {
       setStatus("error");
     }
   };

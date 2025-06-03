@@ -1,7 +1,7 @@
 import { useState } from "react";
 import DropdownInput from "../atoms/inputs/DropdownInput";
 import { useAirports } from "../../hooks/useAiports";
-import { GetAirportsResponse, Airport } from "../../types/api/flight";
+import { Airport } from "../../types/api/flight";
 
 interface SearchInputProps {
   handleSearch: (origin: string, destination: string) => void;
@@ -24,12 +24,12 @@ function SearchInput({ handleSearch, handleCancelSearch }: SearchInputProps) {
 
   // 3) Filtra pelos códigos (você pode exibir nome+cidade, se quiser)
   const originOptions = airports
-    .filter((a) => a.codigo !== selectedSecondValue)
-    .map((a) => `${a.codigo} – ${a.nome}`);
+  .filter((a) => a.codigo !== selectedSecondValue)
+  .map((a) => `${a.codigo} – ${a.cidade}`);
 
   const destinationOptions = airports
-    .filter((a) => a.codigo !== selectedFirstValue)
-    .map((a) => `${a.codigo} – ${a.nome}`);
+  .filter((a) => a.codigo !== selectedFirstValue)
+  .map((a) => `${a.codigo} – ${a.cidade}`);
 
   const handleResetValues = () => {
     setSelectedFirstValue("");
@@ -55,8 +55,15 @@ function SearchInput({ handleSearch, handleCancelSearch }: SearchInputProps) {
           ) : (
             <DropdownInput
               options={originOptions}
-              value={selectedFirstValue}
-              setSelectedValue={setSelectedFirstValue}
+              value={
+                selectedFirstValue
+                  ? originOptions.find((opt) => opt.startsWith(selectedFirstValue)) || ""
+                  : ""
+              }
+              setSelectedValue={(value) => {
+                const codigo = value.split(" – ")[0]; // extrai o código
+                setSelectedFirstValue(codigo);
+              }}
             />
           )}
         </div>
@@ -72,8 +79,15 @@ function SearchInput({ handleSearch, handleCancelSearch }: SearchInputProps) {
           ) : (
             <DropdownInput
               options={destinationOptions}
-              value={selectedSecondValue}
-              setSelectedValue={setSelectedSecondValue}
+              value={
+                selectedSecondValue
+                  ? destinationOptions.find((opt) => opt.startsWith(selectedSecondValue)) || ""
+                  : ""
+              }
+              setSelectedValue={(value) => {
+                const codigo = value.split(" – ")[0]; // extrai o código
+                setSelectedSecondValue(codigo);
+              }}
             />
           )}
         </div>
