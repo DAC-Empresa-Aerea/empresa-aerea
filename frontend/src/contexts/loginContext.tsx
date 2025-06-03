@@ -95,6 +95,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       await logoutMutation.mutateAsync({ login: "" });
     } catch {
+      console.error("Erro ao fazer logout");
     } finally {
       Cookies.remove("token");
       Cookies.remove("user");

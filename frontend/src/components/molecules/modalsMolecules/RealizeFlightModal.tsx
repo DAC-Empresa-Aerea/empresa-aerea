@@ -1,7 +1,6 @@
 import { FaTimes } from "react-icons/fa";
 import { FlightWithAirports as Flight, FlightStatus } from "../../../types/api/flight";
 import { useUpdateFlightStatus } from "../../../hooks/flights/useUpdateFlights";
-import { getReservesByFlightCode, UpdateReserve } from "../../../services/reserveService";
 
 interface RealizeFlightModalProps {
   flight: Flight;
@@ -27,7 +26,6 @@ function RealizeFlightModal({ flight, isOpen, onClose }: RealizeFlightModalProps
         estado: FlightStatus.REALIZADO,
       });
 
-      alert("Voo realizado com sucesso e reservas atualizadas!");
       onClose();
     } catch (error) {
       console.error("Erro ao realizar voo:", error);

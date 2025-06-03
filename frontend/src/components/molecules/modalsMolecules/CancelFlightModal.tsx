@@ -28,7 +28,6 @@ function CancelFlightModal({ flight, isOpen, onClose  }: CancelFlightModalProps)
         estado: FlightStatus.CANCELADO,
       });
 
-      alert("Voo e reservas cancelados com sucesso!");
       onClose();
     } catch (error) {
       console.error("Erro ao cancelar voo:", error);
