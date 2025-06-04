@@ -10,6 +10,7 @@ export interface EmployeeWithCode extends Employee {
 }
 
 export interface EmployeeWithPassword extends Employee {
+  codigo: number;
   senha: string;
 }
 
@@ -46,7 +47,14 @@ export type CreateEmployeeResponse = EmployeeWithCode;
 // SUCCESS -> 200
 // ERROR -> 401, 403, 404
 
-export type UpdateEmployeeRequest = EmployeeWithCodeAndPassword;
+export interface UpdateEmployeeRequest {
+  codigo: number;
+  nome: string;
+  telefone: string;
+  email: string;
+  cpf: string;
+  senha?: string;
+}
 
 export type UpdateEmployeeResponse = EmployeeWithCode;
 

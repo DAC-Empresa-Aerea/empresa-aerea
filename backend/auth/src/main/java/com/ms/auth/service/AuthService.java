@@ -64,6 +64,7 @@ public class AuthService {
         if (authRequest.getRole().equals(Roles.EMPLOYEE)) {
             if(authRequest.getPassword() != null && !authRequest.getPassword().isEmpty()) {
                 if(authRequest.getPassword().length() != 4) {
+                    System.out.println("Password: " + authRequest.getPassword());
                     throw new BusinessException(
                         "PASSWORD_NOT_ALLOWED", 
                         "Password invalid for the given role", 
