@@ -245,7 +245,6 @@ public class ReserveService {
         reserveQuery.setStatusCode(StatusEnum.CANCELED.getCode());
         reserveQuery.setStatusAbbreviation(statusCommand.getAbbreviation());
         reserveQuery.setStatusDescription(statusCommand.getDescription());
-        reserveQueryRepository.save(reserveQuery);
 
         // 5. Publicar evento de cancelamento
         cqrsProducer.sendStatusUpdate(reserveId, StatusEnum.CANCELED.getCode());
