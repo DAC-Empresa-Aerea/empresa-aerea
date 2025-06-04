@@ -13,6 +13,7 @@ import { useLogout } from "../hooks/useLogout";
 import Customer from "../types/Customer";
 import Employee from "../types/Employee";
 
+
 // -------------------------------------------------------------------------
 // TYPES
 // -------------------------------------------------------------------------
@@ -48,9 +49,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
-  /* --------------------------------------------------------
-   *  1) Restaura sessão caso exista cookie/token salvo
-   * ------------------------------------------------------*/
+
   useEffect(() => {
     const token = Cookies.get("token");
     const cachedUser = localStorage.getItem("user");
@@ -58,7 +57,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       try {
         setUser(JSON.parse(cachedUser));
       } catch {
-        /* se falhar parsing, ignora */
+        /* se falhar, ignora */
       }
     }
     setLoading(false);

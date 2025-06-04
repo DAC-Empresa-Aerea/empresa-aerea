@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import Employee from "../../types/Employee";
 import EmployeeTable from "../../components/organisms/EmployeeTable";
 import BasicModal, {
   CloseOptions,
@@ -10,6 +9,7 @@ import { useEmployees } from "../../hooks/employees/useEmployees";
 import { useCreateEmployee } from "../../hooks/employees/useCreateEmployee";
 import { useUpdateEmployee } from "../../hooks/employees/useUpdateEmployee";
 import { useDeleteEmployee } from "../../hooks/employees/useDeleteEmployee";
+import { EmployeeWithCode as Employee } from "../../types/api/employee";
 
 function EmployeeCRUD() {
   const [employees, setEmployees] = useState<Employee[]>([]);
@@ -64,20 +64,23 @@ function EmployeeCRUD() {
   };
 
   const onConfirmEdit = async (employee: Employee) => {
+
     try {
       employee.telefone = employee.telefone.replace(/\D/g, "");
+      employee.cpf = employee.cpf.replace(/\D/g, "");
+      console.log("onConfirmEdit", employee);
       if (employee.codigo) {
-        // Para update, garantir senha (pode ser string vazia se não for alterada)
+
         await updateEmployeeMutation.mutateAsync({
           codigo: employee.codigo,
-          data: { ...employee, senha: "" },
+          data: { ...employee },
         });
         setEmployees((prev) =>
           prev.map((emp) => (emp.codigo === employee.codigo ? employee : emp))
         );
       } else {
         // Para create, gerar senha aleatória
-        const senha = Math.random().toString(36).slice(-6);
+        const senha = employee?.senha
         const created = await createEmployeeMutation.mutateAsync({
           ...employee,
           senha,

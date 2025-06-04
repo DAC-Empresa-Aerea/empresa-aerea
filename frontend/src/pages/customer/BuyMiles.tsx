@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/loginContext";
 import { queryClient } from "../../App";
+import Cookies from "js-cookie";
 
 import MilesPurchaseHeader from "../../components/organisms/milesOrganisms/MilesPurchaseHeader";
 import BalanceDisplay from "../../components/molecules/milesMolecules/BalanceDisplay";
@@ -52,6 +53,7 @@ const BuyMiles: React.FC = () => {
       const { data: updatedUser } = await getCustomer.refetch();
       if (updatedUser) {
         setUser(updatedUser);
+        Cookies.set("user", JSON.stringify(updatedUser), { sameSite: "strict" });
         localStorage.setItem("user", JSON.stringify(updatedUser));
 
         await queryClient.invalidateQueries({ queryKey: ["customer"] });
