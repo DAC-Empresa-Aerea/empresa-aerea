@@ -1,5 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
-import { getCustomerReserves } from "../../services/costumers";
+import { getCustomerReserves } from "../../services/customers";
 import { GetReserveResponse } from "../../types/api/reserve";
 
 export const useCustomerReserves = (codigo: number, enabled = true) =>
@@ -7,4 +7,4 @@ export const useCustomerReserves = (codigo: number, enabled = true) =>
     queryKey: ["customerReserves", codigo],
     queryFn: () => getCustomerReserves(codigo).then((r) => r.data),
     enabled: enabled && !!codigo,
-});
+  });
