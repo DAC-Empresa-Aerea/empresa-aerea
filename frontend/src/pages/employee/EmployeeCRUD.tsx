@@ -33,7 +33,12 @@ function EmployeeCRUD() {
   const deleteEmployeeMutation = useDeleteEmployee();
 
   useEffect(() => {
-    if (employeesData) setEmployees(employeesData);
+    if (employeesData) {
+      
+      setEmployees(employeesData.sort((a, b) =>
+        a.nome.localeCompare(b.nome)
+      ));
+    };
   }, [employeesData]);
 
   const handleDeleteEmployee = (employee?: Employee | null) => {
@@ -79,13 +84,12 @@ function EmployeeCRUD() {
           prev.map((emp) => (emp.codigo === employee.codigo ? employee : emp))
         );
       } else {
-        // Para create, gerar senha aleatória
         const senha = employee?.senha
         const created = await createEmployeeMutation.mutateAsync({
           ...employee,
           senha,
         });
-        setEmployees((prev) => [...prev, created]);
+        refetch();
       }
       setSelectedEmployee(null);
       setOpenModal((prev) => ({ ...prev, isOpen: false }));
