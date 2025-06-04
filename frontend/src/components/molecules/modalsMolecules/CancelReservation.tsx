@@ -1,6 +1,9 @@
 import { FaTimes } from "react-icons/fa";
 import { ReserveWithFlight } from "../../../types/api/reserve";
 import { useCancelReserve } from "../../../hooks/reserves/useCancelReserve";
+import { useCustomer } from "../../../hooks/customers/useCustomer";
+import { useAuth } from "../../../contexts/loginContext";
+import Cookies from "js-cookie";
 
 interface CancelReservationProps {
   cancelisOpen: boolean;
@@ -17,12 +20,22 @@ function CancelReservation({
   selectedReserve,
   onUpdate,
 }: CancelReservationProps) {
+  const { user, setUser } = useAuth();
   const { mutateAsync: cancelReserve } = useCancelReserve();
+  const getCustomer = useCustomer(user?.codigo || 0);
   if (!cancelisOpen) return null;
+  
 
   const handleCancel = async () => {
     try {
-      await cancelReserve(selectedReserve.codigo);
+      await cancelReserve(selectedReserve.codigo).then(async () => {
+        const { data: updatedUser } = await getCustomer.refetch();
+        if (updatedUser) {
+          Cookies.set("user", JSON.stringify(updatedUser), { sameSite: "strict" });
+          setUser(updatedUser);
+          localStorage.setItem("user", JSON.stringify(updatedUser));
+        }
+      });
       onUpdate();
       cancelClose();
     } catch (error) {

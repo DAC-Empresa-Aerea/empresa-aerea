@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { useLocation } from "react-router-dom";
 import FlightDetails from "../../components/molecules/cartMolecules/FlightDetails";
 import TicketQuantitySelector from "../../components/molecules/cartMolecules/TicketQuantitySelector";
@@ -8,6 +9,7 @@ import { useAuth } from "../../contexts/loginContext";
 import Customer from "../../types/Customer";
 import { useCreateReserve } from "../../hooks/reserves/useCreateReserve";
 import { CreateReserveRequest } from "../../types/api/reserve";
+import { useCustomer } from "../../hooks/customers/useCustomer";
 
 const Cart: React.FC = () => {
   const { mutateAsync: createReserveAsync } = useCreateReserve();
@@ -15,7 +17,7 @@ const Cart: React.FC = () => {
   const location = useLocation();
   const selectedFlight = location.state?.flight;
 
-  const { user } = useAuth();
+  const { user, setUser } = useAuth();
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [milesToUse, setMilesToUse] = useState(0);
 
@@ -60,6 +62,9 @@ const Cart: React.FC = () => {
       setMilesToUse(value);
     }
   };
+
+  const getCustomer = useCustomer(user?.codigo || 0);
+
   const handleConfirmPurchase = async () => {
     if (!user) return;
 
@@ -75,6 +80,9 @@ const Cart: React.FC = () => {
       };
 
       const reserveResponse = await createReserveAsync(reserveRequest);
+      const { data: updatedUser } = await getCustomer.refetch();
+      Cookies.set("user", JSON.stringify(updatedUser), { sameSite: "strict" });
+      
       setBookingCode(reserveResponse.codigo);
     } catch (error) {
       console.error("Erro ao criar reserva:", error);
