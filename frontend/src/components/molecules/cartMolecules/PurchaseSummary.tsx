@@ -23,7 +23,7 @@ const PurchaseSummary: React.FC<PurchaseSummaryProps> = ({
   onConfirmPurchase,
   onMilesChange
 }) => {
-  console.log(user.saldo_milhas, requiredMiles);
+
   return (
     <div className="bg-gray-50 p-4 rounded-md">
       <h2 className="font-bold text-lg mb-4">Resumo</h2>

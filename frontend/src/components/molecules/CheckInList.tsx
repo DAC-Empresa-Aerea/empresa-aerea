@@ -1,10 +1,10 @@
 import CheckInItem from "../atoms/CheckInItem";
-import Reserve from "../../types/Reserve";
+import { ReserveWithFlight } from "../../types/api/reserve";
 
 interface CheckInListProps {
   title: string;
-  reserves: Reserve[];
-  onCheckInClick: (reserve: Reserve) => void;
+  reserves: ReserveWithFlight[];
+  onCheckInClick: (reserve: ReserveWithFlight) => void;
 }
 
 function CheckInList({ title, reserves, onCheckInClick }: CheckInListProps) {

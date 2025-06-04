@@ -231,7 +231,7 @@ public class CustomerService {
         milesHistory.setCustomer(customer);
         ZoneId saoPauloZone = ZoneId.of("America/Sao_Paulo");
         milesHistory.setDate(LocalDateTime.now(saoPauloZone).atZone(saoPauloZone).toOffsetDateTime());
-        milesHistory.setDescription("Retorno de milhas por cancelamento de reserva: " + reserve.getCode());
+        milesHistory.setDescription("CANCELADA: " + reserve.getCode());
         milesHistory.setMilesQuantity(reserve.getMilesUsed());
         milesHistory.setReserveCode(reserve.getCode());
         milesHistory.setType("ENTRADA");

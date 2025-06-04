@@ -1,70 +1,113 @@
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import DropdownInput from "../atoms/inputs/DropdownInput";
-import { getAirports } from "../../services/airportService";
-
+import { useAirports } from "../../hooks/useAiports";
+import { Airport } from "../../types/api/flight";
 
 interface SearchInputProps {
-    handleSearch: (origin: string, destination: string) => void;
-    handleCancelSearch: () => void;
+  handleSearch: (origin: string, destination: string) => void;
+  handleCancelSearch: () => void;
 }
 
-function SearchInput({
-    handleSearch,
-    handleCancelSearch,
-}: SearchInputProps) {
+function SearchInput({ handleSearch, handleCancelSearch }: SearchInputProps) {
+  const [selectedFirstValue, setSelectedFirstValue] = useState("");
+  const [selectedSecondValue, setSelectedSecondValue] = useState("");
 
-    const [selectedFirstValue, setSelectedFirstValue] = useState("");
-    const [selectedSecondValue, setSelectedSecondValue] = useState("");
-    const [airports, setAirports] = useState([]);
+  // 1) O hook retorna algo como UseQueryResult<AxiosResponse<GetAirportsResponse>, Error>
+  const {
+    data: airportsResponse,  // axios response ou undefined
+    isLoading,
+    error,
+  } = useAirports();
 
-    const availableAirportsForFirst = airports.filter(airport => airport !== selectedSecondValue);
-    const availableAirportsForSecond = airports.filter(airport => airport !== selectedFirstValue);
+  // 2) Extrai só o array de Airport do response, ou usa [] enquanto carrega/erro
+  const airports: Airport[] = airportsResponse?.data ?? [];
 
-    useEffect(() => {
-        getAirports()
-            .then((data) => {
-                const airportCodes = data.map((airport: any) => airport.codigo);
-                setAirports(airportCodes);
-            })
-            .catch((error) => {
-                console.error("Erro ao buscar voos:", error);
-            });
-    }, []);
+  // 3) Filtra pelos códigos (você pode exibir nome+cidade, se quiser)
+  const originOptions = airports
+  .filter((a) => a.codigo !== selectedSecondValue)
+  .map((a) => `${a.codigo} – ${a.cidade}`);
 
-    function handleResetValues() {
-        setSelectedFirstValue("");
-        setSelectedSecondValue("");
-    }
+  const destinationOptions = airports
+  .filter((a) => a.codigo !== selectedFirstValue)
+  .map((a) => `${a.codigo} – ${a.cidade}`);
 
-    return (
-        <div className=" w-60 md:w-14rem h-full flex flex-col justify-between bg-white  p-4  shadow-medium rounded-2xl">
-            <div className="flex flex-col gap-4">
-                <h1 className="font-roboto text-2xl font-semibold text-alien mb-6">
-                    Buscar Voos
-                </h1>
-                <h2 className="font-roboto text-lg font-semibold text-alien">
-                    Origem
-                </h2>
-                <DropdownInput options={availableAirportsForFirst} setSelectedValue={setSelectedFirstValue} value={selectedFirstValue} />
-                <h3 className="font-roboto text-lg font-semibold text-alien"> Chegada</h3>
-                <DropdownInput options={availableAirportsForSecond} setSelectedValue={setSelectedSecondValue} value={selectedSecondValue} />
-                <button
-                    onClick={() => { handleCancelSearch(); handleResetValues(); }}
-                    className="flex items-center justify-center rounded-md bg-blue-600 px-6 py-1 text-white hover:bg-blue-700 cursor-pointer self-end"
-                >
-                    Limpar
-                </button>
-            </div>
-            <div>
-                <button
-                    onClick={() => handleSearch(selectedFirstValue, selectedSecondValue)}
-                    className="w-full rounded-md bg-blue-600 px-4 py-2 text-white hover:bg-blue-700 cursor-pointer"
-                >
-                    Buscar
-                </button>
-            </div>
+  const handleResetValues = () => {
+    setSelectedFirstValue("");
+    setSelectedSecondValue("");
+    handleCancelSearch();
+  };
+
+  return (
+    <div className="w-60 md:w-14rem h-full flex flex-col justify-between bg-white p-4 shadow-medium rounded-2xl">
+      <div className="flex flex-col gap-4">
+        <h1 className="font-roboto text-2xl font-semibold text-alien mb-6">
+          Buscar Voos
+        </h1>
+
+        <div>
+          <h2 className="font-roboto text-lg font-semibold text-alien">
+            Origem
+          </h2>
+          {isLoading ? (
+            <p>Carregando aeroportos...</p>
+          ) : error ? (
+            <p>Erro ao carregar aeroportos</p>
+          ) : (
+            <DropdownInput
+              options={originOptions}
+              value={
+                selectedFirstValue
+                  ? originOptions.find((opt) => opt.startsWith(selectedFirstValue)) || ""
+                  : ""
+              }
+              setSelectedValue={(value) => {
+                const codigo = value.split(" – ")[0]; // extrai o código
+                setSelectedFirstValue(codigo);
+              }}
+            />
+          )}
         </div>
-    );
+
+        <div>
+          <h2 className="font-roboto text-lg font-semibold text-alien">
+            Destino
+          </h2>
+          {isLoading ? (
+            <p>Carregando aeroportos...</p>
+          ) : error ? (
+            <p>Erro ao carregar aeroportos</p>
+          ) : (
+            <DropdownInput
+              options={destinationOptions}
+              value={
+                selectedSecondValue
+                  ? destinationOptions.find((opt) => opt.startsWith(selectedSecondValue)) || ""
+                  : ""
+              }
+              setSelectedValue={(value) => {
+                const codigo = value.split(" – ")[0]; // extrai o código
+                setSelectedSecondValue(codigo);
+              }}
+            />
+          )}
+        </div>
+
+        <button
+          onClick={handleResetValues}
+          className="self-end mt-2 px-6 py-1 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+        >
+          Limpar
+        </button>
+      </div>
+
+      <button
+        onClick={() => handleSearch(selectedFirstValue, selectedSecondValue)}
+        className="w-full mt-4 px-4 py-2 bg-blue-600 text-white rounded-md hover:bg-blue-700"
+      >
+        Buscar
+      </button>
+    </div>
+  );
 }
 
 export default SearchInput;

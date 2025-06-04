@@ -1,5 +1,4 @@
 import Employee from "../../../types/Employee";
-import employeesExample from "../../../data/EmployeesExample";
 import EmployeeList from "../../molecules/EmployeeList";
 
 interface EmployeeTableProps {
@@ -9,7 +8,7 @@ interface EmployeeTableProps {
 }
 
 function EmployeeTable({
-  employees = employeesExample,
+  employees,
   editEmployee,
   deleteEmployee,
 }: EmployeeTableProps) {

@@ -1,7 +1,6 @@
 import { FaTimes } from "react-icons/fa";
-import Flight from "../../../types/Flight";
-import { updateFlight } from "../../../services/flightsService";
-import { getReservesByFlightCode, UpdateReserve } from "../../../services/reserveService";
+import { FlightWithAirports as Flight, FlightStatus } from "../../../types/api/flight";
+import { useUpdateFlightStatus } from "../../../hooks/flights/useUpdateFlights";
 
 interface RealizeFlightModalProps {
   flight: Flight;
@@ -10,6 +9,8 @@ interface RealizeFlightModalProps {
 }
 
 function RealizeFlightModal({ flight, isOpen, onClose }: RealizeFlightModalProps) {
+  const { mutateAsync: updateStatus } = useUpdateFlightStatus();
+
   if (!isOpen) return null;
 
   const handleRealizeFlight = async () => {
@@ -20,20 +21,11 @@ function RealizeFlightModal({ flight, isOpen, onClose }: RealizeFlightModalProps
         return;
       }
 
-      const reservas = await getReservesByFlightCode(flight.codigo);
+      await updateStatus({
+        codigo: flight.codigo,
+        estado: FlightStatus.REALIZADO,
+      });
 
-      await Promise.all(
-        reservas.map((reserva: any) =>
-          UpdateReserve(reserva.codigo, {
-            ...reserva,
-            estado: reserva.estado === "EMBARCADA" ? "REALIZADA" : "NÃO REALIZADA",
-          })
-        )
-      );
-
-      await updateFlight(flight.codigo, { ...flight, estado: "REALIZADO" });
-
-      alert("Voo realizado com sucesso e reservas atualizadas!");
       onClose();
     } catch (error) {
       console.error("Erro ao realizar voo:", error);

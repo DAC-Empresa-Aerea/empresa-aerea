@@ -1,17 +1,17 @@
 import { useState } from "react";
-import Flight  from "../../../types/Flight";
 import SearchInput from "../../molecules/SearchInput";
 import AvailableFlights from "../AvailableFlights";
+import { FlightWithAirports } from "../../../types/api/flight";
 
 interface SearchAvailables {
-    flightsList: Array<Flight>;
+    flightsList: Array<FlightWithAirports>;
 }
 
 function SearchAvailables({
     flightsList,
 }: SearchAvailables) {
 
-    const [flights, setFlights] = useState<Array<Flight>>(flightsList || []);
+    const [flights, setFlights] = useState<Array<FlightWithAirports>>(flightsList || []);
 
     function handleSearch(origin: string, destination: string) {
         if(origin !==  "" && destination == "")  {

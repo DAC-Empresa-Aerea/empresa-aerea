@@ -1,55 +1,49 @@
 import { useEffect, useState } from "react";
-import Flight from "../../types/Flight";
 import EmployeeFlightList from "../../components/molecules/flight/EmployeeFlightList";
-import { getFlights } from "../../services/flightsService";
+import { useGetFlightsByDate } from "../../hooks/flights/useGetFlightsByDate";
+import { FlightWithAirports } from "../../types/api/flight";
 
 interface EmployeeHomeProps {
   title: string;
-  onViewMoreClick: () => void;
 }
 
-function sortFlightsByDate(flights: Flight[]) {
+function sortFlightsByDate(flights: FlightWithAirports[]) {
   return flights.sort((a, b) => {
     return new Date(a.data).getTime() - new Date(b.data).getTime();
   });
 }
 
-function EmployeeHome({
-  title,
-  onViewMoreClick,
-}: EmployeeHomeProps) {
-  const [sortedFlights, setSortedFlights] = useState<Array<Flight>>([]);
+function EmployeeHome({ title }: EmployeeHomeProps) {
+  const [sortedFlights, setSortedFlights] = useState<Array<FlightWithAirports>>([]);
 
-  const fetchFlights = async () => {
-    try {
-      const data = await getFlights();
-      const now = new Date();
-      const next48h = new Date(now.getTime() + 48 * 60 * 60 * 1000);
+  const startDate = new Date().toISOString().split("T")[0];
+  const endDate = new Date(Date.now() + 2 * 24 * 60 * 60 * 1000).toISOString().split("T")[0];
 
-      const flightsNext48Hours = data.filter((flight: any) => {
-        const flightDate = new Date(flight.data);
-        return flightDate >= now && flightDate <= next48h;
-      });
-
-      setSortedFlights(sortFlightsByDate(flightsNext48Hours));
-    } catch (error) {
-      console.error("Erro ao buscar voos:", error);
-    }
-  };
+  const {
+    data: flightsData,
+    refetch,
+  } = useGetFlightsByDate(startDate, endDate, true);
 
   useEffect(() => {
-    fetchFlights();
-  }, []);
+    if (flightsData) {
+      setSortedFlights(() => sortFlightsByDate(flightsData.voos));
+    }
+  }, [flightsData]);
+
+  const fetchFlights = async () => {
+    const { data: updatedFlightsData } = await refetch();
+    if (updatedFlightsData) {
+      setSortedFlights(() => sortFlightsByDate(updatedFlightsData.voos));
+    }
+  };
 
   return (
     <EmployeeFlightList
       title={title}
-      onViewMoreClick={onViewMoreClick}
       flights={sortedFlights}
       onUpdate={fetchFlights}
     />
   );
 }
-
 
 export default EmployeeHome;

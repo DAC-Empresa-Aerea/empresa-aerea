@@ -5,7 +5,7 @@ import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import jakarta.validation.constraints.Future;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 public class RegisterFlightRequestDTO {
     
-    @Future(message = "A data deve estar no futuro")
+    @FutureOrPresent(message = "A data deve ser hoje ou no futuro")
     private OffsetDateTime data;
 
     @JsonProperty("valor_passagem")

@@ -1,8 +1,6 @@
 import { FaTimes } from "react-icons/fa";
-import Flight from "../../../types/Flight";
-import { updateFlight } from "../../../services/flightsService";
-import { getReservesByFlightCode, UpdateReserve } from "../../../services/reserveService";
-
+import { FlightWithAirports as Flight, FlightStatus } from "../../../types/api/flight";
+import { useUpdateFlightStatus } from "../../../hooks/flights/useUpdateFlights";
 interface CancelFlightModalProps {
   flight: Flight;
   isOpen: boolean;
@@ -10,7 +8,12 @@ interface CancelFlightModalProps {
 }
 
 function CancelFlightModal({ flight, isOpen, onClose  }: CancelFlightModalProps) {
+  const { mutateAsync: updateStatus } = useUpdateFlightStatus();
+
   if (!isOpen) return null;
+  
+
+  console.log("CancelFlightModal", flight);
 
   const handleCancelFlight = async () => {
     try {
@@ -20,20 +23,11 @@ function CancelFlightModal({ flight, isOpen, onClose  }: CancelFlightModalProps)
         return;
       }
 
-      const reservas = await getReservesByFlightCode(flight.codigo);
+      await updateStatus({
+        codigo: flight.codigo,
+        estado: FlightStatus.CANCELADO,
+      });
 
-      await Promise.all(
-        reservas.map((reserva: any) =>
-          UpdateReserve(reserva.codigo, {
-            ...reserva,
-            estado: "CANCELADA",
-          })
-        )
-      );
-
-      await updateFlight(flight.codigo, { ...flight, estado: "CANCELADO" });
-
-      alert("Voo e reservas cancelados com sucesso!");
       onClose();
     } catch (error) {
       console.error("Erro ao cancelar voo:", error);

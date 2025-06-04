@@ -66,7 +66,11 @@ export type GetFlightRequest = {
 
 // NO REQUEST BODY
 
-export type GetFlightByDateResponse = Array<FlightWithAirports>;
+export type GetFlightByDateResponse = {
+  inicio: string;
+  fim: string;
+  voos: Array<FlightWithAirports>
+};
 
 //------------------------------------------------------------------------
 

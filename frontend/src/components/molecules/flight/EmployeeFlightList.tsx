@@ -1,19 +1,18 @@
 import EmployeeFlight from "../../atoms/EmployeeFlight";
-import  Flight  from "../../../types/Flight";
+import { FlightWithAirports } from "../../../types/api/flight";
 
 interface FlightListProps {
   title: string;
-  flights: Flight[];
-  onViewMoreClick: () => void;
+  flights: FlightWithAirports[];
   onUpdate: () => void;
 }
 
 function EmployeeFlightList({
   title,
   flights,
-  onViewMoreClick,
   onUpdate,
 }: FlightListProps) {
+
   return (
     <section>
       <h2>{title}</h2>

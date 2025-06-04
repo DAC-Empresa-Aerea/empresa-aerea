@@ -4,9 +4,9 @@ import Footer from "../../components/organisms/divs/Footer";
 
 function BasicCustomerLayout() {
   return (
-    <div className="h-screen flex flex-col bg-gray-extra-light">
+    <div className="h-auto flex flex-col bg-gray-extra-light">
       <Header />
-      <main className="flex-1 overflow-auto">
+      <main className="overflow-auto min-h-[70dvh] h-auto">
         <Outlet />
       </main>
       <Footer />

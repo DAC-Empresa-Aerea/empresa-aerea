@@ -1,11 +1,11 @@
 import { useState } from "react";
-import Flight from "../../types/Flight";
+import { FlightWithAirports } from "../../types/api/flight";
 import { useNavigate } from "react-router-dom";
 import CancelFlightModal from "../molecules/modalsMolecules/CancelFlightModal";
 import RealizeFlightModal from "../molecules/modalsMolecules/RealizeFlightModal";
 
 interface EmployeeFlightProps {
-  flight: Flight;
+  flight: FlightWithAirports;
   refreshFlights: () => void;
 }
 
@@ -22,7 +22,7 @@ function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
     setIsModalRealizeOpen(true);
   };
 
-  const handleFlightClick = (flight: Flight) => {
+  const handleFlightClick = (flight: FlightWithAirports) => {
     navigate("/employee/confirm", { state: { flight } });
   };
 
@@ -75,6 +75,9 @@ function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
             minute: "2-digit",
           })}
         </p>
+        <p>
+          Origem: {flight.aeroporto_origem.codigo} - Destino: {flight.aeroporto_destino.codigo}
+        </p>
         <p>Status: {flight.estado}</p>
       </article>
       <div className="flex gap-4">
@@ -87,7 +90,9 @@ function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
         isOpen={isModalCancelOpen}
         onClose={() => {
           setIsModalCancelOpen(false);
-          refreshFlights();
+          setTimeout(() => {
+            refreshFlights();
+          }, 1000);
         }}
       />
 
@@ -96,7 +101,9 @@ function EmployeeFlight({ flight, refreshFlights }: EmployeeFlightProps) {
         isOpen={isModalRealizeOpen}
         onClose={() => {
           setIsModalRealizeOpen(false);
-          refreshFlights();
+          setTimeout(() => {
+            refreshFlights();
+          }, 1000);
         }}
       />
     </li>

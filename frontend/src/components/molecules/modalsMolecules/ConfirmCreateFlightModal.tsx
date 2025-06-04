@@ -1,7 +1,7 @@
 import { FaTimes } from "react-icons/fa";
 import Flight from "../../../types/Flight";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useCreateFlight } from "../../../hooks/flights/useCreateFlight";
 
 interface ConfirmCreateFlightModalProps {
@@ -14,9 +14,15 @@ function ConfirmCreateFlightModal({ flight, isOpen, onClose }: ConfirmCreateFlig
   const navigate = useNavigate();
   const [status, setStatus] = useState<"loading" | "success" | "error" | null>(null);
 
-  if (!isOpen) return null;
-
   const { mutateAsync: createFlight } = useCreateFlight();
+
+  useEffect(() => {
+    if (isOpen) {
+      setStatus(null);
+    }
+  }, [isOpen]);
+
+  if (!isOpen) return null;
 
   const handleCreateFlight = async () => {
     setStatus("loading");
@@ -32,7 +38,7 @@ function ConfirmCreateFlightModal({ flight, isOpen, onClose }: ConfirmCreateFlig
         navigate("/employee/home");
         onClose();
       }, 1000);
-    } catch (error) {
+    } catch {
       setStatus("error");
     }
   };

@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import Cookies from "js-cookie";
 import { useLocation } from "react-router-dom";
 import FlightDetails from "../../components/molecules/cartMolecules/FlightDetails";
 import TicketQuantitySelector from "../../components/molecules/cartMolecules/TicketQuantitySelector";
@@ -6,33 +7,23 @@ import PurchaseSummary from "../../components/molecules/cartMolecules/PurchaseSu
 import BookingConfirmation from "../../components/molecules/cartMolecules/BookingConfirmation";
 import { useAuth } from "../../contexts/loginContext";
 import Customer from "../../types/Customer";
-import Reserve from "../../types/Reserve";
-import { createReserve } from "../../services/reserveService";
+import { useCreateReserve } from "../../hooks/reserves/useCreateReserve";
+import { CreateReserveRequest } from "../../types/api/reserve";
+import { useCustomer } from "../../hooks/customers/useCustomer";
 
 const Cart: React.FC = () => {
-
-  const generateBookingCode = (): string => {
-    const letters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
-    let code = "";
-
-    for (let i = 0; i < 3; i++) {
-      code += letters.charAt(Math.floor(Math.random() * letters.length));
-    }
-
-    for (let i = 0; i < 3; i++) {
-      code += Math.floor(Math.random() * 10);
-    }
-
-    return code;
-  };
+  const { mutateAsync: createReserveAsync } = useCreateReserve();
+  
   const location = useLocation();
   const selectedFlight = location.state?.flight;
 
-  const { user } = useAuth() as { user: Customer, setUser: (user: Customer) => void };
+  const { user, setUser } = useAuth();
   const [ticketQuantity, setTicketQuantity] = useState(1);
   const [milesToUse, setMilesToUse] = useState(0);
 
-  const [totalPrice, setValor_passagem] = useState(selectedFlight.valor_passagem);
+  const [totalPrice, setValor_passagem] = useState(
+    selectedFlight.valor_passagem
+  );
   const [requiredMiles, setRequiredMiles] = useState(0);
   const [finalPrice, setFinalPrice] = useState(selectedFlight.valor_passagem);
   const [milesDiscount, setMilesDiscount] = useState(0);
@@ -60,36 +51,44 @@ const Cart: React.FC = () => {
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     const value = parseInt(e.target.value);
-    if (value > 0 && value <= 10) {
+    if (value > 0 && value <= (selectedFlight.quantidade_poltronas_total - selectedFlight.quantidade_poltronas_ocupadas)) {
       setTicketQuantity(value);
     }
   };
 
   const handleMilesToUseChange = (value: number) => {
-    if (value >= 0 && value <= user.saldo_milhas) {
+    if (!user) return;
+    if ("saldo_milhas" in user && value >= 0 && value <= user.saldo_milhas) {
       setMilesToUse(value);
     }
   };
 
-  const handleConfirmPurchase = () => {
+  const getCustomer = useCustomer(user?.codigo || 0);
 
-    const newBookingCode = generateBookingCode();
-    setBookingCode(newBookingCode);
+  const handleConfirmPurchase = async () => {
+    if (!user) return;
 
-    const newReserve: Reserve = {
-      codigo: newBookingCode,
-      data: new Date(),
-      valor: finalPrice,
-      milhas_utilizadas: milesToUse,
-      quantidade_poltronas: ticketQuantity,
-      codigo_cliente: user.codigo,
-      estado: "CRIADA",
-      voo: selectedFlight,
-    };
-    createReserve(newReserve)
-    console.log("Compra confirmada!", newReserve);
+    try {
+      const reserveRequest: CreateReserveRequest = {
+        codigo_cliente: user.codigo,
+        valor: finalPrice,
+        milhas_utilizadas: milesToUse,
+        quantidade_poltronas: ticketQuantity,
+        codigo_voo: selectedFlight.codigo,
+        codigo_aeroporto_origem: selectedFlight.aeroporto_origem.codigo,
+        codigo_aeroporto_destino: selectedFlight.aeroporto_destino.codigo,
+      };
+
+      const reserveResponse = await createReserveAsync(reserveRequest);
+      const { data: updatedUser } = await getCustomer.refetch();
+      Cookies.set("user", JSON.stringify(updatedUser), { sameSite: "strict" });
+      
+      setBookingCode(reserveResponse.codigo);
+    } catch (error) {
+      console.error("Erro ao criar reserva:", error);
+      alert("Erro ao finalizar a reserva. Tente novamente.");
+    }
   };
-
 
   return (
     <div className="bg-slate-50 min-h-screen pb-16">
@@ -122,6 +121,7 @@ const Cart: React.FC = () => {
                 <TicketQuantitySelector
                   quantity={ticketQuantity}
                   onChange={handleTicketQuantityChange}
+                  maxQuantity={selectedFlight.quantidade_poltronas_total - selectedFlight.quantidade_poltronas_ocupadas}
                 />
               </div>
 
@@ -137,7 +137,7 @@ const Cart: React.FC = () => {
                   milesToUse={milesToUse}
                   milesDiscount={milesDiscount}
                   finalPrice={finalPrice}
-                  user={user}
+                  user={user as Customer}
                   onConfirmPurchase={handleConfirmPurchase}
                   onMilesChange={handleMilesToUseChange}
                 />

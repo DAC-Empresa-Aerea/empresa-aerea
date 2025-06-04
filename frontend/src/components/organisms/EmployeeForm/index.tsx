@@ -2,6 +2,7 @@ import { useState } from "react";
 import Employee from "../../../types/Employee";
 import EmployeeInputs from "../../molecules/employee/EmployeeInputs";
 import SubmitButton from "../../atoms/buttons/SubmitButton";
+import { UpdateEmployeeRequest } from "../../../types/api/employee";
 
 interface EmployeeFormProps {
   employee?: Employee | null;
@@ -12,8 +13,8 @@ function EmployeeForm({
   employee,
   onConfirm,
 }: EmployeeFormProps) {
-  const [employeeData, setEmployeeData] = useState<Employee>(
-    employee || ({} as Employee)
+  const [employeeData, setEmployeeData] = useState<UpdateEmployeeRequest>(
+    employee || ({} as UpdateEmployeeRequest)
   );
 
   const [isNew] = useState<boolean>(!employee?.codigo);

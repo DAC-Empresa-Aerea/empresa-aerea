@@ -6,7 +6,7 @@ import { useAuth } from "../../../../contexts/loginContext";
 
 const Header = () => {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const { isAuthenticated, signOut } = useAuth();
+  const { user, signOut } = useAuth();
   const navigate = useNavigate();
 
   const handleLogout = () => {
@@ -15,9 +15,8 @@ const Header = () => {
   };
 
   function logedIn() {
-    const user = localStorage.getItem("user");
-    const userType = localStorage.getItem("userType");
-    return user && userType;
+    const userLoged = user;
+    return userLoged;
   }
 
   return (
@@ -26,7 +25,7 @@ const Header = () => {
         {/* DESKTOP */}
         <div className="hidden md:flex justify-between items-center">
           <div className="flex items-center">
-            <a className="flex items-center">
+            <a className="flex items-center" href={Routes.HOME}>
               <img
                 src="/icon/favicon/favicon.ico"
                 alt="Logo"

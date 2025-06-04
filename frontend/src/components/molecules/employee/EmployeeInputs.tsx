@@ -1,10 +1,9 @@
 import BasicInput from "../../atoms/inputs/BasicInput";
-import Employee from "../../../types/Employee";
 import MaskedInput from "../../atoms/inputs/MaskedInput";
-
+import { UpdateEmployeeRequest } from "../../../types/api/employee";
 interface EmployeeInputsProps {
-  employee: Employee;
-  setEmployee: (employee: Employee) => void;
+  employee: UpdateEmployeeRequest;
+  setEmployee: (employee: UpdateEmployeeRequest) => void;
   isNew: boolean;
 }
 
@@ -45,17 +44,18 @@ function EmployeeInputs({ employee, setEmployee, isNew }: EmployeeInputsProps) {
         width="w-full"
       />
 
-      <MaskedInput
-        mask="000.000.000-00"
-        type="text"
-        disabled={!isNew}
-        required={true}
-        classNameAdd="w-full"
-        placeholder="Digite o CPF do funcionário"
-        value={employee.cpf || ""}
-        onChange={(e) => setEmployee({ ...employee, cpf: e.target.value })}
-        width="w-full"
-      />
+      {isNew && (
+        <MaskedInput
+          mask="000.000.000-00"
+          type="text"
+          required={true}
+          classNameAdd="w-full"
+          placeholder="Digite o CPF do funcionário"
+          value={employee.cpf || ""}
+          onChange={(e) => setEmployee({ ...employee, cpf: e.target.value })}
+          width="w-full"
+        />
+      )}
     </div>
   );
 }

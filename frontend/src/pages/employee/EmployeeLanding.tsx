@@ -2,12 +2,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/loginContext";
 import { EmployeeRoutesEnum } from "../../routes/routes.enum";
-import Flight from "../../types/Flight";
+import { FlightWithAirports as Flight } from "../../types/api/flight";
 import StatCard from "../../components/atoms/cards/StatCard";
 import ActionCard from "../../components/atoms/cards/ActionCard";
 import PageTitle from "../../components/atoms/typography/PageTitle";
 import EmployeeHome from "./EmployeeHome";
-import { getFlights } from "../../services/flightsService";
+import { useGetFlightsByDate } from "../../hooks/flights/useGetFlightsByDate";
 
 function fixDateFormat(dateString: string): string {
   if (dateString.includes("T")) {
@@ -25,7 +25,12 @@ function fixDateFormat(dateString: string): string {
 const EmployeeLandingPage = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
-  const [flightsList, setFlightsList] = useState([]);
+
+  const { data: flightsData } = useGetFlightsByDate(
+    new Date().toISOString().split("T")[0], 
+    new Date(Date.now() + 1000 * 48 * 60 * 60 * 1000).toISOString().split("T")[0],
+    true
+  );
 
   const [stats, setStats] = useState({
     totalFlights: 0,
@@ -34,40 +39,16 @@ const EmployeeLandingPage = () => {
   });
 
   useEffect(() => {
-    const fetchFlightsAndStats = async () => {
-      try {
-        const data = await getFlights();
-        setFlightsList(data);
-
-        const totalFlights = data.length;
-        const pendingReservations = data.filter((flight : Flight) => flight.estado === "CONFIRMADO").length;
-
-        const today = new Date();
-        const todaysFlights = data.filter((flight: Flight) => {
-          const flightDate = new Date(
-            typeof flight.data === "string" ? fixDateFormat(flight.data) : flight.data
-          );
-        
-          return (
-            flightDate.getFullYear() === today.getFullYear() &&
-            flightDate.getMonth() === today.getMonth() &&
-            flightDate.getDate() === today.getDate()
-          );
-        }).length;
-        
-
-        setStats({
-          totalFlights,
-          pendingReservations,
-          todaysFlights,
-        });
-      } catch (error) {
-        console.error("Erro ao buscar voos ou estatísticas:", error);
-      }
-    };
-
-    fetchFlightsAndStats();
-  }, []);
+    if (flightsData) {
+      setStats({
+        ...stats,
+        totalFlights: flightsData.voos.length,
+        todaysFlights: flightsData.voos.filter(
+          (flight: Flight) => new Date(flight.data).toDateString() === new Date().toDateString()
+        ).length,
+      });
+    }
+  }, [flightsData]);
 
 
   const handleCardClick = (route: string) => {
@@ -87,18 +68,12 @@ const EmployeeLandingPage = () => {
       </div>
 
       {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <StatCard
           title="Total de Voos"
           value={stats.totalFlights}
           icon="airplane"
           color="bg-blue-500"
-        />
-        <StatCard
-          title="Reservas Pendentes"
-          value={stats.pendingReservations}
-          icon="clock"
-          color="bg-yellow-500"
         />
         <StatCard
           title="Voos Hoje"
@@ -133,7 +108,6 @@ const EmployeeLandingPage = () => {
 
       <EmployeeHome
         title="Voos nas próximas 48 horas"
-        onViewMoreClick={() => alert("Ver mais voos nas próximas 48 horas")}
       />
     </div>
   );

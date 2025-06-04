@@ -26,16 +26,15 @@ const Login = () => {
   };
 
   const validatePassword = (password: string) => {
-    const hasMinLength = password.length >= 4;
-    const hasNumber = /[0-9]/.test(password);
+    const hasMinLength = password.length == 4;
+    //const hasNumber = /[0-9]/.test(password);
 
     return {
-      isValid:
-        hasMinLength &&
-        hasNumber,
+      isValid: hasMinLength,
+      //&& hasNumber
       requirements: {
         hasMinLength,
-        hasNumber,
+        // hasNumber,
       },
     };
   };
@@ -58,9 +57,8 @@ const Login = () => {
       const requirements = passwordValidation.requirements;
       const missingRequirements = [];
 
-      if (!requirements.hasMinLength)
-        missingRequirements.push("4 caracteres");
-      if (!requirements.hasNumber) missingRequirements.push("um número");
+      if (!requirements.hasMinLength) missingRequirements.push("4 caracteres");
+      //if (!requirements.hasNumber) missingRequirements.push("um número");
 
       setPasswordError(
         `A senha deve conter: ${missingRequirements.join(", ")}`
@@ -149,7 +147,8 @@ const Login = () => {
               value={password}
               placeholder="Senha"
               onChange={(e) => {
-                setPassword(e.target.value);
+                const value = e.target.value.slice(0, 4);
+                setPassword(value);
                 setPasswordError("");
               }}
               required
