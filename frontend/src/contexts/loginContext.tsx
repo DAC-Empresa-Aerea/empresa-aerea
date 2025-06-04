@@ -13,6 +13,7 @@ import { useLogout } from "../hooks/useLogout";
 import Customer from "../types/Customer";
 import Employee from "../types/Employee";
 
+
 // -------------------------------------------------------------------------
 // TYPES
 // -------------------------------------------------------------------------
@@ -48,22 +49,19 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const loginMutation = useLogin();
   const logoutMutation = useLogout();
-  /* --------------------------------------------------------
-   *  1) Restaura sessão caso exista cookie/token salvo
-   * ------------------------------------------------------*/
+
   useEffect(() => {
     const token = Cookies.get("token");
-    const cachedUser = Cookies.get("user");
+    const cachedUser = localStorage.getItem("user");
     if (token && cachedUser) {
       try {
         setUser(JSON.parse(cachedUser));
       } catch {
-        /* se falhar parsing, ignora */
+        /* se falhar, ignora */
       }
     }
     setLoading(false);
   }, []);
-
   /* --------------------------------------------------------
    *  2) Faz login
    * ------------------------------------------------------*/
@@ -72,7 +70,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     try {
       const data = await loginMutation.mutateAsync({ login, senha });
       Cookies.set("token", data.access_token, { sameSite: "strict" });
-      Cookies.set("user", JSON.stringify(data.usuario), { sameSite: "strict" });
+      localStorage.setItem("user", JSON.stringify(data.usuario));
 
       setUser(data.usuario as User);
 
@@ -84,7 +82,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
-
   /* --------------------------------------------------------
    *  3) Faz logout
    * ------------------------------------------------------*/
@@ -96,7 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Erro ao fazer logout");
     } finally {
       Cookies.remove("token");
-      Cookies.remove("user");
+      localStorage.removeItem("user");
       setUser(null);
       queryClient.clear();
       setLoading(false);
