@@ -44,27 +44,18 @@ function EmployeeInputs({ employee, setEmployee, isNew }: EmployeeInputsProps) {
         width="w-full"
       />
 
-      <MaskedInput
-        mask="000.000.000-00"
-        type="text"
-        required={true}
-        classNameAdd="w-full"
-        placeholder="Digite o CPF do funcionário"
-        value={employee.cpf || ""}
-        onChange={(e) => setEmployee({ ...employee, cpf: e.target.value })}
-        width="w-full"
-      />
-
-      <MaskedInput
-        mask="0000"
-        type="password"
-        required={isNew}
-        classNameAdd="w-full"
-        placeholder="Digite a senha do funcionário"
-        value={employee.senha || ""}
-        onChange={(e) => setEmployee({ ...employee, senha: e.target.value })}
-        width="w-full"
-      />
+      {isNew && (
+        <MaskedInput
+          mask="000.000.000-00"
+          type="text"
+          required={true}
+          classNameAdd="w-full"
+          placeholder="Digite o CPF do funcionário"
+          value={employee.cpf || ""}
+          onChange={(e) => setEmployee({ ...employee, cpf: e.target.value })}
+          width="w-full"
+        />
+      )}
     </div>
   );
 }

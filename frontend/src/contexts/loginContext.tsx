@@ -52,7 +52,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   useEffect(() => {
     const token = Cookies.get("token");
-    const cachedUser = Cookies.get("user");
+    const cachedUser = localStorage.getItem("user");
     if (token && cachedUser) {
       try {
         setUser(JSON.parse(cachedUser));
@@ -62,13 +62,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     }
     setLoading(false);
   }, []);
-
+  /* --------------------------------------------------------
+   *  2) Faz login
+   * ------------------------------------------------------*/
   const signIn = async (login: string, senha: string) => {
     setLoading(true);
     try {
       const data = await loginMutation.mutateAsync({ login, senha });
       Cookies.set("token", data.access_token, { sameSite: "strict" });
-      Cookies.set("user", JSON.stringify(data.usuario), { sameSite: "strict" });
+      localStorage.setItem("user", JSON.stringify(data.usuario));
 
       setUser(data.usuario as User);
 
@@ -80,7 +82,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setLoading(false);
     }
   };
-
   /* --------------------------------------------------------
    *  3) Faz logout
    * ------------------------------------------------------*/
@@ -92,7 +93,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       console.error("Erro ao fazer logout");
     } finally {
       Cookies.remove("token");
-      Cookies.remove("user");
+      localStorage.removeItem("user");
       setUser(null);
       queryClient.clear();
       setLoading(false);
