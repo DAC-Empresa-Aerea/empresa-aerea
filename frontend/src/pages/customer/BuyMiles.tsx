@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../../contexts/loginContext";
-import { getCustomerByCpf } from "../../services/customerService";
+import { queryClient } from "../../App";
 
 import MilesPurchaseHeader from "../../components/organisms/milesOrganisms/MilesPurchaseHeader";
 import BalanceDisplay from "../../components/molecules/milesMolecules/BalanceDisplay";
@@ -9,11 +9,10 @@ import MilesOptionsSelector from "../../components/molecules/milesMolecules/Mile
 import MilesSlider from "../../components/molecules/milesMolecules/MilesSlider";
 import PriceSummary from "../../components/molecules/milesMolecules/PriceSummary";
 import TransactionConfirmation from "../../components/organisms/milesOrganisms/TransactionConfirmation";
-import { useUpdateMiles } from "../../hooks/customers/useUptadeMiles";
+import { useUpdateMiles } from "../../hooks/customers/useUpdateMiles";
 import { useCustomer } from "../../hooks/customers/useCustomer";
 
 const BuyMiles: React.FC = () => {
-
   const { user, setUser } = useAuth();
   const [milesAmount, setMilesAmount] = useState<number>(1000);
   const [priceInReais, setPriceInReais] = useState<number>(0);
@@ -40,7 +39,6 @@ const BuyMiles: React.FC = () => {
   const sliderMax = 1000;
   const sliderStep = 10;
   const sliderMarkers = [10, 250, 500, 750, 1000];
-
   const handlePurchase = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!user) return;
@@ -51,6 +49,14 @@ const BuyMiles: React.FC = () => {
       await buyMiles.mutateAsync({
         quantidade: milesAmount,
       });
+      const { data: updatedUser } = await getCustomer.refetch();
+      if (updatedUser) {
+        setUser(updatedUser);
+        localStorage.setItem("user", JSON.stringify(updatedUser));
+
+        await queryClient.invalidateQueries({ queryKey: ["customer"] });
+      }
+
       setTransaction({
         quantidade_milhas: milesAmount,
         valor_reais: priceInReais,
@@ -64,21 +70,10 @@ const BuyMiles: React.FC = () => {
         descricao: "Compra de milhas",
       });
       setShowConfirmation(true);
-    } catch (err) {
-      alert("Erro ao processar a compra de milhas.");
+    } catch (error) {
+      alert(`${error}: Erro ao processar a compra de milhas.`);
     } finally {
       setIsProcessing(false);
-      try {
-        const { data: updatedUser } = await getCustomer.refetch();
-        if (updatedUser) {
-          setUser(updatedUser);
-          localStorage.setItem("user", JSON.stringify(updatedUser));
-        } else {
-          console.error("Erro ao atualizar os dados do usuário: updatedUser is undefined");
-        }
-      } catch (error) {
-        console.error("Erro ao atualizar os dados do usuário:", error);
-      }
     }
   };
 
@@ -93,7 +88,6 @@ const BuyMiles: React.FC = () => {
       currency: "BRL",
     });
   };
-
   const handleMilesChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setMilesAmount(parseInt(e.target.value));
   };
@@ -126,7 +120,6 @@ const BuyMiles: React.FC = () => {
                 </h2>
                 <BalanceDisplay balance={user.saldo_milhas} />
               </div>
-
               <form onSubmit={handlePurchase}>
                 <MilesOptionsSelector
                   options={milesOptions}
@@ -149,7 +142,7 @@ const BuyMiles: React.FC = () => {
                   onSubmit={handlePurchase}
                   formatCurrency={formatCurrency}
                 />
-              </form>
+              </form>{" "}
               {/* Botão de ir para o extrato */}
               <div className="flex justify-end mb-4">
                 <button

@@ -7,7 +7,7 @@ import {
   ReactNode,
 } from "react";
 import Cookies from "js-cookie";
-import { queryClient} from "../App"; 
+import { queryClient } from "../App";
 import { useLogin } from "../hooks/useLogin";
 import { useLogout } from "../hooks/useLogout";
 import Customer from "../types/Customer";
@@ -46,9 +46,8 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
 
-  const loginMutation = useLogin();     // hook de mutation
+  const loginMutation = useLogin();
   const logoutMutation = useLogout();
-
   /* --------------------------------------------------------
    *  1) Restaura sessão caso exista cookie/token salvo
    * ------------------------------------------------------*/
@@ -72,13 +71,12 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setLoading(true);
     try {
       const data = await loginMutation.mutateAsync({ login, senha });
-
       Cookies.set("token", data.access_token, { sameSite: "strict" });
       Cookies.set("user", JSON.stringify(data.usuario), { sameSite: "strict" });
 
       setUser(data.usuario as User);
 
-      return {                          //  <-- devolvemos só o que a tela precisa
+      return {
         tipo: data.tipo,
         usuario: data.usuario,
       };
