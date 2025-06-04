@@ -68,18 +68,12 @@ const EmployeeLandingPage = () => {
       </div>
 
       {/* Estatísticas */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <StatCard
           title="Total de Voos"
           value={stats.totalFlights}
           icon="airplane"
           color="bg-blue-500"
-        />
-        <StatCard
-          title="Reservas Pendentes"
-          value={stats.pendingReservations}
-          icon="clock"
-          color="bg-yellow-500"
         />
         <StatCard
           title="Voos Hoje"
