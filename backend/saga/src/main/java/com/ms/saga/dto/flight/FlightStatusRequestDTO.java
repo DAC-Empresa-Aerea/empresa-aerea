@@ -1,5 +1,7 @@
 package com.ms.saga.dto.flight;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
+
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -8,5 +10,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @Data
 public class FlightStatusRequestDTO {
-    private String estado;
+
+    @JsonProperty("estado")
+    private String status;
+    
 }

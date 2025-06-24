@@ -1,6 +1,6 @@
 package com.ms.reserve.query.model;
 
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 
 import jakarta.persistence.Column;
@@ -22,7 +22,7 @@ public class ReserveHistoryQuery {
     private String reserveCode;
 
     @Column(name = "data", nullable = false)
-    private LocalDateTime date;
+    private OffsetDateTime date;
 
     @Column(name = "estado_origem_codigo", nullable = false)
     private String originStatusCode;

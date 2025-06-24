@@ -7,14 +7,15 @@ import com.ms.auth.dto.LoginAuthResponseDTO;
 import com.ms.auth.dto.LogoutAuthDTO;
 import com.ms.auth.service.AuthService;
 
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 @RestController
 public class AuthController {
@@ -31,11 +32,20 @@ public class AuthController {
     }
 
     @PostMapping("/logout")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public LogoutAuthDTO logout(@RequestBody LogoutAuthDTO dto, @RequestHeader("Authorization") String authHeader) {
-        dto.setToken(authHeader.replace("Bearer ", ""));
-        authService.logout(dto);
-        return dto;
+    public ResponseEntity<LogoutAuthDTO> logout(
+            @RequestBody LogoutAuthDTO dto,
+            @RequestHeader("Authorization") String authHeader,
+            HttpServletResponse response
+    ) {
+        Cookie cookie = new Cookie("access-token", "");
+        cookie.setHttpOnly(true);
+        cookie.setSecure(true);
+        cookie.setPath("/");
+        cookie.setMaxAge(0);
+
+        response.addCookie(cookie);
+
+        return ResponseEntity.ok(dto);
     }
     
 }

@@ -11,9 +11,6 @@ import lombok.Setter;
 @Setter
 public class RefundMilesRequestDTO {
     
-    private Long customerCode;
     private String reserverCode;
-    private int amount;
-    private String resonRefund;
 
 }

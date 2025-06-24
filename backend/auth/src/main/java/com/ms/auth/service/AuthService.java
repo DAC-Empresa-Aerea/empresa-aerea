@@ -1,6 +1,7 @@
 package com.ms.auth.service;
 
 import java.util.Date;
+import java.util.Set;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,10 +12,12 @@ import com.ms.auth.config.JwtProperties;
 import com.ms.auth.dto.LoginAuthRequestDTO;
 import com.ms.auth.dto.LoginAuthResponseDTO;
 import com.ms.auth.dto.LogoutAuthDTO;
+import com.ms.auth.dto.Roles;
 import com.ms.auth.dto.create.CreateAuthRequestDTO;
 import com.ms.auth.dto.create.CreateAuthResponseDTO;
 import com.ms.auth.dto.delete.DeleteAuthRequestDTO;
-import com.ms.auth.dto.update.UpdateAuthDTO;
+import com.ms.auth.dto.update.UpdateAuthRequestDTO;
+import com.ms.auth.dto.update.UpdateAuthResponseDTO;
 import com.ms.auth.exception.BusinessException;
 import com.ms.auth.factory.RoleFactory;
 import com.ms.auth.model.Auth;
@@ -25,6 +28,9 @@ import com.ms.auth.util.PasswordGeneratorUtil;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
+import jakarta.validation.ConstraintViolation;
+import jakarta.validation.ConstraintViolationException;
+import jakarta.validation.Validator;
 
 @Service
 public class AuthService {
@@ -47,14 +53,46 @@ public class AuthService {
     @Autowired
     private BlacklistService blacklistService;
 
-
-    public boolean emailExists(String email) {
-        return authRepository.findByLogin(email) != null;
-    }
+    @Autowired
+    private Validator validator;
 
     public CreateAuthResponseDTO createAuth(CreateAuthRequestDTO authRequest) {
+        Set<ConstraintViolation<CreateAuthRequestDTO>> violations = validator.validate(authRequest);
+        String password = null;
 
-        String password = PasswordGeneratorUtil.generate();
+        if(!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
+        if (authRepository.findByLogin(authRequest.getEmail()) != null) {
+            throw new BusinessException(
+                "AUTH_ALREADY_EXISTS", 
+                "Authentication already exists for the given email and role", 
+                HttpStatus.BAD_REQUEST.value()
+            );
+        }
+        
+        if (authRequest.getRole().equals(Roles.EMPLOYEE)) {
+            if(authRequest.getPassword() == null || authRequest.getPassword().isEmpty()) {
+                throw new BusinessException(
+                    "PASSWORD_NOT_ALLOWED", 
+                    "Password need to be provided for the given role", 
+                    HttpStatus.BAD_REQUEST.value()
+                );
+            }
+
+            if(authRequest.getPassword().length() != 4) {
+                throw new BusinessException(
+                    "PASSWORD_NOT_ALLOWED", 
+                    "Password invalid for the given role", 
+                    HttpStatus.BAD_REQUEST.value()
+                );
+            }
+
+            password = authRequest.getPassword();
+        } else {
+            password = PasswordGeneratorUtil.generate();
+        }
 
         String salt = HashUtil.generateSalt();
         String hashedPassword = HashUtil.hashPassword(password, salt);
@@ -71,7 +109,13 @@ public class AuthService {
         return new CreateAuthResponseDTO(true);
     }
 
-    public UpdateAuthDTO updateAuth(UpdateAuthDTO authRequest) {
+    public UpdateAuthResponseDTO updateAuth(UpdateAuthRequestDTO authRequest) {
+        Set<ConstraintViolation<UpdateAuthRequestDTO>> violations = validator.validate(authRequest);
+
+        if(!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+
         Auth auth = authRepository.findByLogin(authRequest.getOldEmail());
 
         if (auth == null) {
@@ -82,11 +126,21 @@ public class AuthService {
             );
         }
 
+        String salt = HashUtil.generateSalt();
+        String hashedPassword = HashUtil.hashPassword(authRequest.getPassword(), salt);
+
         auth.setLogin(authRequest.getNewEmail());
+        auth.setPassword(hashedPassword);
+        auth.setSalt(salt);
 
         authRepository.save(auth);
 
-        return authRequest;
+        UpdateAuthResponseDTO response = new UpdateAuthResponseDTO();
+        response.setNewEmail(authRequest.getNewEmail());
+        response.setOldEmail(authRequest.getOldEmail());
+        response.setRole(authRequest.getRole());
+
+        return response;
     }
 
     public LoginAuthResponseDTO login(LoginAuthRequestDTO authRequest) {
@@ -120,16 +174,16 @@ public class AuthService {
         authRepository.delete(auth);
     }
 
-    public void logout(LogoutAuthDTO dto) {
-        Claims claims = Jwts.parserBuilder()
-            .setSigningKey(jwtProperties.getSecret().getBytes())
-            .build()
-            .parseClaimsJws(dto.getToken())
-            .getBody();
+    // public void logout(LogoutAuthDTO dto) {
+    //     Claims claims = Jwts.parserBuilder()
+    //         .setSigningKey(jwtProperties.getSecret().getBytes())
+    //         .build()
+    //         .parseClaimsJws(dto.getToken())
+    //         .getBody();
 
-        String jti = claims.getId();
-        Date exp = claims.getExpiration();
-        blacklistService.blacklistToken(jti, exp);
-    }
+    //     String jti = claims.getId();
+    //     Date exp = claims.getExpiration();
+    //     blacklistService.blacklistToken(jti, exp);
+    // }
 
 }

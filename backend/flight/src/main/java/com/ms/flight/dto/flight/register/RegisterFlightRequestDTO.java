@@ -1,7 +1,7 @@
 package com.ms.flight.dto.flight.register;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -20,7 +20,7 @@ import lombok.Setter;
 public class RegisterFlightRequestDTO {
     
     @Future(message = "A data deve estar no futuro")
-    private LocalDateTime data;
+    private OffsetDateTime data;
 
     @JsonProperty("valor_passagem")
     @NotNull(message = "O valor da passagem não pode ser nulo")

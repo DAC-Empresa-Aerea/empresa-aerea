@@ -1,7 +1,7 @@
 package com.ms.reserve.query.model;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,7 +25,7 @@ public class ReserveQuery {
     private String code;
 
     @Column(name = "data", nullable = false)
-    private LocalDateTime date;
+    private OffsetDateTime date;
 
     @Column(name = "valor", nullable = false)
     private BigDecimal value;

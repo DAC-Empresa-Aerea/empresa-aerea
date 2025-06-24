@@ -9,7 +9,8 @@ import com.ms.saga.config.RabbitMQConfig;
 import com.ms.saga.dto.auth.create.CreateAuthRequestDTO;
 import com.ms.saga.dto.auth.create.CreateAuthResponseDTO;
 import com.ms.saga.dto.auth.delete.DeleteAuthRequestDTO;
-import com.ms.saga.dto.auth.update.UpdateAuthDTO;
+import com.ms.saga.dto.auth.update.UpdateAuthRequestDTO;
+import com.ms.saga.dto.auth.update.UpdateAuthResponseDTO;
 import com.ms.saga.dto.error.SagaResponse;
 
 @Component
@@ -27,12 +28,12 @@ public class AuthProducer {
         );
     }
 
-    public SagaResponse<UpdateAuthDTO> sendUpdateAuth(UpdateAuthDTO dto) {
+    public SagaResponse<UpdateAuthResponseDTO> sendUpdateAuth(UpdateAuthRequestDTO dto) {
         return rabbitTemplate.convertSendAndReceiveAsType(
             RabbitMQConfig.UPDATE_AUTH_EXCHANGE,
             RabbitMQConfig.UPDATE_AUTH_ROUTING_KEY,
             dto,
-            new ParameterizedTypeReference<SagaResponse<UpdateAuthDTO>>() {}
+            new ParameterizedTypeReference<SagaResponse<UpdateAuthResponseDTO>>() {}
         );
     }
 

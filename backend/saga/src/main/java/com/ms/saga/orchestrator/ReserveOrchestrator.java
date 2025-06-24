@@ -1,8 +1,11 @@
 package com.ms.saga.orchestrator;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Component;
 
+import com.ms.saga.dto.customer.GetMilesRequestDTO;
+import com.ms.saga.dto.customer.GetMilesResponseDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatRequestDTO;
 import com.ms.saga.dto.customer.debitSeat.DebitSeatResponseDTO;
 import com.ms.saga.dto.error.SagaResponse;
@@ -33,6 +36,16 @@ public class ReserveOrchestrator {
     private CustomerProducer customerProducer;
 
     public ReserveFlightResponseDTO processRegisterReserve(ReserveFlightRequestDTO reserveRequest) {
+        SagaResponse<GetMilesResponseDTO> customerResponse = customerProducer.sendGetMiles(new GetMilesRequestDTO(reserveRequest.getCustomerCode()));
+        
+        if(!customerResponse.isSuccess()) {
+            throw new BusinessException(customerResponse.getError());
+        }
+
+        if(customerResponse.getData().getMilesBalance() < reserveRequest.getMilesUsed()) {
+            throw new BusinessException("MILES_INSUFFICIENT", "Saldo de milhas insuficiente", HttpStatus.BAD_REQUEST.value());
+        }
+
         // Validacao do voo e atualizacao de poltronas
         UpdateSeatsRequestDTO seatsRequest = new UpdateSeatsRequestDTO(
             reserveRequest.getFlightCode(), 
@@ -51,10 +64,10 @@ public class ReserveOrchestrator {
         // Criação de uma reserva (precisa do código)
         RegisterReserveRequestDTO registerReserveRequestDTO = new RegisterReserveRequestDTO(
             reserveRequest.getCustomerCode(),
-            seatsResponse.getData().getValue(),
-            seatsResponse.getData().getMilesUsed(),
+            reserveRequest.getValue(),
+            reserveRequest.getMilesUsed(),
             reserveRequest.getFlightCode(),
-            seatsResponse.getData().getSeatsQuantity()
+            seatsResponse.getData().getInfo().getSeatsQuantity()
         );
 
         SagaResponse<RegisterReserveResponseDTO> registerReserveResponse = reserveProducer.sendCreateReserve(registerReserveRequestDTO);
@@ -73,23 +86,24 @@ public class ReserveOrchestrator {
         DebitSeatRequestDTO seatDebit = new DebitSeatRequestDTO(
             reserveRequest.getCustomerCode(), 
             registerReserveResponse.getData().getReserveCode(),
-            seatsResponse.getData().getMilesUsed(),
-            seatsResponse.getData().getValue(),
-            seatsResponse.getData().getSeatsQuantity(),
-            seatsResponse.getData().getOriginAirportCode(),
-            seatsResponse.getData().getDestinyAirportCode()
+            reserveRequest.getMilesUsed(),
+            reserveRequest.getValue(),
+            seatsResponse.getData().getInfo().getSeatsQuantity(),
+            seatsResponse.getData().getFlight().getOriginAirport().getCode(),
+            seatsResponse.getData().getFlight().getDestinyAirport().getCode()
         );
 
         SagaResponse<DebitSeatResponseDTO> debitSeatResponseDTO = customerProducer.sendSeatDebit(seatDebit);
 
         if(!debitSeatResponseDTO.isSuccess()) {
+
             RollbackReserveSeatsDTO rollbackReserveSeatsDTO = new RollbackReserveSeatsDTO(
                 seatsRequest.getFlightCode(), 
                 seatsRequest.getSeatsQuantity()
             );
             flightProducer.sendRollbackReserveSeats(rollbackReserveSeatsDTO);
 
-            reserveProducer.sendRollbackRegisterReserve(registerReserveResponse.getData().getReserveCode());
+            reserveProducer.sendRollbackRegisterReserve(registerReserveResponse.getData());
 
             throw new BusinessException(debitSeatResponseDTO.getError());
         }
@@ -98,13 +112,11 @@ public class ReserveOrchestrator {
         reserveFlightResponseDTO.setCode(debitSeatResponseDTO.getData().getReserveCode());
         reserveFlightResponseDTO.setCustomerCode(debitSeatResponseDTO.getData().getCustomerCode());
         reserveFlightResponseDTO.setDate(registerReserveResponse.getData().getDate());
-        reserveFlightResponseDTO.setValue(debitSeatResponseDTO.getData().getValue());
-        reserveFlightResponseDTO.setMilesUsed(debitSeatResponseDTO.getData().getMilesUsed());
+        reserveFlightResponseDTO.setValue(reserveRequest.getValue());
+        reserveFlightResponseDTO.setMilesUsed(reserveRequest.getMilesUsed());
         reserveFlightResponseDTO.setStatus(registerReserveResponse.getData().getStatus());
         reserveFlightResponseDTO.setSeatsQuantity(debitSeatResponseDTO.getData().getSeatsQuantity());
-        reserveFlightResponseDTO.setOriginAirportCode(debitSeatResponseDTO.getData().getOriginAirportCode());
-        reserveFlightResponseDTO.setDestinyAirportCode(debitSeatResponseDTO.getData().getDestinyAirportCode());
-        reserveFlightResponseDTO.setFlightCode(seatsResponse.getData().getFlightCode());
+        reserveFlightResponseDTO.setFlight(seatsResponse.getData().getFlight());
         
         return reserveFlightResponseDTO;
     }

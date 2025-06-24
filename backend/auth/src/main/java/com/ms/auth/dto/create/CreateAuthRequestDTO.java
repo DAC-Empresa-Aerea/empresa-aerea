@@ -20,4 +20,6 @@ public class CreateAuthRequestDTO {
     @NotBlank(message = "Role não pode ser vazio")
     private String role;
     
+    private String password;
+    
 }

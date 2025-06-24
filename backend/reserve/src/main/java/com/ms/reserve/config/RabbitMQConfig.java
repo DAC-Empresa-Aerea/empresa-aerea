@@ -34,6 +34,10 @@ public class RabbitMQConfig {
     public static final String DELETE_RESERVE_QUEUE = "delete.reserve.queue";
     public static final String DELETE_RESERVE_EXCHANGE = "delete.reserve.exchange";
     public static final String DELETE_RESERVE_ROUTING_KEY = "delete.reserve.routing.key";
+
+    public static final String ROLLBACK_RESERVE_STATUS_QUEUE = "rollback.reserve.status.queue";
+    public static final String ROLLBACK_RESERVE_STATUS_UPDATE_EXCHANGE = "rollback.reserve.status.update.exchange";
+    public static final String ROLLBACK_RESERVE_STATUS_UPDATE_ROUTING_KEY = "rollback.reserve.status.update.routing.key";
     
     @Bean
     public Queue reserveStatusUpdatedQueue() {
@@ -126,6 +130,24 @@ public class RabbitMQConfig {
                 .bind(deleteReserveQueue)
                 .to(deleteReserveExchange)
                 .with(DELETE_RESERVE_ROUTING_KEY);
+    }
+
+    @Bean
+    public Queue rollbackReserveStatusQueue() {
+        return new Queue(ROLLBACK_RESERVE_STATUS_QUEUE, true);
+    }
+
+    @Bean
+    public TopicExchange rollbackReserveStatusUpdateExchange() {
+        return new TopicExchange(ROLLBACK_RESERVE_STATUS_UPDATE_EXCHANGE);
+    }
+
+    @Bean
+    public Binding rollbackReserveStatusUpdateBinding(Queue rollbackReserveStatusQueue, TopicExchange rollbackReserveStatusUpdateExchange) {
+        return BindingBuilder
+                .bind(rollbackReserveStatusQueue)
+                .to(rollbackReserveStatusUpdateExchange)
+                .with(ROLLBACK_RESERVE_STATUS_UPDATE_ROUTING_KEY);
     }
 
     @Bean

@@ -32,6 +32,10 @@ public class RabbitMQConfig {
     public static final String ROLLBACK_RESERVE_SEAT_EXCHANGE = "rollback.debit.seat.exchange";
     public static final String ROLLBACK_RESERVE_SEAT_ROUTING_KEY = "rollback.debit.seat.routing.key";
 
+    public static final String GET_MILES_QUEUE = "get.miles.queue";
+    public static final String GET_MILES_EXCHANGE = "get.miles.exchange";
+    public static final String GET_MILES_ROUTING_KEY = "get.miles.routing.key";
+
     @Bean
     public Queue createCustomerQueue() {
         return new Queue(CREATE_CUSTOMER_QUEUE, true);
@@ -103,6 +107,25 @@ public class RabbitMQConfig {
                 .bind(refundMilesQueue)
                 .to(refundMilesExchange)
                 .with(REFUND_MILES_ROUTING_KEY)
+                .noargs();
+    }
+
+    @Bean
+    public Queue getMilesQueue() {
+        return new Queue(GET_MILES_QUEUE, true);
+    }
+
+    @Bean
+    public Exchange getMilesExchange() {
+        return new DirectExchange(GET_MILES_EXCHANGE, true, false);
+    }
+
+    @Bean
+    public Binding getMilesBinding(Queue getMilesQueue, Exchange getMilesExchange) {
+        return BindingBuilder
+                .bind(getMilesQueue)
+                .to(getMilesExchange)
+                .with(GET_MILES_ROUTING_KEY)
                 .noargs();
     }
 

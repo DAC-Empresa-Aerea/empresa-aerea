@@ -11,9 +11,13 @@ import com.ms.auth.dto.create.CreateAuthRequestDTO;
 import com.ms.auth.dto.create.CreateAuthResponseDTO;
 import com.ms.auth.dto.delete.DeleteAuthRequestDTO;
 import com.ms.auth.dto.error.SagaResponse;
-import com.ms.auth.dto.update.UpdateAuthDTO;
+import com.ms.auth.dto.update.UpdateAuthRequestDTO;
+import com.ms.auth.dto.update.UpdateAuthResponseDTO;
 import com.ms.auth.exception.BusinessException;
 import com.ms.auth.service.AuthService;
+import com.ms.auth.util.ValidationUtil;
+
+import jakarta.validation.ConstraintViolationException;
 
 @Component
 public class AuthConsumer {
@@ -23,18 +27,25 @@ public class AuthConsumer {
 
     @RabbitListener(queues = RabbitMQConfig.CREATE_AUTH_QUEUE)
     public SagaResponse<CreateAuthResponseDTO> receiveAuthQueue (@Payload CreateAuthRequestDTO authRequest) {
-
-        if (authService.emailExists(authRequest.getEmail())) {
-            return SagaResponse.error("EMAIL_EXISTS", "Email já cadastrado", HttpStatus.CONFLICT.value());
+        try {
+            return SagaResponse.success(authService.createAuth(authRequest));
+        } catch (ConstraintViolationException e) {
+            String errors = ValidationUtil.extractMessages(e);
+            return SagaResponse.error("VALIDATION_ERROR", errors, HttpStatus.BAD_REQUEST.value());
+        } catch (BusinessException e) {
+            return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
+        } catch (Exception e) {
+            return SagaResponse.error("CREATE_AUTH_FAILED", "Falha ao criar autenticação", HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
-
-        return SagaResponse.success(authService.createAuth(authRequest));
     }
     
     @RabbitListener(queues = RabbitMQConfig.UPDATE_AUTH_QUEUE)
-    public SagaResponse<UpdateAuthDTO> receiveUpdateAuthQueue (@Payload UpdateAuthDTO authRequest) {
+    public SagaResponse<UpdateAuthResponseDTO> receiveUpdateAuthQueue (@Payload UpdateAuthRequestDTO authRequest) {
         try {
             return SagaResponse.success(authService.updateAuth(authRequest));
+        } catch (ConstraintViolationException e) {
+            String errors = ValidationUtil.extractMessages(e);
+            return SagaResponse.error("VALIDATION_ERROR", errors, HttpStatus.BAD_REQUEST.value());
         } catch (BusinessException e) {
             return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
         } catch (Exception e) {
@@ -43,15 +54,8 @@ public class AuthConsumer {
     }
 
     @RabbitListener(queues = RabbitMQConfig.DELETE_AUTH_QUEUE)
-    public SagaResponse<Void> receiveDeleteAuthQueue(@Payload DeleteAuthRequestDTO request) {
-        try {
-            authService.deleteAuth(request);
-            return SagaResponse.success(null);
-        } catch (BusinessException e) {
-            return SagaResponse.error(e.getCode(), e.getMessage(), e.getStatus());
-        } catch (Exception e) {
-            return SagaResponse.error("DELETE_AUTH_FAILED", "Falha ao deletar autenticação", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        }
+    public void receiveDeleteAuthQueue(@Payload DeleteAuthRequestDTO request) {
+        authService.deleteAuth(request);
     }
 
 }

@@ -1,7 +1,7 @@
 package com.ms.reserve.dto.cqrs;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
+import java.time.OffsetDateTime;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -26,7 +26,7 @@ public class RegisteredReserveDTO {
     private String flightCode;
 
 	@JsonProperty("data")
-	private LocalDateTime date;
+	private OffsetDateTime date;
 
 	@JsonProperty("valor")
 	private BigDecimal value;
