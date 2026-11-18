@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1000" height="625" viewBox="0 0 1000 625" role="img" aria-labelledby="title desc">
+  <title id="title">FlyHigh backend architecture</title>
+  <desc id="desc">React frontend connects to a Node.js API Gateway and Spring Boot microservices. RabbitMQ handles messaging. PostgreSQL and MongoDB store data.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto">
+      <path d="M0 0L8 4.5L0 9" fill="none" stroke="var(--arrow)" stroke-width="1.5"/>
+    </marker>
+    <style>
+:root { --surface: #f3eee3; --card: #faf6ed; --shade: #e2dacb; --ink: #111111; --muted: #514c44; --line: #9c9385; --edge: #756b5e; --arrow: #574f43; }
+@media (prefers-color-scheme: dark) {
+  :root { --surface: #171614; --card: #201e1b; --shade: #322e28; --ink: #f3eee3; --muted: #cac2b5; --line: #736b5f; --edge: #9f9482; --arrow: #d4c7b3; }
+}
+text{font-family:Arial,Helvetica,sans-serif;fill:var(--ink)}
+.small{font-size:15px;fill:var(--muted);letter-spacing:1px}
+.label{font-size:19px;font-weight:700}
+.tech{font-size:15px;fill:var(--muted)}
+.line{fill:none;stroke:var(--arrow);stroke-width:3;marker-end:url(#arrow)}
+.soft{fill:none;stroke:var(--line);stroke-width:2;stroke-dasharray:6 6}
+.box{fill:var(--card);stroke:var(--line);stroke-width:2}
+.pill{fill:var(--shade);stroke:var(--edge);stroke-width:2}
+</style>
+  </defs>
+  <rect width="1000" height="625" fill="var(--surface)"/>
+  <text x="46" y="54" class="small">FLYHIGH / ARQUITETURA</text>
+  <text x="46" y="91" font-size="30" font-weight="700">Interface, serviços e mensageria</text>
+  <rect x="46" y="187" width="172" height="125" rx="16" class="box"/>
+  <text x="70" y="233" class="label">Frontend</text>
+  <text x="70" y="262" class="tech">React + TypeScript</text>
+  <text x="70" y="288" class="tech">Cliente · Funcionário</text>
+  <path d="M220 249H265" class="line"/>
+  <rect x="270" y="187" width="165" height="125" rx="16" class="box"/>
+  <text x="292" y="233" class="label">API Gateway</text>
+  <text x="292" y="262" class="tech">Node.js</text>
+  <text x="292" y="288" class="tech">REST · JWT</text>
+  <path d="M437 249H480" class="line"/>
+  <rect x="486" y="146" width="466" height="248" rx="18" class="box"/>
+  <text x="510" y="180" class="small">MICROSSERVIÇOS / SPRING BOOT</text>
+  <g class="pill">
+    <rect x="510" y="201" width="127" height="62" rx="12"/>
+    <rect x="649" y="201" width="130" height="62" rx="12"/>
+    <rect x="791" y="201" width="137" height="62" rx="12"/>
+    <rect x="510" y="281" width="127" height="62" rx="12"/>
+    <rect x="649" y="281" width="130" height="62" rx="12"/>
+    <rect x="791" y="281" width="137" height="62" rx="12"/>
+  </g>
+  <text x="532" y="239" class="label">Auth</text>
+  <text x="671" y="239" class="label">Cliente</text>
+  <text x="813" y="239" class="label">Voos</text>
+  <text x="532" y="319" class="label">Reserva</text>
+  <text x="671" y="319" class="label">Saga</text>
+  <text x="813" y="319" class="label">Funcionário</text>
+  <path d="M720 395V438" class="line"/>
+  <rect x="586" y="446" width="270" height="70" rx="14" class="box"/>
+  <text x="611" y="487" class="label">RabbitMQ</text>
+  <text x="737" y="487" class="tech">mensageria</text>
+  <path d="M533 395V541H390" class="soft"/>
+  <path d="M904 395V541H866" class="soft"/>
+  <rect x="290" y="534" width="188" height="58" rx="14" class="box"/>
+  <text x="315" y="571" class="label">PostgreSQL</text>
+  <rect x="768" y="534" width="184" height="58" rx="14" class="box"/>
+  <text x="794" y="571" class="label">MongoDB</text>
+  <text x="46" y="581" class="tech">Visão simplificada da arquitetura do projeto</text>
+</svg>

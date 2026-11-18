@@ -2,6 +2,8 @@
  # Empresa Aérea
  
  ## Documentação
+
+ [Arquitetura e saga de reserva](docs/architecture-and-saga.md)
  
  [[Requisitos Funcionais] (Google Docs)](https://docs.google.com/document/d/1vQBC1WE8G4egoz6qbk9bKdXO6BHt4qTeLN11DCbTJqk/edit?usp=sharing)
  
